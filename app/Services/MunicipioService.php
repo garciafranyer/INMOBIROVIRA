@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\MunicipioRepository;
+use PhpParser\Builder\Function_;
+
+class MunicipioService {
+    private MunicipioRepository $municipio_repository;
+
+    public function __construct(MunicipioRepository $municipio_repository)
+    {
+        $this->municipio_repository = $municipio_repository;
+    }
+
+    public Function listar(){
+        return $this->municipio_repository->listar();
+
+    }
+
+
+}
