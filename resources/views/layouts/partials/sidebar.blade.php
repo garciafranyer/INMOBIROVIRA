@@ -27,7 +27,7 @@
                     ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
                     ['label' => 'Municipios',    'route' => 'municipio.index',      'icon' => 'users'],
                     ['label' => 'Perfiles/Roles', 'route' => 'roles.index',   'icon' => 'shield'],
-                    ['label' => 'Categorías',  'route' => 'categories.index', 'icon' => 'tag'],
+                    ['label' => 'Tipo de Inmueble',  'route' => 'tipo_inmueble.index', 'icon' => 'tag'],
                     ['label' => 'Productos',   'route' => 'producto.index',   'icon' => 'box'],
                     ['label' => 'Reportes',    'route' => 'reports.index',    'icon' => 'chart'],
                     ['label' => 'Configuración', 'route' => 'settings.index', 'icon' => 'cog'],

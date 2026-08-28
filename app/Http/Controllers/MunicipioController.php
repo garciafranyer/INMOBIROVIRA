@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MunicipioStoreRequest;
 use App\Http\Requests\MunicipioUpdateRequest;
 use App\Models\municipio;
-use Illuminate\Http\Request;
 use App\Services\MunicipioService;
 
 class MunicipioController extends Controller
