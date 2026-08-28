@@ -18,5 +18,24 @@ class MunicipioService {
 
     }
 
+    public function crear(array $datos){
+        $this->municipio_repository->crear($datos);
+
+    }
+
+    public function eliminar(int $id){
+        $this->municipio_repository->eliminar($id);
+    }
+
+    public function buscarporid(int $id){
+        return
+        $this->municipio_repository->buscarporid($id);
+    }
+
+
+    public function actualizar(int $id, array $datos){
+        $this->municipio_repository->actualizar($id, $datos);
+    }
+
 
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MunicipioStoreRequest;
+use App\Http\Requests\MunicipioUpdateRequest;
 use App\Models\municipio;
 use Illuminate\Http\Request;
 use App\Services\MunicipioService;
@@ -20,7 +22,9 @@ class MunicipioController extends Controller
      */
     public function index()
     {
-        //
+        $municipio = $this->municipio_service->listar();
+
+        return view('municipio.index', compact('municipio'));
     }
 
     /**
@@ -28,15 +32,16 @@ class MunicipioController extends Controller
      */
     public function create()
     {
-        //
+        return view('municipio.crear');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MunicipioStoreRequest $request)
     {
-        //
+        $this->municipio_service->crear($request->validated());
+        return redirect()->route('municipio.index')->with('success', 'se creo correctamente');
     }
 
     /**
@@ -50,24 +55,28 @@ class MunicipioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(municipio $municipio)
+    public function edit(int $id )
     {
-        //
+        $municipio = $this->municipio_service->buscarporid($id);
+        return view('municipio.editar',compact('municipio'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, municipio $municipio)
+    public function update(int $id, MunicipioUpdateRequest $request )
     {
-        //
+        $this->municipio_service->actualizar($id,$request->all());
+
+        return redirect()->route('municipio.index')->with('success', 'Se actualizo corretamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(municipio $municipio)
+    public function destroy(int $id)
     {
-        //
+        $this->municipio_service->eliminar($id);
+        return redirect()->route('municipio.index')->with('success','Se elimino corrrectamente');
     }
 }
