@@ -28,7 +28,7 @@
                     ['label' => 'Municipios',    'route' => 'municipio.index',      'icon' => 'users'],
                     ['label' => 'Perfiles/Roles', 'route' => 'roles.index',   'icon' => 'shield'],
                     ['label' => 'Tipo de Inmueble',  'route' => 'tipo_inmueble.index', 'icon' => 'tag'],
-                    ['label' => 'Productos',   'route' => 'producto.index',   'icon' => 'box'],
+                    ['label' => 'Usuario',   'route' => 'usuario.index',   'icon' => 'box'],
                     ['label' => 'Reportes',    'route' => 'reports.index',    'icon' => 'chart'],
                     ['label' => 'Configuración', 'route' => 'settings.index', 'icon' => 'cog'],
                 ];

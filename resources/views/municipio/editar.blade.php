@@ -63,6 +63,7 @@
                     <button type="submit">
                         Actualizar
                     </button>
+                    <a href="{{ route('municipio.index') }}">Cancelar</a>
                 </div>
 
             </form>

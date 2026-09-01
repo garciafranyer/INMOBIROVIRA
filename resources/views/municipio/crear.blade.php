@@ -42,6 +42,7 @@
 
                 <div>
                     <button type="submit">Guardar</button>
+                    <a href="{{ route('municipio.index') }}">Cancelar</a>
                 </div>
 
             </form>

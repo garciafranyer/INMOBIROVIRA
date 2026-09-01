@@ -51,6 +51,7 @@
                     <button type="submit">
                         Actualizar
                     </button>
+                    <a href="{{ route('tipo_inmueble.index') }}">Cancelar</a>
                 </div>
 
             </form>
