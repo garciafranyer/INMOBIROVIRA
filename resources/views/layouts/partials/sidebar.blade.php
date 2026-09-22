@@ -30,7 +30,7 @@
                     ['label' => 'Tipo de Inmueble',  'route' => 'tipo_inmueble.index', 'icon' => 'tag'],
                     ['label' => 'Usuario',   'route' => 'usuario.index',   'icon' => 'box'],
                     ['label' => 'Barrio',    'route' => 'barrio.index',    'icon' => 'chart'],
-                    ['label' => 'Configuración', 'route' => 'settings.index', 'icon' => 'cog'],
+                    ['label' => 'inmueble', 'route' => 'inmueble.index', 'icon' => 'cog'],
                 ];
             @endphp
 

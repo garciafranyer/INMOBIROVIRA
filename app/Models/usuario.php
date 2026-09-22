@@ -10,4 +10,8 @@ class usuario extends Model
 
    protected $fillable = ['nombre','gmail','telefono','direccion','tipo_usuario','nombre_empresa'];
 
+  public function inmueble(){
+    return $this->hasMany(inmueble::class);
+  }
+
 }

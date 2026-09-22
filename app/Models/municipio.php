@@ -13,4 +13,8 @@ class municipio extends Model
    public function barrio(){
       return $this->hasMany(barrio::class);
    }
+
+   public function inmueble(){
+      return $this->hasMany(inmueble::class);
+   }
 }
