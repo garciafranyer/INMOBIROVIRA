@@ -22,5 +22,8 @@ class Inmueble extends Model
         return $this->belongsTo(municipio::class, 'id_municipio');
     }
 
+    public function detalle_inmueble(){
+        return $this->hasOne(detalle_inmueble::class);
+    }
     
 }

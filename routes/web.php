@@ -6,6 +6,7 @@ use App\Http\Controllers\InmuebleController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\TipoInmuebleController;
 use App\Http\Controllers\UsuarioController;
+use App\Models\detalle_inmueble;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])
@@ -20,5 +21,7 @@ route::resource('usuario', UsuarioController::class);
 route::resource('barrio', BarrioController::class);
 
 route::resource('inmueble',InmuebleController::class);
+
+route::resource('detalle_inmueble',detalle_inmueble::class);
 
 
