@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InmuebleStoreRequest;
 use App\Http\Requests\InmuebleUpdateRequest;
-use App\Models\Inmueble;
 use App\Services\InmuebleService;
 use App\Services\MunicipioService;
 use App\Services\TipoInmuebleService;
 use App\Services\UsuarioService;
-use Illuminate\Http\Request;
 
 class InmuebleController extends Controller
-{   
+{
     private InmuebleService $inmueble_service;
 
     private MunicipioService $municipio_service;
@@ -28,12 +26,13 @@ class InmuebleController extends Controller
         $this->usuario_service = $usuario_service;
         $this->tipo_inmueble_service = $tipo_inmueble_service;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-         $inmueble = $this->inmueble_service->listar();
+        $inmueble = $this->inmueble_service->listar();
 
         return view('inmueble.index', compact('inmueble'));
     }
@@ -43,11 +42,11 @@ class InmuebleController extends Controller
      */
     public function create()
     {
-
         $usuario = $this->usuario_service->listar();
         $municipios = $this->municipio_service->listar();
         $tipo_inmueble = $this->tipo_inmueble_service->listar();
-        return view('inmueble.crear',compact('usuario','municipios','tipo_inmueble'));
+
+        return view('inmueble.crear', compact('usuario', 'municipios', 'tipo_inmueble'));
     }
 
     /**
@@ -55,7 +54,12 @@ class InmuebleController extends Controller
      */
     public function store(InmuebleStoreRequest $request)
     {
-        $this->inmueble_service->crear($request->validated());
+
+        $this->inmueble_service->crear(
+            $request->safe()->except('imagenes'),
+            $request->file('imagenes', [])
+        );
+
         return redirect()->route('inmueble.index')->with('success', 'se creo correctamente');
     }
 
@@ -76,15 +80,20 @@ class InmuebleController extends Controller
         $usuario = $this->usuario_service->listar();
         $municipios = $this->municipio_service->listar();
         $inmueble = $this->inmueble_service->buscarporid($id);
-        return view('inmueble.editar',compact('inmueble','municipios','usuario','tipo_inmueble'));
+
+        return view('inmueble.editar', compact('inmueble', 'municipios', 'usuario', 'tipo_inmueble'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(int $id, InmuebleUpdateRequest $request )
+    public function update(int $id, InmuebleUpdateRequest $request)
     {
-        $this->inmueble_service->actualizar($id,$request->all());
+        $this->inmueble_service->actualizar(
+            $id,
+            $request->safe()->except('imagenes'),
+            $request->file('imagenes', [])
+        );
 
         return redirect()->route('inmueble.index')->with('success', 'Se actualizo corretamente');
     }
@@ -95,6 +104,7 @@ class InmuebleController extends Controller
     public function destroy(int $id)
     {
         $this->inmueble_service->eliminar($id);
-        return redirect()->route('inmueble.index')->with('success','Se elimino corrrectamente');
+
+        return redirect()->route('inmueble.index')->with('success', 'Se elimino corrrectamente');
     }
 }

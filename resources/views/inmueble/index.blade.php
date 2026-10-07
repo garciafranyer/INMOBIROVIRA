@@ -154,6 +154,17 @@
                                 @else
                                     <p class="text-gray-500">Este inmueble no tiene detalles.</p>
                                 @endif
+
+                                {{-- Imágenes del inmueble --}}
+                                @if ($item->imagenes->isNotEmpty())
+                                    <div class="flex flex-wrap gap-3 mt-4">
+                                        @foreach ($item->imagenes as $img)
+                                            <a href="{{ asset('storage/' . $img->ruta) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $img->ruta) }}" class="w-28 h-20 object-cover rounded-lg border">
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </td>
                         </tr>
                     @empty

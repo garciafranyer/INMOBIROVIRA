@@ -9,7 +9,7 @@ class InmuebleRepository
 {
     public function listar()
     {
-        return Inmueble::with('municipio', 'tipo_inmueble', 'usuario', 'detalle_inmueble')->get();
+        return Inmueble::with('municipio', 'tipo_inmueble', 'usuario', 'detalle_inmueble', 'imagenes')->get();
     }
 
     public function crear(array $datos)
@@ -36,7 +36,7 @@ class InmuebleRepository
 
     public function buscarporid(int $id)
     {
-        return Inmueble::with('detalle_inmueble')->findOrFail($id);
+        return Inmueble::with('detalle_inmueble', 'imagenes')->findOrFail($id);
     }
 
     public function actualizar(int $id, array $datos)

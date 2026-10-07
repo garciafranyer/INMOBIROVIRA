@@ -18,7 +18,7 @@
 
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Editar inmueble</h2>
-            <p class="text-sm text-gray-500">Modifica los datos del inmueble y su detalle.</p>
+            <p class="text-sm text-gray-500">Modifica los datos del inmueble, su detalle y sus imágenes.</p>
         </div>
 
         {{-- Errores --}}
@@ -33,7 +33,7 @@
             </div>
         @endif
 
-        <form action="{{ route('inmueble.update', $inmueble->id) }}" method="POST" class="space-y-6">
+        <form action="{{ route('inmueble.update', $inmueble->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -170,6 +170,32 @@
                 </div>
             </section>
 
+            {{-- IMÁGENES --}}
+            <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Imágenes</h3>
+
+                @if ($inmueble->imagenes->isNotEmpty())
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                        @foreach ($inmueble->imagenes as $img)
+                            <div class="border rounded-lg p-2 text-center">
+                                <img src="{{ asset('storage/' . $img->ruta) }}" class="w-full h-24 object-cover rounded">
+                                <button type="submit" form="eliminar-imagen-{{ $img->id }}"
+                                        onclick="return confirm('¿Eliminar esta imagen?')"
+                                        class="mt-2 text-sm text-red-600 hover:underline">
+                                    Eliminar
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                <label class="{{ $label }}">Agregar más imágenes</label>
+                <input type="file" name="imagenes[]" id="imagenes" multiple accept="image/*" class="{{ $input }}">
+                <p class="mt-2 text-xs text-gray-500">Máximo 10 fotos por vez, de 2 MB cada una.</p>
+
+                <div id="vista-previa" class="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4"></div>
+            </section>
+
             {{-- Botones --}}
             <div class="flex items-center justify-end gap-3">
                 <a href="{{ route('inmueble.index') }}"
@@ -183,8 +209,31 @@
             </div>
 
         </form>
+
+        {{-- Formularios ocultos para borrar imágenes (fuera del formulario principal) --}}
+        @foreach ($inmueble->imagenes as $img)
+            <form id="eliminar-imagen-{{ $img->id }}" action="{{ route('imagen.destroy', $img->id) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endforeach
+
     </div>
 
 </x-card>
+
+<script>
+    document.getElementById('imagenes').addEventListener('change', function () {
+        const contenedor = document.getElementById('vista-previa');
+        contenedor.innerHTML = '';
+
+        Array.from(this.files).forEach(function (archivo) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(archivo);
+            img.className = 'w-full h-24 object-cover rounded-lg border';
+            contenedor.appendChild(img);
+        });
+    });
+</script>
 
 @endsection

@@ -17,7 +17,7 @@
 
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Nuevo inmueble</h2>
-            <p class="text-sm text-gray-500">Completa los datos del inmueble y su detalle.</p>
+            <p class="text-sm text-gray-500">Completa los datos del inmueble, su detalle y sus imágenes.</p>
         </div>
 
         {{-- Errores --}}
@@ -32,7 +32,7 @@
             </div>
         @endif
 
-        <form action="{{ route('inmueble.store') }}" method="post" class="space-y-6">
+        <form action="{{ route('inmueble.store') }}" method="post" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
             {{-- DATOS DEL INMUEBLE --}}
@@ -162,6 +162,16 @@
                 </div>
             </section>
 
+            {{-- IMÁGENES --}}
+            <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Imágenes</h3>
+
+                <input type="file" name="imagenes[]" id="imagenes" multiple accept="image/*" class="{{ $input }}">
+                <p class="mt-2 text-xs text-gray-500">Máximo 10 fotos, de 2 MB cada una.</p>
+
+                <div id="vista-previa" class="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4"></div>
+            </section>
+
             {{-- Botones --}}
             <div class="flex items-center justify-end gap-3">
                 <a href="{{ route('inmueble.index') }}"
@@ -179,4 +189,18 @@
 
 </x-card>
 
-@endsection
+<script>
+    document.getElementById('imagenes').addEventListener('change', function () {
+        const contenedor = document.getElementById('vista-previa');
+        contenedor.innerHTML = '';
+
+        Array.from(this.files).forEach(function (archivo) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(archivo);
+            img.className = 'w-full h-24 object-cover rounded-lg border';
+            contenedor.appendChild(img);
+        });
+    });
+</script>
+
+@endsection 

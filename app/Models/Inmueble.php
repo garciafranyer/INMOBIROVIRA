@@ -25,5 +25,10 @@ class Inmueble extends Model
     public function detalle_inmueble(){
         return $this->hasOne(detalle_inmueble::class,'id_inmueble');
     }
+
+   public function imagenes()
+{
+    return $this->hasMany(imagen::class, 'id_inmueble');
+}
     
 }
