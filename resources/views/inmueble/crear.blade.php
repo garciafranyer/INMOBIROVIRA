@@ -1,84 +1,181 @@
 @extends('layouts.app')
 
-
 @section('title')
-    TITULO
+    Nuevo inmueble
 @endsection
-
 
 @section('content')
 
+@php
+    $input = 'w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400';
+    $label = 'block mb-1.5 text-sm font-semibold text-gray-700';
+@endphp
 
 <x-card>
 
-    <div>
-        <div>
-            <h2>Nuevo inmueble</h2>
-            <br>
+    <div class="max-w-4xl mx-auto p-4 sm:p-6">
 
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Nuevo inmueble</h2>
+            <p class="text-sm text-gray-500">Completa los datos del inmueble y su detalle.</p>
+        </div>
 
-            @if ($errors->any())
-
-            <div>
-                <ul>
-                    @foreach ($errors->all() as $error )
-                    <li>{{$error}}</li>                        
+        {{-- Errores --}}
+        @if ($errors->any())
+            <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <p class="font-semibold mb-1">Revisa estos campos:</p>
+                <ul class="list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
-                
-            @endif
-            <form action="{{ route('inmueble.store') }}"method="post">
-                @csrf
-                <div>
-                    <label for="" class="block mb-2 font-semibold">Nombre de inmueble</label>
-                    <input type="text" name="nombre" class="w-full border rounded px-3 py-2">
-                </div>
+        @endif
 
-                <div>
-                    <label for="" class="block mb-2 font-semibold">Zona del inmueble</label>
-                    <select name="zona" id="zona" class="w-full border rounded px-3 py-2">
-                       <option value="rural">Rural</option>
-                       <option value="urbana">Urbana</option>
-                    </select>
-                </div>
+        <form action="{{ route('inmueble.store') }}" method="post" class="space-y-6">
+            @csrf
 
-                <div>
-                    <label for="" class="block mb-2 font-semibold">usuario </label>
-                    <select name="id_usuario" class="w-full border rounded px-3 py-2" id="">
-                        @foreach ($usuario as $usuario )
-                        <option value="{{ $usuario->id }}">{{$usuario->nombre}}</option>
-                        @endforeach
-                    </select>
-                </div>
+            {{-- DATOS DEL INMUEBLE --}}
+            <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Datos del inmueble</h3>
 
-                <div>
-                    <label for="" class="block mb-2 font-semibold">tipo de inmueble </label>
-                    <select name="id_tipo_inmueble" class="w-full border rounded px-3 py-2" id="">
-                        @foreach ($tipo_inmueble as $tipo_inmueble )
-                        <option value="{{ $tipo_inmueble->id }}">{{$tipo_inmueble->nombre}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="{{ $label }}">Nombre del inmueble</label>
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" class="{{ $input }}">
+                    </div>
 
-                <div>
-                    <label for="" class="block mb-2 font-semibold">municipio </label>
-                    <select name="id_municipio" class="w-full border rounded px-3 py-2" id="">
-                        @foreach ($municipios as $municipio )
-                        <option value="{{ $municipio->id }}">{{$municipio->nombre}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div>
+                        <label class="{{ $label }}">Zona</label>
+                        <select name="zona" id="zona" class="{{ $input }}">
+                            <option value="rural" @selected(old('zona') === 'rural')>Rural</option>
+                            <option value="urbana" @selected(old('zona') === 'urbana')>Urbana</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <button type="submit">Guardar</button>
-                    <a href="{{ route('inmueble.index') }}">Cancelar</a>
-                </div>
+                    <div>
+                        <label class="{{ $label }}">Usuario</label>
+                        <select name="id_usuario" class="{{ $input }}">
+                            @foreach ($usuario as $u)
+                                <option value="{{ $u->id }}" @selected(old('id_usuario') == $u->id)>{{ $u->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            </form>
-        </div>
+                    <div>
+                        <label class="{{ $label }}">Tipo de inmueble</label>
+                        <select name="id_tipo_inmueble" class="{{ $input }}">
+                            @foreach ($tipo_inmueble as $tipo)
+                                <option value="{{ $tipo->id }}" @selected(old('id_tipo_inmueble') == $tipo->id)>{{ $tipo->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Municipio</label>
+                        <select name="id_municipio" class="{{ $input }}">
+                            @foreach ($municipios as $municipio)
+                                <option value="{{ $municipio->id }}" @selected(old('id_municipio') == $municipio->id)>{{ $municipio->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            {{-- DETALLE DEL INMUEBLE --}}
+            <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Detalle del inmueble</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="{{ $label }}">Dirección</label>
+                        <input type="text" name="detalle[direccion]" value="{{ old('detalle.direccion') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Tipo de oferta</label>
+                        <select name="detalle[tipo_oferta]" class="{{ $input }}">
+                            @foreach (['venta', 'arriendo', 'venta y arriendo'] as $oferta)
+                                <option value="{{ $oferta }}" @selected(old('detalle.tipo_oferta') === $oferta)>{{ ucfirst($oferta) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Estado de publicación</label>
+                        <select name="detalle[estado_publicacion]" class="{{ $input }}">
+                            @foreach (['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'] as $estado)
+                                <option value="{{ $estado }}" @selected(old('detalle.estado_publicacion') === $estado)>{{ ucfirst($estado) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Precio</label>
+                        <input type="number" step="0.01" name="detalle[precio]" value="{{ old('detalle.precio') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Precio de administración</label>
+                        <input type="number" step="0.01" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Área (m²)</label>
+                        <input type="number" step="0.01" name="detalle[area]" value="{{ old('detalle.area') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Fecha de publicación</label>
+                        <input type="date" name="detalle[fecha_publicacion]" value="{{ old('detalle.fecha_publicacion') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Habitaciones</label>
+                        <input type="number" name="detalle[numero_habitacion]" value="{{ old('detalle.numero_habitacion') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Baños</label>
+                        <input type="number" name="detalle[numero_bano]" value="{{ old('detalle.numero_bano') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Parqueaderos</label>
+                        <input type="number" name="detalle[numero_parqueadero]" value="{{ old('detalle.numero_parqueadero') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Piso</label>
+                        <input type="number" name="detalle[numero_piso]" value="{{ old('detalle.numero_piso') }}" class="{{ $input }}">
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Apartamento</label>
+                        <input type="number" name="detalle[numero_apartamento]" value="{{ old('detalle.numero_apartamento') }}" class="{{ $input }}">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="{{ $label }}">Descripción</label>
+                        <input type="text" name="detalle[descripcion]" value="{{ old('detalle.descripcion') }}" class="{{ $input }}">
+                    </div>
+                </div>
+            </section>
+
+            {{-- Botones --}}
+            <div class="flex items-center justify-end gap-3">
+                <a href="{{ route('inmueble.index') }}"
+                   class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow transition">
+                    Guardar
+                </button>
+            </div>
+
+        </form>
     </div>
-
 
 </x-card>
 

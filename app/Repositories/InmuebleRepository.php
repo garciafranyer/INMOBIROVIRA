@@ -1,33 +1,61 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
 use App\Models\Inmueble;
-use App\Models\usuario;
+use Illuminate\Support\Facades\DB;
 
-class InmuebleRepository{
+class InmuebleRepository
+{
+    public function listar()
+    {
+        return Inmueble::with('municipio', 'tipo_inmueble', 'usuario', 'detalle_inmueble')->get();
+    }
 
-public function listar(){
-    return Inmueble::with('municipio','tipo_inmueble','usuario')->get();
-}
+    public function crear(array $datos)
+    {
+        return DB::transaction(function () use ($datos) {
+            $detalle = $datos['detalle'];
+            unset($datos['detalle']);
 
-public function crear(array $datos){
-    Inmueble::create($datos);
-}
+            $inmueble = Inmueble::create($datos);
+            $inmueble->detalle_inmueble()->create($detalle);
 
-public function eliminar(int $id){
-    Inmueble::destroy($id);
-}
+            return $inmueble;
+        });
+    }
 
-public function buscarporid(int $id){
-    $inmueble =  Inmueble::findOrFail($id);
-    return $inmueble;
-}
+    public function eliminar(int $id)
+    {
+        DB::transaction(function () use ($id) {
+            $inmueble = Inmueble::findOrFail($id);
+            $inmueble->detalle_inmueble()->delete();
+            $inmueble->delete();
+        });
+    }
 
-public function actualizar(int $id, array $datos){
-    $inmueble = Inmueble::findOrFail($id);
-    $inmueble->update($datos);
-    return $inmueble;
-}
+    public function buscarporid(int $id)
+    {
+        return Inmueble::with('detalle_inmueble')->findOrFail($id);
+    }
 
+    public function actualizar(int $id, array $datos)
+    {
+        return DB::transaction(function () use ($id, $datos) {
+            $detalle = $datos['detalle'] ?? null;
+            unset($datos['detalle']);
+
+            $inmueble = Inmueble::findOrFail($id);
+            $inmueble->update($datos);
+
+            if ($detalle) {
+                $inmueble->detalle_inmueble()->updateOrCreate(
+                    ['id_inmueble' => $inmueble->id],
+                    $detalle
+                );
+            }
+
+            return $inmueble;
+        });
+    }
 }

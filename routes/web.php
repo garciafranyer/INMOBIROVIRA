@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarrioController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DetalleInmuebleController;
 use App\Http\Controllers\InmuebleController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\TipoInmuebleController;
@@ -22,6 +23,6 @@ route::resource('barrio', BarrioController::class);
 
 route::resource('inmueble',InmuebleController::class);
 
-route::resource('detalle_inmueble',detalle_inmueble::class);
+route::resource('detalle_inmueble',DetalleInmuebleController::class);
 
 

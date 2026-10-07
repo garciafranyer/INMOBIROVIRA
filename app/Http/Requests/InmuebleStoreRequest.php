@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class InmuebleStoreRequest extends FormRequest
 {
@@ -21,14 +22,30 @@ class InmuebleStoreRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-           return [
+    { return [
             'nombre' => 'required|string|max:100',            
             'zona' => 'required|string|max:100',            
             'id_usuario' => 'required|string|max:100',            
             'id_tipo_inmueble' => 'required|string|max:100',            
-            'id_municipio' => 'required|string|max:100'       
-        ];
+            'id_municipio' => 'required|string|max:100',  
+            
+            
+
+
+            'detalle.direccion'            => 'required|string|max:255',
+            'detalle.tipo_oferta'          => ['required', Rule::in(['venta', 'arriendo', 'venta y arriendo'])],
+            'detalle.precio'               => 'required|numeric|min:0',
+            'detalle.precio_administrador' => 'required|numeric|min:0',
+            'detalle.area'                 => 'required|numeric|min:0',
+            'detalle.numero_habitacion'    => 'nullable|integer|min:0',
+            'detalle.numero_parqueadero'   => 'nullable|integer|min:0',
+            'detalle.numero_piso'          => 'nullable|integer|min:0',
+            'detalle.numero_apartamento'   => 'nullable|integer|min:0',
+            'detalle.numero_bano'          => 'nullable|integer|min:0',
+            'detalle.descripcion'          => 'required|string|max:255',
+            'detalle.fecha_publicacion'    => 'required|date',
+            'detalle.estado_publicacion'   => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
+                    ];
     }
 
     public function messages(): array{

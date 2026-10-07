@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Repositories;
+namespace App\Repositories;
 
 use app\Models\detalle_inmueble;
 
 class DetalleInmuebleRepository{
 
     public function listar(){
-        return detalle_inmueble::with('id_inmueble')->get();
+        return detalle_inmueble::with('inmueble')->get();
     }
 
 

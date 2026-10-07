@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+
 use Illuminate\Database\Eloquent\Model;
 
 class detalle_inmueble extends Model
 {
     protected $table = "detalle_inmueble";
 
-    protected $Fillable = [
+    protected $fillable = [
         'direccion',
         'tipo_oferta',
         'precio',
@@ -26,6 +26,6 @@ class detalle_inmueble extends Model
         'id_inmueble',
     ];
     public function inmueble(){
-        return $this->belongsTo(inmueble::class,'id_inmueble');
+        return $this->belongsTo(Inmueble::class,'id_inmueble');
     }
 }
