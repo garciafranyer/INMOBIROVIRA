@@ -28,7 +28,7 @@
             </div>
 
             <a href="{{ route('inmueble.create') }}"
-               class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition">
+            class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition">
                 <span class="text-lg leading-none">+</span> Nuevo inmueble
             </a>
         </div>
@@ -72,18 +72,18 @@
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center gap-2">
                                     <button type="button"
-                                            onclick="toggleDetalle({{ $item->id }}, this)"
+                                            data-id="{{ $item->id }}"
                                             class="px-3 py-1.5 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50 font-medium transition">
                                         Ver detalles
                                     </button>
 
                                     <a href="{{ route('inmueble.edit', $item->id) }}"
-                                       class="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium transition">
+                                    class="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium transition">
                                         Editar
                                     </a>
 
                                     <form action="{{ route('inmueble.destroy', $item->id) }}" method="POST"
-                                          onsubmit="return confirm('¿Seguro que quieres eliminar este inmueble?')">
+                                        onsubmit="return confirm('¿Seguro que quieres eliminar este inmueble?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -159,8 +159,8 @@
                                 @if ($item->imagenes->isNotEmpty())
                                     <div class="flex flex-wrap gap-3 mt-4">
                                         @foreach ($item->imagenes as $img)
-                                            <a href="{{ asset('storage/' . $img->ruta) }}" target="_blank">
-                                                <img src="{{ asset('storage/' . $img->ruta) }}" class="w-28 h-20 object-cover rounded-lg border">
+                                            <a href="{{ asset('storage/' . $img->url_imagen) }}" target="_blank">
+                                            <img src="{{ asset('storage/' . $img->url_imagen) }}" class="w-28 h-20 object-cover rounded-lg border">
                                             </a>
                                         @endforeach
                                     </div>

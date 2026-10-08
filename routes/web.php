@@ -28,4 +28,6 @@ route::resource('detalle_inmueble',DetalleInmuebleController::class);
 
 route::resource('imagen',ImagenController::class);
 
+Route::resource('imagen', ImagenController::class)->only(['index', 'destroy']);
+
 

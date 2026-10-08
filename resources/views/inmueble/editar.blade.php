@@ -178,7 +178,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                         @foreach ($inmueble->imagenes as $img)
                             <div class="border rounded-lg p-2 text-center">
-                                <img src="{{ asset('storage/' . $img->ruta) }}" class="w-full h-24 object-cover rounded">
+                                <img src="{{ asset('storage/' . $img->url_imagen) }}" class="w-full h-24 object-cover rounded">
                                 <button type="submit" form="eliminar-imagen-{{ $img->id }}"
                                         onclick="return confirm('¿Eliminar esta imagen?')"
                                         class="mt-2 text-sm text-red-600 hover:underline">

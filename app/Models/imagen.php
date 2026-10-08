@@ -9,7 +9,6 @@ class imagen extends Model
     protected $table = 'imagen';
 
     protected $fillable = [
-        'ruta',
         'url_imagen',
         'id_inmueble',
     ];

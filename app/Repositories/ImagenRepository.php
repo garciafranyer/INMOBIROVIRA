@@ -19,13 +19,11 @@ class ImagenRepository
 
     public function eliminar(int $id)
     {
-        $imagen = imagen::findOrFail($id);
-        $ruta = $imagen->ruta;
+        $imagen = imagen::findOrFail($id); # trae el registro
 
-        $imagen->delete();                        // primero la fila
-        Storage::disk('public')->delete($ruta);   // después el archivo
+        Storage::disk('public')->delete($imagen->url_imagen); # borra el archivo fisico
 
-        return true;
+        return $imagen->delete(); #borra el registro de la base de datos
     }
 
     public function buscarporid(int $id)

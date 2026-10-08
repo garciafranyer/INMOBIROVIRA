@@ -40,8 +40,8 @@
                 @foreach ($imagen as $item)
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
 
-                        <a href="{{ asset('storage/' . $item->ruta) }}" target="_blank">
-                            <img src="{{ asset('storage/' . $item->ruta) }}"
+                        <a href="{{ asset('storage/' . $item->url_imagen) }}" target="_blank">
+                            <img src="{{ asset('storage/' . $item->url_imagen) }}"
                                  alt="Imagen de {{ $item->inmueble?->nombre }}"
                                  class="w-full h-40 object-cover hover:opacity-90 transition">
                         </a>

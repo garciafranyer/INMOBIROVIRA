@@ -53,15 +53,14 @@ class InmuebleController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(InmuebleStoreRequest $request)
-    {
+{
+    $this->inmueble_service->crear(
+        $request->safe()->except('imagenes'),
+        $request->file('imagenes')
+    );
 
-        $this->inmueble_service->crear(
-            $request->safe()->except('imagenes'),
-            $request->file('imagenes', [])
-        );
-
-        return redirect()->route('inmueble.index')->with('success', 'se creo correctamente');
-    }
+    return redirect()->route('inmueble.index')->with('success', 'se creo correctamente');
+}
 
     /**
      * Display the specified resource.
@@ -88,15 +87,11 @@ class InmuebleController extends Controller
      * Update the specified resource in storage.
      */
     public function update(int $id, InmuebleUpdateRequest $request)
-    {
-        $this->inmueble_service->actualizar(
-            $id,
-            $request->safe()->except('imagenes'),
-            $request->file('imagenes', [])
-        );
+{
+    $this->inmueble_service->actualizar($id, $request->safe()->except('imagenes'), $request->file('imagenes'));
 
-        return redirect()->route('inmueble.index')->with('success', 'Se actualizo corretamente');
-    }
+    return redirect()->route('inmueble.index')->with('success', 'Se actualizo corretamente');
+}
 
     /**
      * Remove the specified resource from storage.

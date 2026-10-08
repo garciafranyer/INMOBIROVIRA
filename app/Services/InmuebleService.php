@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\InmuebleRepository;
-use Illuminate\Support\Facades\DB;
 
-class InmuebleService
-{
+class InmuebleService{
     private InmuebleRepository $inmueble_repository;
 
     private ImagenService $imagen_service;
@@ -17,26 +15,30 @@ class InmuebleService
         $this->imagen_service = $imagen_service;
     }
 
-    public function listar()
-    {
+    public function listar(){
         return $this->inmueble_repository->listar();
     }
 
-    public function crear(array $datos, array $imagenes = [])
-    {
-        return DB::transaction(function () use ($datos, $imagenes) {
-            $inmueble = $this->inmueble_repository->crear($datos);
-            $this->imagen_service->subir($inmueble->id, $imagenes);
+    public function crear(array $datosInmueble, array $imagenes){
 
-            return $inmueble;
-        });
+        $inmueble = $this->inmueble_repository->crear($datosInmueble);
+
+        foreach ($imagenes as $imagen){
+
+            $ruta = $imagen->store('inmuebles', 'public');
+
+            $this->imagen_service->crear([
+                'id_inmueble' => $inmueble->id,
+                'url_imagen' => $ruta,
+            ]);
+
+        }
+
     }
 
-    public function eliminar(int $id)
-    {
+    public function eliminar(int $id){
         $inmueble = $this->inmueble_repository->buscarporid($id);
 
-        // Borra cada foto (archivo y fila) antes de borrar el inmueble
         foreach ($inmueble->imagenes as $imagen) {
             $this->imagen_service->eliminar($imagen->id);
         }
@@ -44,16 +46,22 @@ class InmuebleService
         $this->inmueble_repository->eliminar($id);
     }
 
-    public function buscarporid(int $id)
-    {
+    public function buscarporid(int $id){
         return $this->inmueble_repository->buscarporid($id);
     }
 
-    public function actualizar(int $id, array $datos, array $imagenes = [])
-    {
-        DB::transaction(function () use ($id, $datos, $imagenes) {
-            $this->inmueble_repository->actualizar($id, $datos);
-            $this->imagen_service->subir($id, $imagenes);
-        });
+    public function actualizar(int $id, array $datosInmueble, ?array $imagenes = null){
+        $this->inmueble_repository->actualizar($id, $datosInmueble);
+
+        if ($imagenes) {
+            foreach ($imagenes as $imagen) {
+                $ruta = $imagen->store('inmuebles', 'public');
+                $this->imagen_service->crear([
+                    'id_inmueble' => $id,
+                    'url_imagen' => $ruta,
+                ]);
+            }
+        }
     }
+
 }
