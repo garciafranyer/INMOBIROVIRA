@@ -25,12 +25,12 @@
             @php
                 $links = [
                     ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
-                    ['label' => 'Municipios',    'route' => 'municipio.index',      'icon' => 'users'],
+                    ['label' => 'Municipios',    'route' => 'municipio.index',      'icon' => 'map'],
                     ['label' => 'Perfiles/Roles', 'route' => 'roles.index',   'icon' => 'shield'],
                     ['label' => 'Tipo de Inmueble',  'route' => 'tipo_inmueble.index', 'icon' => 'tag'],
-                    ['label' => 'Usuario',   'route' => 'usuario.index',   'icon' => 'box'],
-                    ['label' => 'Barrio',    'route' => 'barrio.index',    'icon' => 'chart'],
-                    ['label' => 'inmueble', 'route' => 'inmueble.index', 'icon' => 'cog'],
+                    ['label' => 'Usuario',   'route' => 'usuario.index',   'icon' => 'users'],
+                    ['label' => 'Barrio',    'route' => 'barrio.index',    'icon' => 'map-pin'],
+                    ['label' => 'inmueble', 'route' => 'inmueble.index', 'icon' => 'building-office-2'],
                 ];
             @endphp
 
