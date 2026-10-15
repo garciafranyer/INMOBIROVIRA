@@ -29,4 +29,9 @@ class BarrioRepository{
         return $barrio;
     }
 
+    public function listarPaginado()
+{
+    return barrio::with('municipio')->orderBy('id_municipio')->orderBy('nombre')->paginate(10);
+}
+
 }

@@ -23,11 +23,11 @@ class BarrioController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $barrio = $this->barrio_service->listar();
+{
+    $barrio = $this->barrio_service->listarPaginado();
 
-        return view('Barrio.index',compact('barrio'));
-    }
+    return view('barrio.index', compact('barrio'));
+}
 
     /**
      * Show the form for creating a new resource.

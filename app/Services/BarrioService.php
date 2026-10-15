@@ -30,4 +30,8 @@ class BarrioService{
     public function actualizar(int $id, array $datos){
         $this->barrio_repository->actualizar($id, $datos);
     }
+
+    public function listarPaginado(){
+    return $this->barrio_repository->listarPaginado();
+}
 }

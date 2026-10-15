@@ -108,7 +108,7 @@
                                         <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $badge($d->estado_publicacion) }}">
                                             {{ ucfirst($d->estado_publicacion) }}
                                         </span>
-                                        <span class="text-sm text-gray-500">Publicado el {{ $d->fecha_publicacion }}</span>
+                                        <span class="text-sm text-gray-500">Publiczeado el {{ $d->fecha_publicacion }}</span>
                                     </div>
 
                                     <p class="text-gray-700 mb-4">
@@ -183,12 +183,14 @@
 </x-card>
 
 <script>
-    function toggleDetalle(id, boton) {
-        const fila = document.getElementById('detalle-' + id);
-        const oculto = fila.style.display === 'none';
-        fila.style.display = oculto ? 'table-row' : 'none';
-        boton.textContent = oculto ? 'Ocultar detalles' : 'Ver detalles';
-    }
+    document.querySelectorAll('button[data-id]').forEach(boton => {
+        boton.addEventListener('click', () => {
+            const fila = document.getElementById('detalle-' + boton.dataset.id);
+            const oculto = fila.style.display === 'none';
+            fila.style.display = oculto ? 'table-row' : 'none';
+            boton.textContent = oculto ? 'Ocultar detalles' : 'Ver detalles';
+        });
+    });
 </script>
 
 @endsection

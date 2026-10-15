@@ -44,32 +44,34 @@
                 </thead>
 
                 <tbody class="divide-y divide-gray-100">
-                    @foreach ($barrio as $barrio)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-4 py-3 text-gray-500">{{ $barrio->id }}</td>
-                            <td class="px-4 py-3 font-semibold text-gray-800">{{ $barrio->nombre }}</td>
-                            <td class="px-4 py-3">{{ $barrio->municipio->nombre }}</td>
+                            @foreach ($barrio as $item)
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-4 py-3 text-gray-500">{{ $item->id }}</td>
+                                    <td class="px-4 py-3 font-semibold text-gray-800">{{ $item->nombre }}</td>
+                                    <td class="px-4 py-3">{{ $item->municipio?->nombre }}</td>
 
-                            <td class="px-4 py-3 text-center">
-                                <a href="{{ route('barrio.edit', $barrio->id) }}"
-                                   class="inline-block px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium transition">
-                                    Editar
-                                </a>
-                            </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <a href="{{ route('barrio.edit', $item->id) }}"
+                                        class="inline-block px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium transition">
+                                            Editar
+                                        </a>
+                                    </td>
 
-                            <td class="px-4 py-3 text-center">
-                                <form action="{{ route('barrio.destroy', $barrio->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
+                                    <td class="px-4 py-3 text-center">
+                                        <form action="{{ route('barrio.destroy', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
 
-                                    <button type="submit"
-                                            class="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-medium transition">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
+                                            <button type="submit"
+                                                    class="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-medium transition">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                    
                 </tbody>
 
             </table>
@@ -78,7 +80,9 @@
         </div>
 
     </div>
-
+<div class="mt-6">
+                    {{ $barrio->links() }}
+                    </div>
 </x-card>
 
 @endsection
