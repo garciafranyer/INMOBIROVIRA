@@ -58,4 +58,19 @@ class InmuebleRepository
             return $inmueble;
         });
     }
+
+    public function listarPublicos()
+    {
+        return Inmueble::with('municipio', 'tipo_inmueble', 'detalle_inmueble', 'imagenes')
+            ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'disponible'))
+            ->latest()
+            ->paginate(9);
+    }
+
+    public function buscarPublico(int $id)
+    {
+        return Inmueble::with('municipio', 'tipo_inmueble', 'usuario', 'detalle_inmueble', 'imagenes')
+            ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'disponible'))
+            ->findOrFail($id);
+    }
 }

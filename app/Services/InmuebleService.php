@@ -64,4 +64,12 @@ class InmuebleService{
         }
     }
 
+    public function listarPublicos(){
+        return $this->inmueble_repository->listarPublicos();
+    }
+
+    public function buscarPublico(int $id){
+        return $this->inmueble_repository->buscarPublico($id);
+    }
+
 }
