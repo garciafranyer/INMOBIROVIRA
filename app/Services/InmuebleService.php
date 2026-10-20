@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Inmueble;
 use App\Repositories\InmuebleRepository;
 
 class InmuebleService{
@@ -62,6 +63,18 @@ class InmuebleService{
                 ]);
             }
         }
+    }
+
+    public function listarPublicos(array $filtros = []){
+        return $this->inmueble_repository->listarPublicos($filtros);
+    }
+
+    public function buscarPublico(int $id){
+        return $this->inmueble_repository->buscarPublico($id);
+    }
+
+    public function listarSimilares(Inmueble $inmueble, int $limite = 3){
+        return $this->inmueble_repository->listarSimilares($inmueble, $limite);
     }
 
 }

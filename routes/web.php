@@ -4,6 +4,7 @@ use App\Http\Controllers\BarrioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetalleInmuebleController;
 use App\Http\Controllers\ImagenController;
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\InmuebleController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\TipoInmuebleController;
@@ -11,8 +12,19 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\detalle_inmueble;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [DashboardController::class, 'index'])
+Route::get('/admin', [DashboardController::class, 'index'])
         ->name('dashboard.index');
+
+Route::post('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('inicio');
+})->name('logout');
+
+// Sitio público
+Route::get('/inicio', [InicioController::class, 'index'])->name('inicio');
+Route::get('/propiedades/{id}', [InicioController::class, 'show'])->name('propiedad.show');
 
 route::resource('municipio', MunicipioController::class);
 
