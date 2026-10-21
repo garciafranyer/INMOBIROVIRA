@@ -13,8 +13,8 @@
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
             <a href="{{ route('inicio') }}" class="flex items-center gap-2">
-                <span class="w-9 h-9 rounded-lg bg-indigo-600 text-white font-bold flex items-center justify-center">I</span>
-                <span class="text-xl font-bold text-gray-800">Inmobirovira</span>
+                <span class="w-8 h-9 rounded-lg bg-indigo-600 text-white font-bold flex items-center justify-center">I</span>
+                <span class="text-xl font-bold text-gray-800">nmobirovira</span>
             </a>
 
             {{-- Menú escritorio --}}
@@ -31,7 +31,7 @@
                 </a>
             </nav>
 
-            {{-- Menú celular (sin JavaScript) --}}
+            {{-- Menú celular  --}}
             <details class="md:hidden relative">
                 <summary class="list-none cursor-pointer p-2 rounded-lg border border-gray-300 text-gray-600">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6">
