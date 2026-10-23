@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Usuario ya autenticado que entra al login -> va a seguridad
+        $middleware->redirectUsersTo(fn () => route('seguridad.roles.index'));
+
+        // Usuario sin sesión que entra a una ruta protegida -> va al login
+        $middleware->redirectGuestsTo(fn () => route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
