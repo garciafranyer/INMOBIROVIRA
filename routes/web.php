@@ -11,13 +11,9 @@ use App\Http\Controllers\TipoInmuebleController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
-// Redirección de raíz al portal público
-Route::get('/', function () {
-    return redirect()->route('inicio');
-});
-
-// Sitio público
-Route::get('/inicio', [InicioController::class, 'index'])->name('inicio');
+// Sitio público (pantalla principal al ingresar al dominio)
+Route::get('/', [InicioController::class, 'index'])->name('inicio');
+Route::get('/inicio', [InicioController::class, 'index']);
 Route::get('/propiedades/{id}', [InicioController::class, 'show'])->name('propiedad.show');
 
 // Zona administrativa (requiere sesión)

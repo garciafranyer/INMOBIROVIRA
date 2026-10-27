@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MunicipioSeeder::class,
+            BarrioSeeder::class,
+            SeguridadSeeder::class,
         ]);
     }
 }
