@@ -66,7 +66,7 @@
                             </form>
                         </div>
                     @else
-                        <a href="{{ route('dashboard.index') }}"
+                        <a href="{{ route('login') }}"
                            class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
                             Iniciar sesión
                         </a>
@@ -100,7 +100,7 @@
                                 </div>
                             @else
                                 <div class="border-t border-neutral-800 pt-1 mt-1">
-                                    <a href="{{ route('dashboard.index') }}" class="block px-4 py-2 rounded-lg text-blue-400 hover:bg-neutral-800 font-semibold">Iniciar sesión</a>
+                                    <a href="{{ route('login') }}" class="block px-4 py-2 rounded-lg text-blue-400 hover:bg-neutral-800 font-semibold">Iniciar sesión</a>
                                 </div>
                             @endauth
                         </nav>
@@ -152,7 +152,7 @@
                             </form>
                         </div>
                     @else
-                        <a href="{{ route('dashboard.index') }}" class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
                             Iniciar sesión
                         </a>
                     @endauth

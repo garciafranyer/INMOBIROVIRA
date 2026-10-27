@@ -108,7 +108,7 @@
                                         <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $badge($d->estado_publicacion) }}">
                                             {{ ucfirst($d->estado_publicacion) }}
                                         </span>
-                                        <span class="text-sm text-gray-500">Publiczeado el {{ $d->fecha_publicacion }}</span>
+                                        <span class="text-sm text-gray-500">Publicado el {{ $d->fecha_publicacion }}</span>
                                     </div>
 
                                     <p class="text-gray-700 mb-4">

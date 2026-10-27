@@ -2,13 +2,36 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneRolesActivos;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class usuario extends Model
+class usuario extends Authenticatable
 {
-     protected $table = "usuario";
 
-   protected $fillable = ['nombre','gmail','telefono','direccion','tipo_usuario','nombre_empresa'];
+  use HasFactory, Notifiable, TieneRolesActivos;
+
+
+  protected $table = "usuario";
+
+
+  protected $fillable = ['nombre','telefono','direccion','email','password'];
+
+  protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
   public function inmueble(){
     return $this->hasMany(inmueble::class);

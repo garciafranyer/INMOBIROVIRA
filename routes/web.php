@@ -9,37 +9,29 @@ use App\Http\Controllers\InmuebleController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\TipoInmuebleController;
 use App\Http\Controllers\UsuarioController;
-use App\Models\detalle_inmueble;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/admin', [DashboardController::class, 'index'])
-        ->name('dashboard.index');
-
-Route::post('/logout', function () {
-    auth()->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
+// Redirección de raíz al portal público
+Route::get('/', function () {
     return redirect()->route('inicio');
-})->name('logout');
+});
 
 // Sitio público
 Route::get('/inicio', [InicioController::class, 'index'])->name('inicio');
 Route::get('/propiedades/{id}', [InicioController::class, 'show'])->name('propiedad.show');
 
-route::resource('municipio', MunicipioController::class);
+// Zona administrativa (requiere sesión)
+Route::middleware('auth')->group(function () {
+    Route::get('/admin', [DashboardController::class, 'index'])->name('dashboard.index');
 
-route::resource('tipo_inmueble', TipoInmuebleController::class);
+    Route::resource('municipio', MunicipioController::class);
+    Route::resource('tipo_inmueble', TipoInmuebleController::class);
+    Route::resource('usuario', UsuarioController::class);
+    Route::resource('barrio', BarrioController::class);
+    Route::resource('inmueble', InmuebleController::class);
+    Route::resource('detalle_inmueble', DetalleInmuebleController::class);
+    Route::resource('imagen', ImagenController::class)->only(['index', 'destroy']);
+});
 
-route::resource('usuario', UsuarioController::class);
-
-route::resource('barrio', BarrioController::class);
-
-route::resource('inmueble',InmuebleController::class);
-
-route::resource('detalle_inmueble',DetalleInmuebleController::class);
-
-route::resource('imagen',ImagenController::class);
-
-Route::resource('imagen', ImagenController::class)->only(['index', 'destroy']);
-
-
+// Login, logout y módulo de seguridad
+require __DIR__.'/seguridad.php';
