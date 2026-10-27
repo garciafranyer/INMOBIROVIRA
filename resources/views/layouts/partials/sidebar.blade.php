@@ -26,17 +26,17 @@
                 $links = [
                     ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
                     ['label' => 'Municipios',    'route' => 'municipio.index',      'icon' => 'map'],
-                    ['label' => 'Perfiles/Roles', 'route' => 'roles.index',   'icon' => 'shield'],
+                    ['label' => 'Roles y Permisos', 'route' => 'seguridad.roles.index',   'icon' => 'shield'],
                     ['label' => 'Tipo de Inmueble',  'route' => 'tipo_inmueble.index', 'icon' => 'tag'],
                     ['label' => 'Usuario',   'route' => 'usuario.index',   'icon' => 'users'],
                     ['label' => 'Barrio',    'route' => 'barrio.index',    'icon' => 'map-pin'],
-                    ['label' => 'inmueble', 'route' => 'inmueble.index', 'icon' => 'building-office-2'],
+                    ['label' => 'Inmuebles', 'route' => 'inmueble.index', 'icon' => 'building-office-2'],
                 ];
             @endphp
 
             @foreach ($links as $link)
                 @php
-                    $active = Route::has($link['route']) && request()->routeIs(explode('.', $link['route'])[0] . '.*');
+                    $active = Route::has($link['route']) && (request()->routeIs(explode('.', $link['route'])[0] . '.*') || (str_starts_with($link['route'], 'seguridad.') && request()->routeIs('seguridad.*')));
                 @endphp
                 <a
                     href="{{ Route::has($link['route']) ? route($link['route']) : '#' }}"
