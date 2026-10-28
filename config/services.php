@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'numero' => env('WHATSAPP_NUMERO', '573103451093'),
+        'numero_visible' => '+57 310 345 1093',
+    ],
+
 ];

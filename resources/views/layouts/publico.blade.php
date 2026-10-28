@@ -213,7 +213,15 @@
                 <ul class="space-y-2 text-sm text-neutral-400">
                     <li>Málaga, Santander</li>
                     <li>contacto@inmobirovira.com</li>
-                    <li>+57 300 000 0000</li>
+                    <li>
+                        <a href="https://wa.me/{{ config('services.whatsapp.numero', '573103451093') }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="hover:text-emerald-400 transition inline-flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                            {{ config('services.whatsapp.numero_visible', '+57 310 345 1093') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -225,6 +233,9 @@
             </div>
         </div>
     </footer>
+
+    {{-- Botón Flotante Global de WhatsApp --}}
+    <x-publico.boton-whatsapp-flotante />
 
 </body>
 </html>
