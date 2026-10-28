@@ -126,6 +126,36 @@
                     </div>
 
                     <div>
+                        <label class="{{ $label }}">Estrato</label>
+                        <select name="detalle[estrato]" class="{{ $input }}">
+                            <option value="">Selecciona estrato</option>
+                            @for ($i = 1; $i <= 6; $i++)
+                                <option value="{{ $i }}" {{ old('detalle.estrato') == $i ? 'selected' : '' }}>Estrato {{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">¿Admite mascotas? 🐾</label>
+                        <select name="detalle[mascotas_permitidas]" class="{{ $input }}">
+                            <option value="">Sin especificar</option>
+                            <option value="1" {{ old('detalle.mascotas_permitidas') === '1' ? 'selected' : '' }}>Sí admite mascotas</option>
+                            <option value="0" {{ old('detalle.mascotas_permitidas') === '0' ? 'selected' : '' }}>No admite mascotas</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Antigüedad</label>
+                        <select name="detalle[antiguedad]" class="{{ $input }}">
+                            <option value="">Selecciona antigüedad</option>
+                            <option value="Para estrenar" {{ old('detalle.antiguedad') == 'Para estrenar' ? 'selected' : '' }}>Para estrenar</option>
+                            <option value="1 a 5 años" {{ old('detalle.antiguedad') == '1 a 5 años' ? 'selected' : '' }}>1 a 5 años</option>
+                            <option value="5 a 10 años" {{ old('detalle.antiguedad') == '5 a 10 años' ? 'selected' : '' }}>5 a 10 años</option>
+                            <option value="Más de 10 años" {{ old('detalle.antiguedad') == 'Más de 10 años' ? 'selected' : '' }}>Más de 10 años</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="{{ $label }}">Fecha de publicación</label>
                         <input type="date" name="detalle[fecha_publicacion]" value="{{ old('detalle.fecha_publicacion') }}" class="{{ $input }}">
                     </div>

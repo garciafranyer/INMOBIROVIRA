@@ -24,6 +24,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     Route::resource('tipo_inmueble', TipoInmuebleController::class);
     Route::resource('usuario', UsuarioController::class);
     Route::resource('barrio', BarrioController::class);
+    Route::patch('inmueble/{id}/estado', [InmuebleController::class, 'actualizarEstado'])->name('inmueble.estado');
     Route::resource('inmueble', InmuebleController::class);
     Route::resource('detalle_inmueble', DetalleInmuebleController::class);
     Route::resource('imagen', ImagenController::class)->only(['index', 'destroy']);

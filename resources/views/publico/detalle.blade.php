@@ -77,12 +77,11 @@
 
                 $mensajeDetalle = "👋 *¡Hola Inmobirovira!*\n\n"
                     . "Me interesa este inmueble que vi en su página web:\n"
-                    . "🏡 *Propiedad:* {$inmueble->nombre}\n"
-                    . "📍 *Ubicación:* {$municipio}\n"
-                    . "🏷️ *Tipo:* {$oferta}\n"
-                    . "💰 *Precio:* \${$precio}\n"
-                    . "🆔 *Código:* #{$inmueble->id}\n\n"
-                    . "🔗 *Enlace:* {$url}";
+                    . " Propiedad: {$inmueble->nombre}\n"
+                    . "📍 Ubicación: {$municipio}\n"
+                    . "🏷️ Tipo: {$oferta}\n"
+                    . "💰 Precio: \${$precio}\n"
+                    . "🔗 Enlace: {$url}";
             @endphp
 
             <a href="https://api.whatsapp.com/send?phone={{ $telWa }}&text={{ rawurlencode($mensajeDetalle) }}"
@@ -111,9 +110,12 @@
             <h2 class="text-lg font-bold mb-3 text-white">Características</h2>
             <dl class="grid grid-cols-2 gap-3 text-sm">
                 <div><dt class="text-neutral-400">Área</dt><dd class="font-semibold text-white">{{ $d->area }} m²</dd></div>
+                <div><dt class="text-neutral-400">Estrato</dt><dd class="font-semibold text-white">{{ $d->estrato ? 'Estrato ' . $d->estrato : '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Habitaciones</dt><dd class="font-semibold text-white">{{ $d->numero_habitacion ?? '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Baños</dt><dd class="font-semibold text-white">{{ $d->numero_bano ?? '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Parqueaderos</dt><dd class="font-semibold text-white">{{ $d->numero_parqueadero ?? '-' }}</dd></div>
+                <div><dt class="text-neutral-400">Antigüedad</dt><dd class="font-semibold text-white">{{ $d->antiguedad ?? '-' }}</dd></div>
+                <div><dt class="text-neutral-400">Mascotas 🐾</dt><dd class="font-semibold text-white">{{ isset($d->mascotas_permitidas) ? ($d->mascotas_permitidas ? 'Sí permitidas' : 'No permitidas') : '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Piso</dt><dd class="font-semibold text-white">{{ $d->numero_piso ?? '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Apartamento</dt><dd class="font-semibold text-white">{{ $d->numero_apartamento ?? '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Zona</dt><dd class="font-semibold text-white">{{ ucfirst($inmueble->zona) }}</dd></div>

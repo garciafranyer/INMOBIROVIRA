@@ -48,6 +48,7 @@
                         <th class="px-4 py-3">Id</th>
                         <th class="px-4 py-3">Nombre</th>
                         <th class="px-4 py-3">Zona</th>
+                        <th class="px-4 py-3">Estado</th>
                         <th class="px-4 py-3">Usuario</th>
                         <th class="px-4 py-3">Tipo</th>
                         <th class="px-4 py-3">Municipio</th>
@@ -65,6 +66,26 @@
                                     {{ ucfirst($item->zona) }}
                                 </span>
                             </td>
+                            <td class="px-4 py-3">
+                                @if ($item->detalle_inmueble)
+                                    <form action="{{ route('inmueble.estado', $item->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('PATCH')
+                                        <select name="estado_publicacion"
+                                                onchange="this.form.submit()"
+                                                title="Cambiar estado de publicación"
+                                                class="text-xs font-semibold rounded-full px-2.5 py-1 border-0 focus:ring-2 focus:ring-indigo-400 cursor-pointer shadow-xs {{ $badge($item->detalle_inmueble->estado_publicacion) }}">
+                                            @foreach (['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'] as $est)
+                                                <option value="{{ $est }}" {{ $item->detalle_inmueble->estado_publicacion === $est ? 'selected' : '' }} class="bg-white text-gray-800">
+                                                    {{ ucfirst($est) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
+                                @else
+                                    <span class="text-xs text-gray-400">Sin detalle</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-3">{{ $item->usuario?->nombre }}</td>
                             <td class="px-4 py-3">{{ $item->tipo_inmueble?->nombre }}</td>
                             <td class="px-4 py-3">{{ $item->municipio?->nombre }}</td>
@@ -76,6 +97,13 @@
                                             class="px-3 py-1.5 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50 font-medium transition">
                                         Ver detalles
                                     </button>
+
+                                    <a href="{{ route('propiedad.show', $item->id) }}"
+                                       target="_blank"
+                                       class="px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-medium transition"
+                                       title="Ver en el sitio web público">
+                                        👁️ Web
+                                    </a>
 
                                     <a href="{{ route('inmueble.edit', $item->id) }}"
                                     class="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium transition">
@@ -97,7 +125,7 @@
 
                         {{-- Fila de detalles (oculta por defecto) --}}
                         <tr id="detalle-{{ $item->id }}" style="display: none;" class="bg-indigo-50/40">
-                            <td colspan="7" class="px-6 py-5">
+                            <td colspan="8" class="px-6 py-5">
                                 @if ($item->detalle_inmueble)
                                     @php $d = $item->detalle_inmueble; @endphp
 
@@ -127,6 +155,18 @@
                                         <div class="bg-white border rounded-lg p-3">
                                             <p class="text-xs text-gray-500">Área</p>
                                             <p class="font-bold text-gray-800">{{ $d->area }} m²</p>
+                                        </div>
+                                        <div class="bg-white border rounded-lg p-3">
+                                            <p class="text-xs text-gray-500">Estrato</p>
+                                            <p class="font-bold text-gray-800">{{ $d->estrato ? 'Estrato ' . $d->estrato : 'No especificado' }}</p>
+                                        </div>
+                                        <div class="bg-white border rounded-lg p-3">
+                                            <p class="text-xs text-gray-500">Mascotas 🐾</p>
+                                            <p class="font-bold text-gray-800">{{ isset($d->mascotas_permitidas) ? ($d->mascotas_permitidas ? 'Permitidas' : 'No permitidas') : 'No especificado' }}</p>
+                                        </div>
+                                        <div class="bg-white border rounded-lg p-3">
+                                            <p class="text-xs text-gray-500">Antigüedad</p>
+                                            <p class="font-bold text-gray-800">{{ $d->antiguedad ?? 'No especificada' }}</p>
                                         </div>
                                         <div class="bg-white border rounded-lg p-3">
                                             <p class="text-xs text-gray-500">Habitaciones</p>

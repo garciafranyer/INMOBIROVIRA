@@ -102,4 +102,23 @@ class InmuebleController extends Controller
 
         return redirect()->route('inmueble.index')->with('success', 'Se elimino corrrectamente');
     }
+
+    /**
+     * Actualiza rápidamente el estado de publicación desde la tabla.
+     */
+    public function actualizarEstado(int $id, \Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'estado_publicacion' => ['required', \Illuminate\Validation\Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
+        ]);
+
+        $inmueble = $this->inmueble_service->buscarporid($id);
+        if ($inmueble && $inmueble->detalle_inmueble) {
+            $inmueble->detalle_inmueble->update([
+                'estado_publicacion' => $request->estado_publicacion,
+            ]);
+        }
+
+        return back()->with('success', 'Estado del inmueble actualizado a ' . ucfirst($request->estado_publicacion));
+    }
 }
