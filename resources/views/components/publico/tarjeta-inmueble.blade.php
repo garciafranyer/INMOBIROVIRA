@@ -71,7 +71,7 @@
 
             {{-- Precio --}}
             <div class="mt-2.5 flex items-baseline gap-1">
-                <span class="text-2xl font-black text-white tracking-tight">
+                <span class="text-lg font-black text-white tracking-tight">
                     ${{ number_format($d->precio ?? 0, 0, ',', '.') }}
                 </span>
                 @if ($esArriendo)
@@ -81,7 +81,7 @@
         </div>
 
         {{-- Características con iconos SVG --}}
-        <div class="mt-4 pt-3.5 border-t border-neutral-800">
+        <div class="mt-5 pt-3.5 border-t border-neutral-800">
             <div class="grid grid-cols-3 gap-2 text-xs text-neutral-300">
                 {{-- Habitaciones --}}
                 <div class="flex items-center gap-1.5" title="Habitaciones">

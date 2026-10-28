@@ -8,15 +8,34 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('usuario', function (Blueprint $table) {
-            $table->renameColumn('gmail', 'email');
-        });
+        // Cada paso solo se aplica si es necesario, así la migración no falla
+        // en bases de datos donde la tabla usuario ya fue creada con estas columnas.
+        if (Schema::hasColumn('usuario', 'gmail') && ! Schema::hasColumn('usuario', 'email')) {
+            Schema::table('usuario', function (Blueprint $table) {
+                $table->renameColumn('gmail', 'email');
+            });
+        }
 
         Schema::table('usuario', function (Blueprint $table) {
-            $table->string('password')->nullable();
-            $table->rememberToken();
-            $table->dropColumn(['tipo_usuario', 'nombre_empresa']);
+            if (! Schema::hasColumn('usuario', 'password')) {
+                $table->string('password')->nullable();
+            }
+
+            if (! Schema::hasColumn('usuario', 'remember_token')) {
+                $table->rememberToken();
+            }
         });
+
+        $columnasAEliminar = array_values(array_filter(
+            ['tipo_usuario', 'nombre_empresa'],
+            fn ($columna) => Schema::hasColumn('usuario', $columna)
+        ));
+
+        if ($columnasAEliminar) {
+            Schema::table('usuario', function (Blueprint $table) use ($columnasAEliminar) {
+                $table->dropColumn($columnasAEliminar);
+            });
+        }
     }
 
     public function down(): void
