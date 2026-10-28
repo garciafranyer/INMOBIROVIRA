@@ -164,12 +164,43 @@
 
             {{-- IMÁGENES --}}
             <section class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Imágenes</h3>
+                <div class="flex items-center justify-between mb-4 pb-2 border-b">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Galería de Imágenes</h3>
+                        <p class="text-xs text-gray-500">Sube hasta 10 fotos (máx. 5 MB c/u en formato JPG, PNG o WEBP).</p>
+                    </div>
+                    <span id="contador-fotos" class="hidden text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">
+                        0 / 10 fotos
+                    </span>
+                </div>
 
-                <input type="file" name="imagenes[]" id="imagenes" multiple accept="image/*" class="{{ $input }}">
-                <p class="mt-2 text-xs text-gray-500">Máximo 10 fotos, de 2 MB cada una.</p>
+                {{-- Zona de Arrastrar y Soltar (Dropzone) --}}
+                <div id="dropzone"
+                     class="relative border-2 border-dashed border-gray-300 hover:border-indigo-500 rounded-xl p-8 text-center bg-gray-50/60 hover:bg-indigo-50/30 transition-all cursor-pointer group">
+                    <input type="file"
+                           name="imagenes[]"
+                           id="imagenes"
+                           multiple
+                           accept="image/jpeg,image/png,image/webp,image/jpg"
+                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
 
-                <div id="vista-previa" class="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4"></div>
+                    <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                        <div class="w-14 h-14 rounded-full bg-indigo-100/80 group-hover:bg-indigo-200/80 text-indigo-600 flex items-center justify-center transition group-hover:scale-110 shadow-xs">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-700 group-hover:text-indigo-600 transition">
+                            Arrastra y suelta tus fotos aquí, o <span class="text-indigo-600 underline font-bold">haz clic para explorar</span>
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            La primera foto seleccionada será la <strong class="text-indigo-700">Foto de Portada</strong> en el catálogo público.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Vista previa con opción de eliminar individualmente --}}
+                <div id="vista-previa" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-5 empty:hidden"></div>
             </section>
 
             {{-- Botones --}}
@@ -190,17 +221,112 @@
 </x-card>
 
 <script>
-    document.getElementById('imagenes').addEventListener('change', function () {
-        const contenedor = document.getElementById('vista-previa');
-        contenedor.innerHTML = '';
+    (function () {
+        const inputImagenes = document.getElementById('imagenes');
+        const dropzone = document.getElementById('dropzone');
+        const vistaPrevia = document.getElementById('vista-previa');
+        const contadorFotos = document.getElementById('contador-fotos');
 
-        Array.from(this.files).forEach(function (archivo) {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(archivo);
-            img.className = 'w-full h-24 object-cover rounded-lg border';
-            contenedor.appendChild(img);
+        let dt = new DataTransfer();
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add('border-indigo-600', 'bg-indigo-50/70', 'ring-2', 'ring-indigo-400');
+            }, false);
         });
-    });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove('border-indigo-600', 'bg-indigo-50/70', 'ring-2', 'ring-indigo-400');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            procesarArchivos(e.dataTransfer.files);
+        });
+
+        inputImagenes.addEventListener('change', function () {
+            procesarArchivos(this.files);
+        });
+
+        function procesarArchivos(nuevosArchivos) {
+            Array.from(nuevosArchivos).forEach(archivo => {
+                if (!archivo.type.startsWith('image/')) return;
+                if (dt.items.length >= 10) return;
+
+                const yaExiste = Array.from(dt.files).some(f => f.name === archivo.name && f.size === archivo.size);
+                if (!yaExiste) {
+                    dt.items.add(archivo);
+                }
+            });
+
+            inputImagenes.files = dt.files;
+            renderizarVistaPrevia();
+        }
+
+        function renderizarVistaPrevia() {
+            vistaPrevia.innerHTML = '';
+            const archivos = Array.from(dt.files);
+
+            if (archivos.length > 0) {
+                contadorFotos.classList.remove('hidden');
+                contadorFotos.textContent = `${archivos.length} / 10 fotos seleccionadas`;
+            } else {
+                contadorFotos.classList.add('hidden');
+            }
+
+            archivos.forEach((archivo, index) => {
+                const card = document.createElement('div');
+                card.className = 'relative group rounded-xl overflow-hidden border border-gray-200 bg-white shadow-xs';
+
+                const url = URL.createObjectURL(archivo);
+                const kb = (archivo.size / 1024).toFixed(0);
+                const mb = (archivo.size / (1024 * 1024)).toFixed(1);
+                const pesoTexto = archivo.size > 1024 * 1024 ? `${mb} MB` : `${kb} KB`;
+
+                card.innerHTML = `
+                    <div class="aspect-4/3 w-full bg-gray-100 overflow-hidden relative">
+                        <img src="${url}" alt="${archivo.name}" class="w-full h-32 sm:h-36 object-cover group-hover:scale-105 transition duration-200">
+                        ${index === 0 ? `
+                            <span class="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                Portada
+                            </span>
+                        ` : ''}
+                        <button type="button" data-index="${index}" class="btn-eliminar-foto absolute top-2 right-2 w-7 h-7 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-110 cursor-pointer" title="Quitar foto">
+                            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div class="p-2 text-xs">
+                        <p class="truncate font-medium text-gray-700" title="${archivo.name}">${archivo.name}</p>
+                        <p class="text-gray-400 text-[10px] mt-0.5">${pesoTexto}</p>
+                    </div>
+                `;
+
+                card.querySelector('.btn-eliminar-foto').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const i = parseInt(e.currentTarget.getAttribute('data-index'));
+                    eliminarFoto(i);
+                });
+
+                vistaPrevia.appendChild(card);
+            });
+        }
+
+        function eliminarFoto(indice) {
+            const nuevaDt = new DataTransfer();
+            Array.from(dt.files).forEach((f, i) => {
+                if (i !== indice) nuevaDt.items.add(f);
+            });
+            dt = nuevaDt;
+            inputImagenes.files = dt.files;
+            renderizarVistaPrevia();
+        }
+    })();
 </script>
 
 @endsection 
