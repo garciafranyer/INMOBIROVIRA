@@ -30,6 +30,7 @@ class InmuebleStoreRequest extends FormRequest
             'id_usuario'       => 'required|exists:usuario,id',
             'id_tipo_inmueble' => 'required|exists:tipo_inmueble,id',
             'id_municipio'     => 'required|exists:municipio,id',
+            'id_barrio'        => 'nullable|exists:barrio,id',
 
             // Detalle del inmueble
             'detalle.direccion'            => 'required|string|max:255',

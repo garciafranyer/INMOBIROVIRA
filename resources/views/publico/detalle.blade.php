@@ -59,7 +59,9 @@
             </div>
 
             <h1 class="text-2xl font-bold text-white">{{ $inmueble->nombre }}</h1>
-            <p class="text-neutral-400 mt-1">{{ $inmueble->municipio?->nombre }} · {{ $d->direccion }}</p>
+            <p class="text-neutral-400 mt-1">
+                {{ $inmueble->municipio?->nombre }}@if($inmueble->barrio) · Barrio {{ $inmueble->barrio->nombre }}@endif · {{ $d->direccion }}
+            </p>
 
             <p class="text-3xl font-black text-white mt-4">${{ number_format($d->precio, 0, ',', '.') }}</p>
             <p class="text-sm text-neutral-400 mt-0.5">Administración: ${{ number_format($d->precio_administrador, 0, ',', '.') }}</p>
@@ -70,18 +72,19 @@
                     ? (str_starts_with($rawTel, '57') ? $rawTel : '57' . $rawTel)
                     : config('services.whatsapp.numero', '573103451093');
 
-                $municipio = $inmueble->municipio?->nombre ?? 'García Rovira';
+                $municipio = ($inmueble->municipio?->nombre ?? 'García Rovira') . ($inmueble->barrio ? ' (Barrio ' . $inmueble->barrio->nombre . ')' : '');
                 $precio    = number_format($d->precio ?? 0, 0, ',', '.');
                 $oferta    = ucfirst($d->tipo_oferta ?? 'Oferta');
                 $url       = url()->current();
 
                 $mensajeDetalle = "👋 *¡Hola Inmobirovira!*\n\n"
                     . "Me interesa este inmueble que vi en su página web:\n"
-                    . " Propiedad: {$inmueble->nombre}\n"
-                    . "📍 Ubicación: {$municipio}\n"
-                    . "🏷️ Tipo: {$oferta}\n"
-                    . "💰 Precio: \${$precio}\n"
-                    . "🔗 Enlace: {$url}";
+                    . "🏡 *Propiedad:* {$inmueble->nombre}\n"
+                    . "📍 *Ubicación:* {$municipio}\n"
+                    . "🏷️ *Tipo:* {$oferta}\n"
+                    . "💰 *Precio:* \${$precio}\n"
+                    . "🆔 *Código:* #{$inmueble->id}\n\n"
+                    . "🔗 *Enlace:* {$url}";
             @endphp
 
             <a href="https://api.whatsapp.com/send?phone={{ $telWa }}&text={{ rawurlencode($mensajeDetalle) }}"
@@ -110,6 +113,7 @@
             <h2 class="text-lg font-bold mb-3 text-white">Características</h2>
             <dl class="grid grid-cols-2 gap-3 text-sm">
                 <div><dt class="text-neutral-400">Área</dt><dd class="font-semibold text-white">{{ $d->area }} m²</dd></div>
+                <div><dt class="text-neutral-400">Barrio</dt><dd class="font-semibold text-white">{{ $inmueble->barrio?->nombre ?? 'No especificado' }}</dd></div>
                 <div><dt class="text-neutral-400">Estrato</dt><dd class="font-semibold text-white">{{ $d->estrato ? 'Estrato ' . $d->estrato : '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Habitaciones</dt><dd class="font-semibold text-white">{{ $d->numero_habitacion ?? '-' }}</dd></div>
                 <div><dt class="text-neutral-400">Baños</dt><dd class="font-semibold text-white">{{ $d->numero_bano ?? '-' }}</dd></div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InmuebleStoreRequest;
 use App\Http\Requests\InmuebleUpdateRequest;
+use App\Services\BarrioService;
 use App\Services\InmuebleService;
 use App\Services\MunicipioService;
 use App\Services\TipoInmuebleService;
@@ -19,12 +20,20 @@ class InmuebleController extends Controller
 
     private TipoInmuebleService $tipo_inmueble_service;
 
-    public function __construct(InmuebleService $inmueble_service, MunicipioService $municipio_service, UsuarioService $usuario_service, TipoInmuebleService $tipo_inmueble_service)
-    {
+    private BarrioService $barrio_service;
+
+    public function __construct(
+        InmuebleService $inmueble_service,
+        MunicipioService $municipio_service,
+        UsuarioService $usuario_service,
+        TipoInmuebleService $tipo_inmueble_service,
+        BarrioService $barrio_service
+    ) {
         $this->inmueble_service = $inmueble_service;
         $this->municipio_service = $municipio_service;
         $this->usuario_service = $usuario_service;
         $this->tipo_inmueble_service = $tipo_inmueble_service;
+        $this->barrio_service = $barrio_service;
     }
 
     /**
@@ -45,8 +54,9 @@ class InmuebleController extends Controller
         $usuario = $this->usuario_service->listar();
         $municipios = $this->municipio_service->listar();
         $tipo_inmueble = $this->tipo_inmueble_service->listar();
+        $barrios = $this->barrio_service->listar();
 
-        return view('inmueble.crear', compact('usuario', 'municipios', 'tipo_inmueble'));
+        return view('inmueble.crear', compact('usuario', 'municipios', 'tipo_inmueble', 'barrios'));
     }
 
     /**
@@ -78,9 +88,10 @@ class InmuebleController extends Controller
         $tipo_inmueble = $this->tipo_inmueble_service->listar();
         $usuario = $this->usuario_service->listar();
         $municipios = $this->municipio_service->listar();
+        $barrios = $this->barrio_service->listar();
         $inmueble = $this->inmueble_service->buscarporid($id);
 
-        return view('inmueble.editar', compact('inmueble', 'municipios', 'usuario', 'tipo_inmueble'));
+        return view('inmueble.editar', compact('inmueble', 'municipios', 'usuario', 'tipo_inmueble', 'barrios'));
     }
 
     /**

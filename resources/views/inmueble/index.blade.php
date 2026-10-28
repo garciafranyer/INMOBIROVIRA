@@ -88,7 +88,12 @@
                             </td>
                             <td class="px-4 py-3">{{ $item->usuario?->nombre }}</td>
                             <td class="px-4 py-3">{{ $item->tipo_inmueble?->nombre }}</td>
-                            <td class="px-4 py-3">{{ $item->municipio?->nombre }}</td>
+                            <td class="px-4 py-3">
+                                <div class="font-medium text-gray-800">{{ $item->municipio?->nombre }}</div>
+                                @if ($item->barrio)
+                                    <div class="text-xs text-gray-500">B. {{ $item->barrio->nombre }}</div>
+                                @endif
+                            </td>
 
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center gap-2">

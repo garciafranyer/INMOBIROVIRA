@@ -75,9 +75,24 @@
 
                     <div>
                         <label class="{{ $label }}">Municipio</label>
-                        <select name="id_municipio" class="{{ $input }}">
+                        <select name="id_municipio" id="id_municipio" class="{{ $input }}">
+                            <option value="">Selecciona municipio</option>
                             @foreach ($municipios as $municipio)
                                 <option value="{{ $municipio->id }}" @selected(old('id_municipio', $inmueble->id_municipio) == $municipio->id)>{{ $municipio->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="{{ $label }}">Barrio <span class="text-xs text-gray-400 font-normal">(Opcional)</span></label>
+                        <select name="id_barrio" id="id_barrio" class="{{ $input }}">
+                            <option value="">Sin barrio / Zona rural</option>
+                            @foreach ($barrios as $b)
+                                <option value="{{ $b->id }}"
+                                        data-municipio="{{ $b->id_municipio }}"
+                                        @selected(old('id_barrio', $inmueble->id_barrio) == $b->id)>
+                                    {{ $b->nombre }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -303,6 +318,31 @@
 
 <script>
     (function () {
+        // Filtrar barrios dinámicamente según el municipio seleccionado
+        const selectMunicipio = document.getElementById('id_municipio');
+        const selectBarrio = document.getElementById('id_barrio');
+        if (selectMunicipio && selectBarrio) {
+            function filtrarBarrios() {
+                const munId = selectMunicipio.value;
+                const opciones = selectBarrio.querySelectorAll('option');
+
+                opciones.forEach(opt => {
+                    const munOpt = opt.getAttribute('data-municipio');
+                    if (!munOpt) {
+                        opt.style.display = '';
+                    } else if (!munId || munOpt === munId) {
+                        opt.style.display = '';
+                    } else {
+                        opt.style.display = 'none';
+                        if (opt.selected) opt.selected = false;
+                    }
+                });
+            }
+
+            selectMunicipio.addEventListener('change', filtrarBarrios);
+            filtrarBarrios();
+        }
+
         const inputImagenes = document.getElementById('imagenes');
         const dropzone = document.getElementById('dropzone');
         const vistaPrevia = document.getElementById('vista-previa');

@@ -8,7 +8,7 @@ class Inmueble extends Model
 {
     protected $table = "inmueble";
 
-    protected $fillable = ['nombre','zona','id_usuario','id_tipo_inmueble','id_municipio'];
+    protected $fillable = ['nombre','zona','id_usuario','id_tipo_inmueble','id_municipio','id_barrio'];
 
     public function usuario(){
         return $this->belongsTo(usuario::class,'id_usuario');
@@ -20,6 +20,10 @@ class Inmueble extends Model
 
     public function municipio(){
         return $this->belongsTo(municipio::class, 'id_municipio');
+    }
+
+    public function barrio(){
+        return $this->belongsTo(barrio::class, 'id_barrio');
     }
 
     public function detalle_inmueble(){
