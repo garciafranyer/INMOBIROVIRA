@@ -99,8 +99,8 @@ class BarrioSeeder extends Seeder
             ],
         ];
 
-        // OPCIONAL: borra los barrios de ejemplo anteriores antes de cargar estos.
-        // DB::table('barrio')->delete();
+        // Limpia los barrios viejos antes de cargar la lista oficial
+        DB::table('barrio')->delete();
 
         foreach ($barrios as $municipio => $lista) {
             $id_municipio = DB::table('municipio')->where('nombre', $municipio)->value('id');
