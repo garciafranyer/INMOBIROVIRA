@@ -124,10 +124,10 @@
                         $telWa = (!empty($rawTel) && strlen($rawTel) >= 10)
                             ? (str_starts_with($rawTel, '57') ? $rawTel : '57' . $rawTel)
                             : config('services.whatsapp.numero', '573103451093');
-                        $msgWa = "Hola Inmobirovira, me interesa el inmueble \"" . $inmueble->nombre . "\" en " . ($inmueble->municipio?->nombre ?? 'García Rovira') . " ($" . number_format($d->precio ?? 0, 0, ',', '.') . "). ¿Sigue disponible?";
+                        $msgWa = "👋 ¡Hola Inmobirovira! Me interesa el inmueble \"" . $inmueble->nombre . "\" en " . ($inmueble->municipio?->nombre ?? 'García Rovira') . " ($" . number_format($d->precio ?? 0, 0, ',', '.') . "). ¿Sigue disponible?";
                     @endphp
 
-                    <a href="https://wa.me/{{ $telWa }}?text={{ urlencode($msgWa) }}"
+                    <a href="https://api.whatsapp.com/send?phone={{ $telWa }}&text={{ rawurlencode($msgWa) }}"
                        target="_blank"
                        rel="noopener noreferrer"
                        class="p-1.5 px-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/30 transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold"

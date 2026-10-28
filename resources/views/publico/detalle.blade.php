@@ -85,7 +85,7 @@
                     . "🔗 *Enlace:* {$url}";
             @endphp
 
-            <a href="https://wa.me/{{ $telWa }}?text={{ urlencode($mensajeDetalle) }}"
+            <a href="https://api.whatsapp.com/send?phone={{ $telWa }}&text={{ rawurlencode($mensajeDetalle) }}"
                target="_blank"
                rel="noopener noreferrer"
                class="mt-6 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-5 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition transform hover:scale-102 cursor-pointer">

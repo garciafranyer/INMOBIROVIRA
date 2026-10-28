@@ -1,7 +1,7 @@
 @php
     $numero = config('services.whatsapp.numero', '573103451093');
-    $mensaje = 'Hola Inmobirovira, estoy navegando en su página web y me gustaría recibir asesoría sobre las propiedades disponibles.';
-    $urlWa = 'https://wa.me/' . $numero . '?text=' . urlencode($mensaje);
+    $mensaje = '👋 ¡Hola Inmobirovira! Estoy navegando en su página web y me gustaría recibir asesoría sobre las propiedades disponibles.';
+    $urlWa = 'https://api.whatsapp.com/send?phone=' . $numero . '&text=' . rawurlencode($mensaje);
 @endphp
 
 <div class="fixed bottom-6 right-6 z-40 group flex items-center">
