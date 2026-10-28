@@ -11,46 +11,91 @@ class BarrioSeeder extends Seeder
     {
         $barrios = [
             'Málaga' => [
+                // Barrios Urbanos
                 'Centro', 'El Bosque', 'El Dorado', 'El Cedral', 'Balcones de Sevilla',
                 'Asovipar', 'El Guamo', 'El Mirador', 'La Esperanza', 'San Sebastián',
                 'Tajamar', 'El Limonal', 'Torres del Paraíso', 'Los Naranjitos',
-            ],
-            'San Andrés' => [
-                'Centro', 'Bochalema', 'La Cruz', 'La Primavera', 'Los Pinos',
-                'Las Palmas', 'Los Rosales', 'San Luis', 'Cañaveral',
+                'Camilo Torres', 'Versalles', 'Santander', 'La Granja',
+                // Zonas Rurales / Veredas
+                'Vda. Calichal', 'Vda. Buenavista', 'Vda. Peña Colorada', 'Vda. Hatico',
+                'Vda. Barichara', 'Vda. Pescaderito', 'Vda. La Vega', 'Vda. Loma Redonda',
             ],
             'Capitanejo' => [
-                'Centro', 'Peñalisa', 'Peñablanca', 'Montecillo',
+                // Barrios Urbanos
+                'Centro', 'La Loma', 'Las Ferias', 'Villa del Río', 'Santander',
+                // Zonas Rurales / Veredas
+                'Vda. Montecillo', 'Vda. Peñablanca', 'Vda. Platanal', 'Vda. San Pedro',
+                'Vda. Las Juntas', 'Vda. Sevillana', 'Vda. La Pampa', 'Vda. Tapias',
+            ],
+            'San Andrés' => [
+                // Barrios Urbanos
+                'Centro', 'Bochalema', 'La Cruz', 'La Primavera', 'Los Pinos',
+                'Las Palmas', 'Los Rosales', 'San Luis', 'Cañaveral',
+                // Zonas Rurales / Veredas
+                'Vda. El Alisal', 'Vda. San Antonio', 'Vda. Listará', 'Vda. Caracolí',
+                'Vda. Santa Cruz', 'Vda. El Hato', 'Vda. Llano Grande',
             ],
             'Cerrito' => [
-                'Centro', 'Servitá', 'Presidente',
+                // Casco Urbano y Corregimientos
+                'Centro', 'San Antonio', 'Cruz Alta', 'Corregimiento Servitá', 'Corregimiento Presidente',
+                // Zonas Rurales / Veredas
+                'Vda. Angosturas', 'Vda. Mortiño', 'Vda. Carrizal', 'Vda. Chupadero', 'Vda. El Hatico',
             ],
             'Concepción' => [
-                'Centro', 'La Laguna', 'El Trapiche', 'Arcipirí', 'Bánega',
+                // Barrios Urbanos
+                'Centro', 'San José', 'El Carmen',
+                // Zonas Rurales / Veredas
+                'Vda. Bánega', 'Vda. Arcipirí', 'Vda. El Trapiche', 'Vda. La Laguna',
+                'Vda. Taquiza', 'Vda. San Antonio', 'Vda. Canutillo',
             ],
             'Enciso' => [
-                'Centro', 'Carrizal', 'Insagá', 'Tierra Blanca',
+                // Barrios Urbanos
+                'Centro', 'La Playa', 'El Carmen',
+                // Zonas Rurales / Veredas
+                'Vda. Carrizal', 'Vda. Insagá', 'Vda. Tierra Blanca', 'Vda. Cochagá',
+                'Vda. Cabeceras', 'Vda. Portachuelo',
             ],
             'Guaca' => [
-                'Centro', 'Baraya', 'San Isidro', 'Tabacal',
+                // Barrios Urbanos
+                'Centro', 'Pueblo Nuevo', 'San Isidro',
+                // Zonas Rurales / Veredas
+                'Vda. Baraya', 'Vda. Tabacal', 'Vda. Llano Grande', 'Vda. Cruz de Mayo', 'Vda. Mata de Ruda',
             ],
             'San José de Miranda' => [
-                'Centro', 'Tehitá', 'Cacota', 'Supagá',
+                // Barrios Urbanos
+                'Centro', 'San Antonio', 'El Progreso',
+                // Zonas Rurales / Veredas
+                'Vda. Tehitá', 'Vda. Supagá', 'Vda. Cacota', 'Vda. Llano Grande', 'Vda. Hatico Seco',
             ],
             'Molagavita' => [
-                'Centro', 'Llanadas',
+                // Barrios Urbanos
+                'Centro', 'El Calvario',
+                // Zonas Rurales / Veredas
+                'Vda. Llanadas', 'Vda. Vega del Trigo', 'Vda. Chitagoto', 'Vda. Potrero Grande',
             ],
             'Carcasí' => [
-                'Centro', 'Purgatorio', 'Supagá', 'Bucaramanga',
+                // Barrios Urbanos
+                'Centro', 'La Cabaña',
+                // Zonas Rurales / Veredas
+                'Vda. Purgatorio', 'Vda. Supagá', 'Vda. Buenavista', 'Vda. Canutal', 'Vda. El Tobal',
             ],
             'Macaravita' => [
-                'Centro', 'Huertas', 'Llano de la Yegua',
+                // Barrios Urbanos
+                'Centro', 'San Roque',
+                // Zonas Rurales / Veredas
+                'Vda. Huertas', 'Vda. Llano de la Yegua', 'Vda. Pajarito', 'Vda. Buenavista',
             ],
             'San Miguel' => [
-                'Centro', 'Paya', 'Muro', 'Mesitas',
+                // Barrios Urbanos
+                'Centro', 'El Carmen',
+                // Zonas Rurales / Veredas
+                'Vda. Paya', 'Vda. Muro', 'Vda. Mesitas', 'Vda. Angostura',
             ],
             'Cepitá' => [
-                'Centro', 'Pescaderito', 'San Antonio',
+                // Barrios Urbanos
+                'Centro', 'La Vega',
+                // Zonas Rurales / Veredas
+                'Vda. Pescaderito', 'Vda. San Antonio', 'Vda. El Salado', 'Vda. Pericos',
             ],
         ];
 
