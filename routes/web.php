@@ -16,8 +16,8 @@ Route::get('/', [InicioController::class, 'index'])->name('inicio');
 Route::get('/inicio', [InicioController::class, 'index']);
 Route::get('/propiedades/{id}', [InicioController::class, 'show'])->name('propiedad.show');
 
-// Zona administrativa (requiere sesión)
-Route::middleware('auth')->group(function () {
+// Zona administrativa (requiere sesión y no almacena en caché)
+Route::middleware(['auth', 'nocache'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::resource('municipio', MunicipioController::class);

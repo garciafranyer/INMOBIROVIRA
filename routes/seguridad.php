@@ -16,7 +16,7 @@ Route::middleware('web')->group(function () {
             ->name('login.store');
     });
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'nocache'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
         Route::prefix('seguridad')

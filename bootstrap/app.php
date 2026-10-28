@@ -12,11 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Usuario ya autenticado que entra al login -> va a seguridad
-        $middleware->redirectUsersTo(fn () => route('seguridad.roles.index'));
+        // Usuario ya autenticado que entra al login -> va al dashboard
+        $middleware->redirectUsersTo(fn () => route('dashboard.index'));
 
         // Usuario sin sesión que entra a una ruta protegida -> va al login
         $middleware->redirectGuestsTo(fn () => route('login'));
+
+        // Alias para evitar almacenamiento en caché de páginas privadas
+        $middleware->alias([
+            'nocache' => \App\Http\Middleware\Seguridad\NoCacheHeaders::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
