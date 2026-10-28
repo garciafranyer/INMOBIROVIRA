@@ -70,7 +70,19 @@
                     ? (str_starts_with($rawTel, '57') ? $rawTel : '57' . $rawTel)
                     : config('services.whatsapp.numero', '573103451093');
 
-                $mensajeDetalle = "Hola Inmobirovira, me interesa el inmueble \"" . $inmueble->nombre . "\" (Cód. #" . $inmueble->id . ") en " . ($inmueble->municipio?->nombre ?? 'García Rovira') . " por $" . number_format($d->precio ?? 0, 0, ',', '.') . " (" . ucfirst($d->tipo_oferta ?? 'oferta') . "). Más información: " . url()->current();
+                $municipio = $inmueble->municipio?->nombre ?? 'García Rovira';
+                $precio    = number_format($d->precio ?? 0, 0, ',', '.');
+                $oferta    = ucfirst($d->tipo_oferta ?? 'Oferta');
+                $url       = url()->current();
+
+                $mensajeDetalle = "👋 *¡Hola Inmobirovira!*\n\n"
+                    . "Me interesa este inmueble que vi en su página web:\n"
+                    . "🏡 *Propiedad:* {$inmueble->nombre}\n"
+                    . "📍 *Ubicación:* {$municipio}\n"
+                    . "🏷️ *Tipo:* {$oferta}\n"
+                    . "💰 *Precio:* \${$precio}\n"
+                    . "🆔 *Código:* #{$inmueble->id}\n\n"
+                    . "🔗 *Enlace:* {$url}";
             @endphp
 
             <a href="https://wa.me/{{ $telWa }}?text={{ urlencode($mensajeDetalle) }}"
