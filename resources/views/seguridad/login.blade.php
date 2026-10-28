@@ -48,7 +48,6 @@
                             Correo electrónico
                         </label>
                         <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus autocomplete="email"
-                               placeholder="admin@admin.com"
                                class="w-full rounded-xl bg-slate-950/80 border border-slate-700/80 text-white placeholder-slate-500 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 px-3.5 py-2.5 text-sm transition @error('email') border-red-500 @enderror">
                         @error('email')
                             <p class="mt-1.5 text-xs text-red-400 font-medium">{{ $message }}</p>
