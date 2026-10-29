@@ -43,7 +43,15 @@ class CuentaController extends Controller
             'roles.*' => ['string', Rule::exists(config('permission.table_names.roles'), 'name')],
         ]);
 
-        $this->cuentaService->crear(Arr::only($datos, ['name', 'email', 'password']), $datos['roles'] ?? []);
+        $datosUsuario = [
+            'nombre'    => $datos['name'],
+            'email'     => $datos['email'],
+            'password'  => $datos['password'],
+            'telefono'  => $datos['telefono'] ?? '',
+            'direccion' => $datos['direccion'] ?? '',
+        ];
+
+        $this->cuentaService->crear($datosUsuario, $datos['roles'] ?? []);
 
         return redirect()->route('seguridad.cuentas.index')->with('success', 'Usuario creado correctamente.');
     }
@@ -71,10 +79,16 @@ class CuentaController extends Controller
             'roles.*' => ['string', Rule::exists(config('permission.table_names.roles'), 'name')],
         ]);
 
+        $datosUsuario = array_filter([
+            'nombre'   => $datos['name'] ?? null,
+            'email'    => $datos['email'] ?? null,
+            'password' => $datos['password'] ?? null,
+        ], fn ($v) => ! is_null($v) && $v !== '');
+
         try {
             $this->cuentaService->actualizar(
                 $usuario,
-                Arr::only($datos, ['name', 'email', 'password']),
+                $datosUsuario,
                 $datos['roles'] ?? [],
                 $request->user()
             );

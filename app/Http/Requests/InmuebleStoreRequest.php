@@ -16,6 +16,15 @@ class InmuebleStoreRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('id_usuario') && auth()->check()) {
+            $this->merge([
+                'id_usuario' => auth()->id(),
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -38,7 +38,12 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard.index');
+        $usuario = $request->user();
+        if ($usuario && $usuario->hasRole(config('seguridad.rol_admin', 'administrador'))) {
+            return redirect()->route('dashboard.index');
+        }
+
+        return redirect()->route('empresa.index');
     }
 
     public function logout(Request $request): RedirectResponse

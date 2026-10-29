@@ -33,6 +33,16 @@ class usuario extends Authenticatable
         ];
     }
 
+    public function getNameAttribute(): ?string
+    {
+        return $this->attributes['nombre'] ?? null;
+    }
+
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['nombre'] = $value;
+    }
+
   public function inmueble(){
     return $this->hasMany(inmueble::class);
   }

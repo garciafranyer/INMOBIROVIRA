@@ -14,6 +14,11 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
+        $usuario = $request->user();
+        if ($usuario && ! $usuario->hasRole(config('seguridad.rol_admin', 'administrador'))) {
+            return redirect()->route('empresa.index');
+        }
+
         $totalUsers    = 8241;
         $totalProducts = 1523;
         $totalSales    = 962;

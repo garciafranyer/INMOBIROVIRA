@@ -3,6 +3,7 @@
 use App\Http\Controllers\BarrioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetalleInmuebleController;
+use App\Http\Controllers\EmpresaInmuebleController;
 use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\InmuebleController;
@@ -28,6 +29,17 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     Route::resource('inmueble', InmuebleController::class);
     Route::resource('detalle_inmueble', DetalleInmuebleController::class);
     Route::resource('imagen', ImagenController::class)->only(['index', 'destroy']);
+});
+
+// Portal exclusivo para empresas inmobiliarias (requiere sesión)
+Route::middleware(['auth', 'nocache'])->prefix('empresa')->name('empresa.')->group(function () {
+    Route::get('/', [EmpresaInmuebleController::class, 'index'])->name('index');
+    Route::get('/inmuebles/crear', [EmpresaInmuebleController::class, 'create'])->name('crear');
+    Route::post('/inmuebles', [EmpresaInmuebleController::class, 'store'])->name('store');
+    Route::get('/inmuebles/{id}/editar', [EmpresaInmuebleController::class, 'edit'])->name('edit');
+    Route::put('/inmuebles/{id}', [EmpresaInmuebleController::class, 'update'])->name('update');
+    Route::delete('/inmuebles/{id}', [EmpresaInmuebleController::class, 'destroy'])->name('destroy');
+    Route::patch('/inmuebles/{id}/estado', [EmpresaInmuebleController::class, 'actualizarEstado'])->name('estado');
 });
 
 // Login, logout y módulo de seguridad
