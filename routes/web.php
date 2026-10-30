@@ -34,6 +34,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
 // Portal exclusivo para empresas inmobiliarias (requiere sesión)
 Route::middleware(['auth', 'nocache'])->prefix('empresa')->name('empresa.')->group(function () {
     Route::get('/', [EmpresaInmuebleController::class, 'index'])->name('index');
+    Route::put('/perfil', [EmpresaInmuebleController::class, 'actualizarPerfil'])->name('perfil.update');
     Route::get('/inmuebles/crear', [EmpresaInmuebleController::class, 'create'])->name('crear');
     Route::post('/inmuebles', [EmpresaInmuebleController::class, 'store'])->name('store');
     Route::get('/inmuebles/{id}/editar', [EmpresaInmuebleController::class, 'edit'])->name('edit');

@@ -167,4 +167,29 @@ class EmpresaInmuebleController extends Controller
 
         return back()->with('success', 'Estado actualizado a ' . ucfirst($request->estado_publicacion));
     }
+
+    /**
+     * Actualiza el perfil de la empresa (Nombre, WhatsApp / Teléfono y Dirección).
+     */
+    public function actualizarPerfil(Request $request): RedirectResponse
+    {
+        $datos = $request->validate([
+            'nombre'    => ['required', 'string', 'max:150'],
+            'telefono'  => ['nullable', 'string', 'max:30'],
+            'direccion' => ['nullable', 'string', 'max:255'],
+        ], [
+            'nombre.required' => 'El nombre de la empresa es obligatorio.',
+            'telefono.max'    => 'El teléfono no puede superar los 30 caracteres.',
+        ]);
+
+        $usuario = $request->user();
+        $usuario->update([
+            'nombre'    => $datos['nombre'],
+            'telefono'  => $datos['telefono'] ?? '',
+            'direccion' => $datos['direccion'] ?? '',
+        ]);
+
+        return redirect()->route('empresa.index')
+            ->with('success', '¡Datos de contacto y número de WhatsApp actualizados correctamente!');
+    }
 }
