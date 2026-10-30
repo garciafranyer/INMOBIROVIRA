@@ -8,8 +8,8 @@
 <section class="relative min-h-165 sm:min-h-185 flex items-center justify-center bg-cover bg-center text-white px-4 pt-36 sm:pt-44 pb-20"
          style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80');">
     
-    {{-- Capa degradada que se funde en el negro azabache (neutral-950) --}}
-    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/55 to-neutral-950"></div>
+    {{-- Capa degradada que se funde en el negro azabache (neutral-900) --}}
+    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/55 to-neutral-900"></div>
 
     <div class="relative z-10 max-w-5xl mx-auto w-full text-center flex flex-col items-center">
         

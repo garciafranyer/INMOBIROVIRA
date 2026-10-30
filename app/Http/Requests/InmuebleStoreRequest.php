@@ -55,7 +55,7 @@ class InmuebleStoreRequest extends FormRequest
             'detalle.numero_piso'          => 'nullable|integer|min:0',
             'detalle.numero_apartamento'   => 'nullable|integer|min:0',
             'detalle.numero_bano'          => 'nullable|integer|min:0',
-            'detalle.descripcion'          => 'required|string|max:255',
+            'detalle.descripcion'          => 'required|string|max:3000',
             'detalle.fecha_publicacion'    => 'required|date',
             'detalle.estado_publicacion'   => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
 
@@ -89,7 +89,7 @@ class InmuebleStoreRequest extends FormRequest
             'detalle.area.required'                 => 'El área es obligatoria',
             'detalle.area.numeric'                  => 'El área debe ser un número',
             'detalle.descripcion.required'          => 'La descripción es obligatoria',
-            'detalle.descripcion.max'               => 'La descripción no puede superar los 255 caracteres',
+            'detalle.descripcion.max'               => 'La descripción no puede superar los 3.000 caracteres',
             'detalle.fecha_publicacion.required'    => 'La fecha de publicación es obligatoria',
             'detalle.fecha_publicacion.date'        => 'La fecha de publicación no es válida',
             'detalle.estado_publicacion.required'   => 'El estado de publicación es obligatorio',

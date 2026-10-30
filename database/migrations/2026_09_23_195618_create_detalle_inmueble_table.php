@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('numero_piso')->nullable();
             $table->integer('numero_apartamento')->nullable();
             $table->integer('numero_bano')->nullable();
-            $table->string('descripcion');
+            $table->text('descripcion');
             $table->date('fecha_publicacion');
             $table->enum('estado_publicacion',['disponible','arrendado','vendido','reservado','inactivo']);
             $table->unsignedBigInteger('id_inmueble');
