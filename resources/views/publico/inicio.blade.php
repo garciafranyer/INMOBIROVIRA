@@ -6,10 +6,10 @@
 @section('hero')
 {{-- PORTADA HERO COMPLETA DESDE EL BORDE SUPERIOR --}}
 <section class="relative min-h-165 sm:min-h-185 flex items-center justify-center bg-cover bg-center text-white px-4 pt-36 sm:pt-44 pb-20"
-         style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80');">
+style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80');">
     
-    {{-- Capa degradada que se funde en el negro azabache (neutral-900) --}}
-    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/55 to-neutral-900"></div>
+    {{-- Capa degradada que se funde en el negro azabache (neutral-800) --}}
+    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/55 to-neutral-800"></div>
 
     <div class="relative z-10 max-w-5xl mx-auto w-full text-center flex flex-col items-center">
         
@@ -23,7 +23,7 @@
 
         {{-- Cápsula Flotante de Búsqueda Estilo Dark Glass --}}
         <form method="GET" action="{{ route('inicio') }}#inmuebles"
-              class="mt-8 sm:mt-10 w-full max-w-4xl bg-neutral-900/90 backdrop-blur-xl rounded-3xl md:rounded-full shadow-2xl p-2 sm:p-2.5 flex flex-col md:flex-row items-center border border-neutral-700/80 gap-2">
+            class="mt-8 sm:mt-10 w-full max-w-4xl bg-neutral-900/90 backdrop-blur-xl rounded-3xl md:rounded-full shadow-2xl p-2 sm:p-2.5 flex flex-col md:flex-row items-center border border-neutral-700/80 gap-2">
             
             {{-- Conservar tipo_oferta si viene de la barra superior --}}
             @if(!empty($filtros['tipo_oferta']))
@@ -167,7 +167,7 @@
         </div>
 
         <div class="mt-12">
-            {{ $inmuebles->links() }}
+            {{ $inmuebles->fragment('inmuebles')->links('vendor.pagination.dark') }}
         </div>
     @endif
 

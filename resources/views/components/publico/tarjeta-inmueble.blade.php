@@ -7,7 +7,7 @@
     $esArriendo = strtolower($d->tipo_oferta ?? '') === 'arriendo';
 @endphp
 
-<article class="group bg-neutral-900 rounded-2xl border border-neutral-800 hover:border-neutral-700 shadow-xl hover:shadow-2xl hover:shadow-blue-950/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden">
+<article class="group bg-neutral-800 rounded-2xl border border-neutral-700 hover:border-neutral-700 shadow-xl hover:shadow-2xl hover:shadow-blue-950/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden">
     {{-- Contenedor de Imagen y Badges Flotantes --}}
     <div class="relative w-full h-52 bg-neutral-950 overflow-hidden">
         <a href="{{ route('propiedad.show', $inmueble->id) }}" class="block w-full h-full">

@@ -129,6 +129,42 @@
     </div>
 
 </div>
+{{-- UBICACIÓN EN GOOGLE MAPS --}}
+<div class="mt-8 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span>Ubicación</span>
+            </h2>
+            <p class="text-xs text-neutral-400 mt-0.5">
+                {{ $d->direccion }}@if($inmueble->barrio), Barrio {{ $inmueble->barrio->nombre }}@endif, {{ $inmueble->municipio?->nombre ?? 'Santander' }}
+            </p>
+        </div>
+        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($d->direccion . ', ' . ($inmueble->municipio?->nombre ?? 'Santander') . ', Colombia') }}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition">
+            <span>Cómo llegar</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+    </div>
+
+    {{-- Iframe interactivo de Google Maps --}}
+    <div class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800">
+        <iframe 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            loading="lazy" 
+            allowfullscreen 
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q={{ urlencode($d->direccion . ', ' . ($inmueble->barrio?->nombre ? $inmueble->barrio->nombre . ', ' : '') . ($inmueble->municipio?->nombre ?? '') . ', Santander, Colombia') }}&t=&z=15&ie=UTF8&iwloc=&output=embed">
+        </iframe>
+    </div>
+</div>
 
 {{-- SECCIÓN DE INMUEBLES SIMILARES --}}
 @if(isset($similares) && $similares->isNotEmpty())

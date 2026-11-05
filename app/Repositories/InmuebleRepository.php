@@ -83,7 +83,7 @@ class InmuebleRepository
                 $q->where('id_tipo_inmueble', $filtros['id_tipo_inmueble']);
             })
             ->latest()
-            ->paginate(9)
+            ->paginate(6)
             ->withQueryString();
     }
 
