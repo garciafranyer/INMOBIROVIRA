@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
-use app\Models\detalle_inmueble;
+use App\Models\detalle_inmueble;
+use App\Repositories\Contracts\DetalleInmuebleRepositoryInterface;
 
-class DetalleInmuebleRepository{
+class DetalleInmuebleRepository implements DetalleInmuebleRepositoryInterface
+{
 
     public function listar(){
         return detalle_inmueble::with('inmueble')->get();

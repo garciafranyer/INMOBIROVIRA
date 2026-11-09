@@ -5,5 +5,6 @@ use App\Providers\SeguridadServiceProvider;
 
 return [
     AppServiceProvider::class,
-    SeguridadServiceProvider::class
+    SeguridadServiceProvider::class,
+    App\Providers\RepositoryServiceProvider::class,
 ];

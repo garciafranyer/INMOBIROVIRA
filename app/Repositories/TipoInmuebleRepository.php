@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\tipo_inmueble;
+use App\Repositories\Contracts\TipoInmuebleRepositoryInterface;
 
-class TipoInmuebleRepository{
+class TipoInmuebleRepository implements TipoInmuebleRepositoryInterface
+{
    public function listar(){
         $tipo_inmueble = tipo_inmueble::all();
         return $tipo_inmueble;

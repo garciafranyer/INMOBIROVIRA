@@ -3,14 +3,15 @@
 namespace App\Services;
 
 use App\Models\Inmueble;
-use App\Repositories\InmuebleRepository;
+use App\Repositories\Contracts\InmuebleRepositoryInterface;
 
-class InmuebleService{
-    private InmuebleRepository $inmueble_repository;
+class InmuebleService
+{
+    private InmuebleRepositoryInterface $inmueble_repository;
 
     private ImagenService $imagen_service;
 
-    public function __construct(InmuebleRepository $inmueble_repository, ImagenService $imagen_service)
+    public function __construct(InmuebleRepositoryInterface $inmueble_repository, ImagenService $imagen_service)
     {
         $this->inmueble_repository = $inmueble_repository;
         $this->imagen_service = $imagen_service;
@@ -20,21 +21,22 @@ class InmuebleService{
         return $this->inmueble_repository->listar();
     }
 
-    public function crear(array $datosInmueble, array $imagenes){
-
+    public function crear(array $datosInmueble, ?array $imagenes = [])
+    {
         $inmueble = $this->inmueble_repository->crear($datosInmueble);
 
-        foreach ($imagenes as $imagen){
+        if (!empty($imagenes)) {
+            foreach ($imagenes as $imagen) {
+                $ruta = $imagen->store('inmuebles', 'public');
 
-            $ruta = $imagen->store('inmuebles', 'public');
-
-            $this->imagen_service->crear([
-                'id_inmueble' => $inmueble->id,
-                'url_imagen' => $ruta,
-            ]);
-
+                $this->imagen_service->crear([
+                    'id_inmueble' => $inmueble->id,
+                    'url_imagen' => $ruta,
+                ]);
+            }
         }
 
+        return $inmueble;
     }
 
     public function eliminar(int $id){

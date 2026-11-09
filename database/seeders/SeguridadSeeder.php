@@ -46,6 +46,23 @@ class SeguridadSeeder extends Seeder
         );
         $admin->assignRole($rolAdmin);
 
+        // Crear Rol y Usuario Empresa de prueba
+        $rolEmpresa = Role::firstOrCreate(
+            ['name' => 'Empresa', 'guard_name' => $guard],
+            ['activo' => true]
+        );
+
+        $empresa = $modelo::firstOrCreate(
+            ['email' => 'empresa@inmobirovira.com'],
+            [
+                'nombre' => 'Inmobiliaria Los Andes S.A.S.',
+                'telefono' => '3103451093',
+                'direccion' => 'Carrera 8 # 11-24, Centro, Málaga',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $empresa->assignRole($rolEmpresa);
+
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

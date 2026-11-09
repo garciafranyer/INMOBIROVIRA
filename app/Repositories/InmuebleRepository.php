@@ -3,9 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Inmueble;
+use App\Repositories\Contracts\InmuebleRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
-class InmuebleRepository
+class InmuebleRepository implements InmuebleRepositoryInterface
 {
     public function listar()
     {

@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\MunicipioRepository;
+use App\Repositories\Contracts\MunicipioRepositoryInterface;
 
 class MunicipioService {
-    private MunicipioRepository $municipio_repository;
+    private MunicipioRepositoryInterface $municipio_repository;
 
-    public function __construct(MunicipioRepository $municipio_repository)
+    public function __construct(MunicipioRepositoryInterface $municipio_repository)
     {
         $this->municipio_repository = $municipio_repository;
     }

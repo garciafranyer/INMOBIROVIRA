@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\DetalleInmuebleRepository;
+use App\Repositories\Contracts\DetalleInmuebleRepositoryInterface;
 
 class DetalleInmuebleService{
-    private DetalleInmuebleRepository $detalle_inmueble_repository;
+    private DetalleInmuebleRepositoryInterface $detalle_inmueble_repository;
 
-    public function __construct(DetalleInmuebleRepository $detalle_inmueble_repository)
+    public function __construct(DetalleInmuebleRepositoryInterface $detalle_inmueble_repository)
     {
         $this->detalle_inmueble_repository = $detalle_inmueble_repository;
     }

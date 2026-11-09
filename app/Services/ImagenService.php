@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\ImagenRepository;
+use App\Repositories\Contracts\ImagenRepositoryInterface;
 
 class ImagenService
 {
-    private ImagenRepository $imagen_repository;
+    private ImagenRepositoryInterface $imagen_repository;
 
-    public function __construct(ImagenRepository $imagen_repository)
+    public function __construct(ImagenRepositoryInterface $imagen_repository)
     {
         $this->imagen_repository = $imagen_repository;
     }

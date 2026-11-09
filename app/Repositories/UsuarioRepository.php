@@ -1,10 +1,11 @@
 <?php
 namespace App\Repositories;
 
-
 use App\Models\usuario;
+use App\Repositories\Contracts\UsuarioRepositoryInterface;
 
-class UsuarioRepository{
+class UsuarioRepository implements UsuarioRepositoryInterface
+{
     public function listar(){
         $usuario = usuario::all();
         return $usuario;

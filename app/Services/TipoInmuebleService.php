@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\TipoInmuebleRepository;
+use App\Repositories\Contracts\TipoInmuebleRepositoryInterface;
 
 class TipoInmuebleService{
-    private TipoInmuebleRepository $tipo_inmueble_repository;
+    private TipoInmuebleRepositoryInterface $tipo_inmueble_repository;
 
-    public function __construct(TipoInmuebleRepository $tipo_inmueble_repository)
+    public function __construct(TipoInmuebleRepositoryInterface $tipo_inmueble_repository)
     {
         $this->tipo_inmueble_repository = $tipo_inmueble_repository;
     }

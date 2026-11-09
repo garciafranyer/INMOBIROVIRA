@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\barrio;
+use App\Repositories\Contracts\BarrioRepositoryInterface;
 
-class BarrioRepository{
+class BarrioRepository implements BarrioRepositoryInterface
+{
     public function listar(){
         return barrio::with('municipio')->get();
     }

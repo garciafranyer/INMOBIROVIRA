@@ -1,13 +1,12 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\UsuarioRepository;
-
+use App\Repositories\Contracts\UsuarioRepositoryInterface;
 
 class UsuarioService {
-    private UsuarioRepository $usuario_repository;
+    private UsuarioRepositoryInterface $usuario_repository;
 
-    public function __construct(UsuarioRepository $usuario_repository)
+    public function __construct(UsuarioRepositoryInterface $usuario_repository)
     {
         $this->usuario_repository = $usuario_repository;
     }

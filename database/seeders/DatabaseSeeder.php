@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             BarrioSeeder::class,
             TipoInmuebleSeeder::class,
             SeguridadSeeder::class,
+            InmuebleSeeder::class,
         ]);
     }
 }

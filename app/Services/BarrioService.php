@@ -1,12 +1,12 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\BarrioRepository;
+use App\Repositories\Contracts\BarrioRepositoryInterface;
 
 class BarrioService{
-    private BarrioRepository $barrio_repository;
+    private BarrioRepositoryInterface $barrio_repository;
 
-    public function __construct(BarrioRepository $barrio_repository)
+    public function __construct(BarrioRepositoryInterface $barrio_repository)
     {
         $this->barrio_repository = $barrio_repository;
     }

@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\municipio;
+use App\Repositories\Contracts\MunicipioRepositoryInterface;
 
-class MunicipioRepository{
+class MunicipioRepository implements MunicipioRepositoryInterface
+{
     public function listar(){
         $municipio = municipio::all();
         return $municipio;

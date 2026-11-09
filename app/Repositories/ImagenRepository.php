@@ -3,9 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\imagen;
+use App\Repositories\Contracts\ImagenRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
 
-class ImagenRepository
+class ImagenRepository implements ImagenRepositoryInterface
 {
     public function listar()
     {
