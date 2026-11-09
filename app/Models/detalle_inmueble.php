@@ -11,6 +11,8 @@ class detalle_inmueble extends Model
 
     protected $fillable = [
         'direccion',
+        'latitud',
+        'longitud',
         'tipo_oferta',
         'precio',
         'precio_administrador',

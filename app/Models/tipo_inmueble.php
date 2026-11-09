@@ -11,6 +11,6 @@ class tipo_inmueble extends Model
    protected $fillable = ['nombre'];
 
    public function inmueble(){
-    return $this->hasMany(inmueble::class);
+    return $this->hasMany(Inmueble::class, 'id_tipo_inmueble');
    }
 }

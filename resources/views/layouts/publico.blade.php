@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Inmobirovira') | Inmobirovira</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('styles')
 </head>
 <body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
@@ -157,7 +159,8 @@
                             </form>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
+                        <a href="{{ route('login') }}"
+                           class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
                             Iniciar sesión
                         </a>
                     @endauth
@@ -242,5 +245,9 @@
     {{-- Botón Flotante Global de WhatsApp --}}
     <x-publico.boton-whatsapp-flotante />
 
+    @stack('scripts')
+</body>
+
+    @stack('scripts')
 </body>
 </html>

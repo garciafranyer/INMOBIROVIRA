@@ -51,6 +51,8 @@ class InmuebleUpdateRequest extends FormRequest
 
             // Detalle del inmueble
             'detalle.direccion'            => 'required|string|max:255',
+            'detalle.latitud'              => 'nullable|numeric|between:-90,90',
+            'detalle.longitud'             => 'nullable|numeric|between:-180,180',
             'detalle.tipo_oferta'          => ['required', Rule::in(['venta', 'arriendo', 'venta y arriendo'])],
             'detalle.precio'               => 'required|numeric|min:0',
             'detalle.precio_administrador' => 'required|numeric|min:0',

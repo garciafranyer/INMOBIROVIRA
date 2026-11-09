@@ -2,6 +2,14 @@
 
 @section('title', $inmueble->nombre)
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<style>
+    .leaflet-container { font-family: inherit; }
+    .custom-pin-marcador { pointer-events: auto; }
+</style>
+@endpush
+
 @section('content')
 
 @php
@@ -111,59 +119,201 @@
 
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl">
             <h2 class="text-lg font-bold mb-3 text-white">Características</h2>
+            @php
+                $tipoNombre = strtolower($inmueble->tipo_inmueble?->nombre ?? '');
+                $esLote = str_contains($tipoNombre, 'lote') || (str_contains($tipoNombre, 'terreno') && !str_contains($tipoNombre, 'campestre'));
+                $esLocal = str_contains($tipoNombre, 'local') || str_contains($tipoNombre, 'comercial');
+                $esFinca = str_contains($tipoNombre, 'finca') || str_contains($tipoNombre, 'campestre');
+                $esCasa = str_contains($tipoNombre, 'casa');
+            @endphp
             <dl class="grid grid-cols-2 gap-3 text-sm">
-                <div><dt class="text-neutral-400">Área</dt><dd class="font-semibold text-white">{{ $d->area }} m²</dd></div>
-                <div><dt class="text-neutral-400">Barrio</dt><dd class="font-semibold text-white">{{ $inmueble->barrio?->nombre ?? 'No especificado' }}</dd></div>
-                <div><dt class="text-neutral-400">Estrato</dt><dd class="font-semibold text-white">{{ $d->estrato ? 'Estrato ' . $d->estrato : '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Habitaciones</dt><dd class="font-semibold text-white">{{ $d->numero_habitacion ?? '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Baños</dt><dd class="font-semibold text-white">{{ $d->numero_bano ?? '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Parqueaderos</dt><dd class="font-semibold text-white">{{ $d->numero_parqueadero ?? '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Antigüedad</dt><dd class="font-semibold text-white">{{ $d->antiguedad ?? '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Mascotas 🐾</dt><dd class="font-semibold text-white">{{ isset($d->mascotas_permitidas) ? ($d->mascotas_permitidas ? 'Sí permitidas' : 'No permitidas') : '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Piso</dt><dd class="font-semibold text-white">{{ $d->numero_piso ?? '-' }}</dd></div>
-                <div><dt class="text-neutral-400">Apartamento</dt><dd class="font-semibold text-white">{{ $d->numero_apartamento ?? '-' }}</dd></div>
+                @if(!empty($d->area))
+                    <div><dt class="text-neutral-400">Área</dt><dd class="font-semibold text-white">{{ $d->area }} m²</dd></div>
+                @endif
+
+                @if($inmueble->barrio)
+                    <div><dt class="text-neutral-400">Barrio</dt><dd class="font-semibold text-white">{{ $inmueble->barrio->nombre }}</dd></div>
+                @endif
+
+                @if(!empty($d->estrato))
+                    <div><dt class="text-neutral-400">Estrato</dt><dd class="font-semibold text-white">Estrato {{ $d->estrato }}</dd></div>
+                @endif
+
+                {{-- Habitaciones: NO en Lote, NO en Local --}}
+                @if(!$esLote && !$esLocal && !is_null($d->numero_habitacion) && (int)$d->numero_habitacion > 0)
+                    <div><dt class="text-neutral-400">Habitaciones</dt><dd class="font-semibold text-white">{{ $d->numero_habitacion }}</dd></div>
+                @endif
+
+                {{-- Baños: NO en Lote --}}
+                @if(!$esLote && !is_null($d->numero_bano) && (int)$d->numero_bano > 0)
+                    <div><dt class="text-neutral-400">Baños</dt><dd class="font-semibold text-white">{{ $d->numero_bano }}</dd></div>
+                @endif
+
+                {{-- Parqueaderos: NO en Lote --}}
+                @if(!$esLote && !is_null($d->numero_parqueadero) && (int)$d->numero_parqueadero > 0)
+                    <div><dt class="text-neutral-400">Parqueaderos</dt><dd class="font-semibold text-white">{{ $d->numero_parqueadero }}</dd></div>
+                @endif
+
+                {{-- Antigüedad: NO en Lote --}}
+                @if(!$esLote && !empty($d->antiguedad))
+                    <div><dt class="text-neutral-400">Antigüedad</dt><dd class="font-semibold text-white">{{ $d->antiguedad }}</dd></div>
+                @endif
+
+                {{-- Mascotas: NO en Lote, NO en Local --}}
+                @if(!$esLote && !$esLocal && isset($d->mascotas_permitidas))
+                    <div><dt class="text-neutral-400">Mascotas 🐾</dt><dd class="font-semibold text-white">{{ $d->mascotas_permitidas ? 'Sí permitidas' : 'No permitidas' }}</dd></div>
+                @endif
+
+                {{-- Piso: NO en Lote, NO en Finca --}}
+                @if(!$esLote && !$esFinca && !empty($d->numero_piso))
+                    <div><dt class="text-neutral-400">Piso</dt><dd class="font-semibold text-white">{{ $d->numero_piso }}</dd></div>
+                @endif
+
+                {{-- Apartamento: SOLO en Apartamento --}}
+                @if(!$esLote && !$esLocal && !$esFinca && !$esCasa && !empty($d->numero_apartamento))
+                    <div><dt class="text-neutral-400">Apartamento</dt><dd class="font-semibold text-white">{{ $d->numero_apartamento }}</dd></div>
+                @endif
+
                 <div><dt class="text-neutral-400">Zona</dt><dd class="font-semibold text-white">{{ ucfirst($inmueble->zona) }}</dd></div>
-                <div><dt class="text-neutral-400">Publicado</dt><dd class="font-semibold text-white">{{ $d->fecha_publicacion }}</dd></div>
+                @if(!empty($d->fecha_publicacion))
+                    <div><dt class="text-neutral-400">Publicado</dt><dd class="font-semibold text-white">{{ $d->fecha_publicacion }}</dd></div>
+                @endif
             </dl>
         </div>
     </div>
 
 </div>
-{{-- UBICACIÓN EN GOOGLE MAPS --}}
-<div class="mt-8 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl">
-    <div class="flex items-center justify-between mb-4">
+{{-- UBICACIÓN EN GOOGLE MAPS Y VISTA 360° STREET VIEW --}}
+@php
+    $tieneCoords = !empty($d->latitud) && !empty($d->longitud);
+    $lat = $tieneCoords ? (float)$d->latitud : null;
+    $lng = $tieneCoords ? (float)$d->longitud : null;
+
+    $urlGoogleMapsExacto = $tieneCoords
+        ? ('https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lng)
+        : ('https://www.google.com/maps/search/?api=1&query=' . urlencode($d->direccion . ', ' . ($inmueble->barrio?->nombre ? $inmueble->barrio->nombre . ', ' : '') . ($inmueble->municipio?->nombre ?? 'Santander') . ', Colombia'));
+
+    $urlComoLlegar = $tieneCoords
+        ? ('https://www.google.com/maps/dir/?api=1&destination=' . $lat . ',' . $lng)
+        : ('https://www.google.com/maps/search/?api=1&query=' . urlencode($d->direccion . ', ' . ($inmueble->barrio?->nombre ? $inmueble->barrio->nombre . ', ' : '') . ($inmueble->municipio?->nombre ?? 'Santander') . ', Colombia'));
+
+    $urlStreetViewDirecto = $tieneCoords
+        ? ('https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' . $lat . ',' . $lng)
+        : ('https://www.google.com/maps/search/?api=1&query=' . urlencode($d->direccion . ', ' . ($inmueble->municipio?->nombre ?? 'Santander') . ', Colombia'));
+
+    $urlStreetViewEmbed = $tieneCoords
+        ? ('https://maps.google.com/maps?layer=c&cbll=' . $lat . ',' . $lng . '&cbp=11,0,0,0,0&output=svembed')
+        : null;
+@endphp
+<div x-data="{ activeMapTab: 'satelite' }" class="mt-8 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
         <div>
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
                 <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                <span>Ubicación</span>
+                <span>Ubicación del inmueble</span>
+                @if($tieneCoords)
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-2 py-0.5 rounded-full">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        GPS Exacto
+                    </span>
+                @endif
             </h2>
             <p class="text-xs text-neutral-400 mt-0.5">
                 {{ $d->direccion }}@if($inmueble->barrio), Barrio {{ $inmueble->barrio->nombre }}@endif, {{ $inmueble->municipio?->nombre ?? 'Santander' }}
             </p>
         </div>
-        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($d->direccion . ', ' . ($inmueble->municipio?->nombre ?? 'Santander') . ', Colombia') }}" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition">
-            <span>Cómo llegar</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </a>
+
+        <div class="flex items-center gap-2 flex-wrap">
+            <a href="{{ $urlGoogleMapsExacto }}"
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white border border-neutral-700 transition shadow-sm">
+                <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Abrir en Google Maps</span>
+            </a>
+
+            <a href="{{ $urlComoLlegar }}" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/30 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                <span>Cómo llegar</span>
+            </a>
+        </div>
     </div>
 
-    {{-- Iframe interactivo de Google Maps --}}
-    <div class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800">
-        <iframe 
-            width="100%" 
-            height="100%" 
-            style="border:0;" 
-            loading="lazy" 
-            allowfullscreen 
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q={{ urlencode($d->direccion . ', ' . ($inmueble->barrio?->nombre ? $inmueble->barrio->nombre . ', ' : '') . ($inmueble->municipio?->nombre ?? '') . ', Santander, Colombia') }}&t=&z=15&ie=UTF8&iwloc=&output=embed">
-        </iframe>
+    {{-- Selector de Pestañas: Satélite / Vista 360° --}}
+    <div class="flex items-center gap-2 mb-4">
+        <button type="button"
+                @click="activeMapTab = 'satelite'; $nextTick(() => { if (window.mapPublico) window.mapPublico.invalidateSize(); })"
+                :class="activeMapTab === 'satelite' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-neutral-800 text-neutral-400 hover:text-white'"
+                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+            <span>🛰️ Vista Satélite</span>
+        </button>
+
+        @if($tieneCoords)
+            <button type="button"
+                    @click="activeMapTab = 'streetview'"
+                    :class="activeMapTab === 'streetview' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-neutral-800 text-neutral-400 hover:text-white'"
+                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+                <span>🚶‍♂️ Vista de Calle 360°</span>
+            </button>
+        @endif
     </div>
+
+    {{-- 1. Mapa Satélite con Marcador Físico Exacto --}}
+    <div x-show="activeMapTab === 'satelite'" class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800 relative z-0">
+        @if($tieneCoords)
+            <div id="mapa-publico" class="w-full h-full"></div>
+        @else
+            <iframe 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                loading="lazy" 
+                allowfullscreen 
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q={{ urlencode($d->direccion . ', ' . ($inmueble->barrio?->nombre ? $inmueble->barrio->nombre . ', ' : '') . ($inmueble->municipio?->nombre ?? '') . ', Santander, Colombia') }}&t=k&z=16&ie=UTF8&iwloc=&output=embed">
+            </iframe>
+        @endif
+    </div>
+
+    {{-- 2. Iframe Street View 360° --}}
+    @if($tieneCoords && $urlStreetViewEmbed)
+        <div x-show="activeMapTab === 'streetview'" x-cloak class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800 relative bg-neutral-950">
+            {{-- Aviso instructivo flotante para el visitante --}}
+            <div class="absolute top-3 left-3 right-3 sm:right-auto sm:max-w-md z-10 bg-neutral-900/90 backdrop-blur-md border border-neutral-700/80 rounded-xl px-3.5 py-2.5 shadow-2xl flex items-start gap-2.5 text-xs text-neutral-200 pointer-events-none">
+                <span class="text-base select-none">💡</span>
+                <p class="leading-relaxed">
+                    <strong class="text-white">Vista a nivel de calle:</strong> Arrastra con el mouse o tu dedo para <strong>girar 360° hacia la fachada</strong> del inmueble, o pulsa las flechas para avanzar por la vía.
+                </p>
+            </div>
+
+            <iframe 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                loading="lazy" 
+                allowfullscreen 
+                referrerpolicy="no-referrer-when-downgrade"
+                src="{{ $urlStreetViewEmbed }}">
+            </iframe>
+            <div class="absolute bottom-3 right-3 z-10">
+                <a href="{{ $urlStreetViewDirecto }}"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-neutral-900/90 backdrop-blur-md text-white hover:bg-neutral-800 border border-neutral-700 shadow-xl transition">
+                    <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+                    <span>Pantalla completa 360°</span>
+                    <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+            </div>
+        </div>
+    @endif
 </div>
 
 {{-- SECCIÓN DE INMUEBLES SIMILARES --}}
@@ -324,5 +474,69 @@
         }
     });
 </script>
+
+@if($tieneCoords)
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const lat = {{ $lat }};
+        const lng = {{ $lng }};
+
+        // Capa Satélite Google de alta resolución
+        const satelite = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '&copy; Google Maps'
+        });
+
+        // Capa Calles
+        const calles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        });
+
+        const map = L.map('mapa-publico', {
+            center: [lat, lng],
+            zoom: 18,
+            layers: [satelite]
+        });
+
+        window.mapPublico = map;
+
+        // Selector de capas
+        L.control.layers({
+            "🛰️ Satélite (Casas)": satelite,
+            "🗺️ Calles (Mapa)": calles
+        }, null, { position: 'topright' }).addTo(map);
+
+        // Marcador visual rojo físico de alta visibilidad
+        const pinIcon = L.divIcon({
+            className: 'custom-pin-marcador',
+            html: `
+                <div style="position: relative; width: 38px; height: 46px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));">
+                    <svg viewBox="0 0 24 24" fill="none" style="width: 100%; height: 100%;">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.8"/>
+                        <circle cx="12" cy="9" r="3.2" fill="#FFFFFF"/>
+                    </svg>
+                </div>
+            `,
+            iconSize: [38, 46],
+            iconAnchor: [19, 46],
+            popupAnchor: [0, -46]
+        });
+
+        const marker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+
+        marker.bindPopup(`
+            <div style="font-family: inherit; min-width: 180px; padding: 4px;">
+                <div style="font-weight: 700; font-size: 13px; color: #111827; margin-bottom: 2px;">{{ addslashes($inmueble->nombre) }}</div>
+                <div style="font-size: 11px; color: #4B5563;">{{ addslashes($d->direccion) }}</div>
+                <div style="margin-top: 6px; font-size: 11px; font-weight: 600; color: #2563EB;">📍 Ubicación fijada de la propiedad</div>
+            </div>
+        `).openPopup();
+    });
+</script>
+@endpush
+@endif
 
 @endsection

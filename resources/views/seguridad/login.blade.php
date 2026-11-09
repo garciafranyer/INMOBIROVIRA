@@ -38,7 +38,19 @@
             {{-- Tarjeta del Formulario --}}
             <div class="bg-slate-900/90 rounded-2xl border border-slate-800 shadow-2xl backdrop-blur-xl p-6 sm:p-8">
                 <h2 class="text-lg font-bold text-white mb-1">Iniciar sesión</h2>
-                <p class="text-xs text-slate-400 mb-6">Ingresa tus credenciales para acceder al sistema</p>
+                <p class="text-xs text-slate-400 mb-4">Ingresa tus credenciales para acceder al sistema</p>
+
+                <div class="mb-5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200 leading-relaxed flex items-start gap-2.5">
+                    <span class="text-base select-none shrink-0">ℹ️</span>
+                    <div>
+                        <strong class="text-white block font-semibold mb-0.5">Acceso exclusivo para Empresas y Administrador</strong>
+                        <span>¿Eres una empresa inmobiliaria y deseas publicar tus inmuebles? </span>
+                        <a href="https://api.whatsapp.com/send?phone={{ config('services.whatsapp.numero', '573103451093') }}&text={{ rawurlencode('👋 ¡Hola Inmobirovira! Soy una empresa interesada en afiliarme para publicar inmuebles en su plataforma.') }}"
+                           target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-white underline font-semibold transition">
+                            Contáctanos por WhatsApp &rarr;
+                        </a>
+                    </div>
+                </div>
 
                 <form action="{{ route('login.store') }}" method="POST" class="space-y-4">
                     @csrf

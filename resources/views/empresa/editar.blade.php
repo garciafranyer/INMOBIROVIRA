@@ -2,6 +2,13 @@
 
 @section('title', 'Editar inmueble')
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<style>
+    .leaflet-container { font-family: inherit; }
+</style>
+@endpush
+
 @section('content')
 
 @php
@@ -79,7 +86,7 @@
                 {{-- 4. Tipo de inmueble --}}
                 <div>
                     <label class="{{ $label }}">Tipo de inmueble <span class="text-rose-400">*</span></label>
-                    <select name="id_tipo_inmueble" required class="{{ $input }}">
+                    <select name="id_tipo_inmueble" id="id_tipo_inmueble" required class="{{ $input }}">
                         @foreach ($tipo_inmueble as $tipo)
                             <option value="{{ $tipo->id }}" class="bg-neutral-900" @selected(old('id_tipo_inmueble', $inmueble->id_tipo_inmueble) == $tipo->id)>
                                 {{ $tipo->nombre }}
@@ -132,6 +139,37 @@
                     <input type="text" name="detalle[direccion]" value="{{ old('detalle.direccion', $d?->direccion ?? '') }}" required class="{{ $input }}">
                 </div>
 
+                {{-- Ubicación en Mapa --}}
+                <div class="md:col-span-2">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                        <div>
+                            <label class="{{ $label }} mb-0 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                <span>Fijar ubicación exacta en el mapa</span>
+                            </label>
+                            <p class="text-xs text-neutral-400">Haz clic en el mapa o arrastra el marcador rojo al punto exacto de la propiedad.</p>
+                        </div>
+                        <button type="button" id="btn-mi-ubicacion" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-neutral-900 text-blue-400 hover:text-white hover:bg-neutral-800 border border-neutral-800 transition cursor-pointer self-start sm:self-auto">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+                            <span>📍 Mi ubicación actual</span>
+                        </button>
+                    </div>
+
+                    <div id="mapa-selector" class="w-full h-72 rounded-2xl border border-neutral-800 overflow-hidden shadow-xl relative z-0"></div>
+
+                    <div class="grid grid-cols-2 gap-3 mt-2.5">
+                        <div>
+                            <label class="block text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-1">Latitud</label>
+                            <input type="text" name="detalle[latitud]" id="input-latitud" value="{{ old('detalle.latitud', $d?->latitud ?? '') }}" readonly placeholder="Click en el mapa" class="{{ $input }} text-xs opacity-75 cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-1">Longitud</label>
+                            <input type="text" name="detalle[longitud]" id="input-longitud" value="{{ old('detalle.longitud', $d?->longitud ?? '') }}" readonly placeholder="Click en el mapa" class="{{ $input }} text-xs opacity-75 cursor-not-allowed">
+                        </div>
+                    </div>
+                    <p id="badge-ubicacion" class="text-xs font-semibold text-emerald-400 mt-1.5 flex items-center gap-1 min-h-[18px]"></p>
+                </div>
+
                 {{-- 2. Tipo de oferta --}}
                 <div>
                     <label class="{{ $label }}">Tipo de oferta <span class="text-rose-400">*</span></label>
@@ -171,7 +209,7 @@
                 </div>
 
                 {{-- 7. Estrato --}}
-                <div>
+                <div id="campo-estrato">
                     <label class="{{ $label }}">Estrato</label>
                     <select name="detalle[estrato]" class="{{ $input }}">
                         <option value="" class="bg-neutral-900">Selecciona estrato</option>
@@ -182,7 +220,7 @@
                 </div>
 
                 {{-- 8. Mascotas permitidas --}}
-                <div>
+                <div id="campo-mascotas">
                     <label class="{{ $label }}">¿Admite mascotas? 🐾</label>
                     <select name="detalle[mascotas_permitidas]" class="{{ $input }}">
                         <option value="" class="bg-neutral-900">Sin especificar</option>
@@ -192,7 +230,7 @@
                 </div>
 
                 {{-- 9. Antigüedad --}}
-                <div>
+                <div id="campo-antiguedad">
                     <label class="{{ $label }}">Antigüedad</label>
                     <select name="detalle[antiguedad]" class="{{ $input }}">
                         <option value="" class="bg-neutral-900">Selecciona antigüedad</option>
@@ -210,31 +248,31 @@
                 </div>
 
                 {{-- 11. Habitaciones --}}
-                <div>
+                <div id="campo-habitaciones">
                     <label class="{{ $label }}">Habitaciones</label>
-                    <input type="number" name="detalle[numero_habitacion]" value="{{ old('detalle.numero_habitacion', $d?->numero_habitacion ?? 0) }}" min="0" class="{{ $input }}">
+                    <input type="number" name="detalle[numero_habitacion]" value="{{ old('detalle.numero_habitacion', $d?->numero_habitacion ?? '') }}" min="0" class="{{ $input }}">
                 </div>
 
                 {{-- 12. Baños --}}
-                <div>
+                <div id="campo-banos">
                     <label class="{{ $label }}">Baños</label>
-                    <input type="number" name="detalle[numero_bano]" value="{{ old('detalle.numero_bano', $d?->numero_bano ?? 0) }}" min="0" class="{{ $input }}">
+                    <input type="number" name="detalle[numero_bano]" value="{{ old('detalle.numero_bano', $d?->numero_bano ?? '') }}" min="0" class="{{ $input }}">
                 </div>
 
                 {{-- 13. Parqueaderos --}}
-                <div>
+                <div id="campo-parqueaderos">
                     <label class="{{ $label }}">Parqueaderos</label>
-                    <input type="number" name="detalle[numero_parqueadero]" value="{{ old('detalle.numero_parqueadero', $d?->numero_parqueadero ?? 0) }}" min="0" class="{{ $input }}">
+                    <input type="number" name="detalle[numero_parqueadero]" value="{{ old('detalle.numero_parqueadero', $d?->numero_parqueadero ?? '') }}" min="0" class="{{ $input }}">
                 </div>
 
                 {{-- 14. Piso --}}
-                <div>
+                <div id="campo-piso">
                     <label class="{{ $label }}">Piso</label>
                     <input type="number" name="detalle[numero_piso]" value="{{ old('detalle.numero_piso', $d?->numero_piso ?? '') }}" class="{{ $input }}">
                 </div>
 
                 {{-- 15. Apartamento --}}
-                <div>
+                <div id="campo-apartamento">
                     <label class="{{ $label }}">Apartamento</label>
                     <input type="number" name="detalle[numero_apartamento]" value="{{ old('detalle.numero_apartamento', $d?->numero_apartamento ?? '') }}" class="{{ $input }}">
                 </div>
@@ -476,5 +514,237 @@
         }
     })();
 </script>
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const municipiosCoords = {
+            'Capitanejo': [6.5292, -72.6964],
+            'Carcasí': [6.6333, -72.6333],
+            'Cepitá': [6.7444, -72.9819],
+            'Cerrito': [6.8436, -72.6942],
+            'Concepción': [6.7167, -72.6833],
+            'Enciso': [6.6667, -72.7000],
+            'Guaca': [6.8833, -72.8500],
+            'Macaravita': [6.6389, -72.5833],
+            'Málaga': [6.7023, -72.7314],
+            'Molagavita': [6.6667, -72.7833],
+            'San Andrés': [6.8111, -72.8489],
+            'San José de Miranda': [6.6578, -72.7303],
+            'San Miguel': [6.5778, -72.6472]
+        };
+
+        const inputLat = document.getElementById('input-latitud');
+        const inputLng = document.getElementById('input-longitud');
+        const selectMunicipio = document.getElementById('id_municipio');
+        const btnUbicacion = document.getElementById('btn-mi-ubicacion');
+
+        const initialLat = parseFloat(inputLat.value) || 6.7023;
+        const initialLng = parseFloat(inputLng.value) || -72.7314;
+        const hasInitial = !isNaN(parseFloat(inputLat.value)) && !isNaN(parseFloat(inputLng.value));
+
+        // Capa Satélite Google de alta resolución
+        const satelite = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '&copy; Google Maps'
+        });
+
+        // Capa Calles
+        const calles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        });
+
+        const map = L.map('mapa-selector', {
+            center: [initialLat, initialLng],
+            zoom: hasInitial ? 18 : 14,
+            layers: [satelite]
+        });
+
+        // Selector de vista Satélite / Calles
+        L.control.layers({
+            "🛰️ Satélite (Casas)": satelite,
+            "🗺️ Calles (Mapa)": calles
+        }, null, { position: 'topright' }).addTo(map);
+
+        let marker = null;
+        const badgeUbicacion = document.getElementById('badge-ubicacion');
+
+        const pinIcon = L.divIcon({
+            className: 'custom-pin-marcador',
+            html: `
+                <div style="position: relative; width: 36px; height: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));">
+                    <svg viewBox="0 0 24 24" fill="none" style="width: 100%; height: 100%;">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.8"/>
+                        <circle cx="12" cy="9" r="3.2" fill="#FFFFFF"/>
+                    </svg>
+                </div>
+            `,
+            iconSize: [36, 44],
+            iconAnchor: [18, 44],
+            popupAnchor: [0, -44]
+        });
+
+        function setCoordinates(lat, lng, zoom = null) {
+            inputLat.value = lat.toFixed(7);
+            inputLng.value = lng.toFixed(7);
+
+            if (badgeUbicacion) {
+                badgeUbicacion.innerHTML = `<span>✅ Marca fijada: <strong>${lat.toFixed(6)}, ${lng.toFixed(6)}</strong> (puedes arrastrar el pin si deseas moverlo)</span>`;
+            }
+
+            if (!marker) {
+                marker = L.marker([lat, lng], { draggable: true, icon: pinIcon }).addTo(map);
+                marker.on('dragend', function (e) {
+                    const pos = e.target.getLatLng();
+                    setCoordinates(pos.lat, pos.lng);
+                });
+            } else {
+                marker.setLatLng([lat, lng]);
+            }
+
+            if (zoom) {
+                map.flyTo([lat, lng], zoom);
+            }
+        }
+
+        if (hasInitial) {
+            setCoordinates(initialLat, initialLng);
+            map.setView([initialLat, initialLng], 18);
+        }
+
+        map.on('click', function (e) {
+            setCoordinates(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Al cambiar de municipio, centrar el mapa
+        if (selectMunicipio) {
+            selectMunicipio.addEventListener('change', function () {
+                const nombre = this.options[this.selectedIndex]?.text?.trim();
+                if (nombre && municipiosCoords[nombre]) {
+                    const coords = municipiosCoords[nombre];
+                    map.flyTo(coords, 14);
+                    if (!marker) {
+                        setCoordinates(coords[0], coords[1]);
+                    }
+                }
+            });
+        }
+
+        // Botón GPS: mi ubicación actual
+        if (btnUbicacion && navigator.geolocation) {
+            btnUbicacion.addEventListener('click', function () {
+                btnUbicacion.classList.add('opacity-50');
+                navigator.geolocation.getCurrentPosition(
+                    function (pos) {
+                        btnUbicacion.classList.remove('opacity-50');
+                        setCoordinates(pos.coords.latitude, pos.coords.longitude, 16);
+                    },
+                    function (err) {
+                        btnUbicacion.classList.remove('opacity-50');
+                        alert('No se pudo obtener tu ubicación GPS. Asegúrate de permitir los permisos en tu navegador.');
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            });
+        }
+
+        // ==========================================
+        // ADAPTACIÓN DINÁMICA POR TIPO DE INMUEBLE
+        // ==========================================
+        const selectTipoInmueble = document.getElementById('id_tipo_inmueble');
+        const campoEstrato = document.getElementById('campo-estrato');
+        const campoMascotas = document.getElementById('campo-mascotas');
+        const campoAntiguedad = document.getElementById('campo-antiguedad');
+        const campoHabitaciones = document.getElementById('campo-habitaciones');
+        const campoBanos = document.getElementById('campo-banos');
+        const campoParqueaderos = document.getElementById('campo-parqueaderos');
+        const campoPiso = document.getElementById('campo-piso');
+        const campoApartamento = document.getElementById('campo-apartamento');
+
+        function toggleCampo(el, visible, limpiar = false) {
+            if (!el) return;
+            if (visible) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+                if (limpiar) {
+                    const input = el.querySelector('input, select');
+                    if (input) input.value = '';
+                }
+            }
+        }
+
+        function adaptarCamposPorTipo(limpiar = false) {
+            if (!selectTipoInmueble) return;
+            const texto = (selectTipoInmueble.options[selectTipoInmueble.selectedIndex]?.text || '').toLowerCase().trim();
+
+            const esLote = texto.includes('lote') || (texto.includes('terreno') && !texto.includes('campestre'));
+            const esLocal = texto.includes('local') || texto.includes('comercial');
+            const esFinca = texto.includes('finca') || texto.includes('campestre');
+            const esCasa = texto.includes('casa');
+            const esApto = texto.includes('apartamento') || texto.includes('apto');
+
+            if (esLote) {
+                // Lote / Terreno: Solo Área y Estrato
+                toggleCampo(campoEstrato, true);
+                toggleCampo(campoMascotas, false, limpiar);
+                toggleCampo(campoAntiguedad, false, limpiar);
+                toggleCampo(campoHabitaciones, false, limpiar);
+                toggleCampo(campoBanos, false, limpiar);
+                toggleCampo(campoParqueaderos, false, limpiar);
+                toggleCampo(campoPiso, false, limpiar);
+                toggleCampo(campoApartamento, false, limpiar);
+            } else if (esLocal) {
+                // Local Comercial: Área, Baños, Parqueaderos, Estrato, Antigüedad y Piso
+                toggleCampo(campoEstrato, true);
+                toggleCampo(campoMascotas, false, limpiar);
+                toggleCampo(campoAntiguedad, true);
+                toggleCampo(campoHabitaciones, false, limpiar);
+                toggleCampo(campoBanos, true);
+                toggleCampo(campoParqueaderos, true);
+                toggleCampo(campoPiso, true);
+                toggleCampo(campoApartamento, false, limpiar);
+            } else if (esFinca) {
+                // Finca / Campestre: Área, Habitaciones, Baños, Parqueaderos, Mascotas, Antigüedad, Estrato
+                toggleCampo(campoEstrato, true);
+                toggleCampo(campoMascotas, true);
+                toggleCampo(campoAntiguedad, true);
+                toggleCampo(campoHabitaciones, true);
+                toggleCampo(campoBanos, true);
+                toggleCampo(campoParqueaderos, true);
+                toggleCampo(campoPiso, false, limpiar);
+                toggleCampo(campoApartamento, false, limpiar);
+            } else if (esCasa) {
+                // Casa: Todo lo residencial excepto Apartamento
+                toggleCampo(campoEstrato, true);
+                toggleCampo(campoMascotas, true);
+                toggleCampo(campoAntiguedad, true);
+                toggleCampo(campoHabitaciones, true);
+                toggleCampo(campoBanos, true);
+                toggleCampo(campoParqueaderos, true);
+                toggleCampo(campoPiso, true);
+                toggleCampo(campoApartamento, false, limpiar);
+            } else {
+                // Apartamento o por defecto: Muestra todo
+                toggleCampo(campoEstrato, true);
+                toggleCampo(campoMascotas, true);
+                toggleCampo(campoAntiguedad, true);
+                toggleCampo(campoHabitaciones, true);
+                toggleCampo(campoBanos, true);
+                toggleCampo(campoParqueaderos, true);
+                toggleCampo(campoPiso, true);
+                toggleCampo(campoApartamento, true);
+            }
+        }
+
+        if (selectTipoInmueble) {
+            selectTipoInmueble.addEventListener('change', () => adaptarCamposPorTipo(true));
+            adaptarCamposPorTipo(false);
+        }
+    });
+</script>
+@endpush
 
 @endsection

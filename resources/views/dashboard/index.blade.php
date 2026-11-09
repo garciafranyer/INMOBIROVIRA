@@ -5,8 +5,78 @@
 
 @section('content')
 
+    {{-- BARRA SUPERIOR DE ACCIONES RÁPIDAS --}}
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <h1 class="text-2xl font-black text-slate-900 tracking-tight">Panel Inmobiliario</h1>
+                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700">García Rovira</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Métricas en tiempo real, gestión de propiedades y actividad del portal Inmobirovira.</p>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+            <a href="{{ route('inmueble.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30 transition transform hover:scale-102 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span>Publicar Inmueble</span>
+            </a>
+            <a href="{{ route('inmueble.index') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+                <span>Inventario Completo</span>
+            </a>
+            <a href="{{ route('inicio') }}" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                <span>Ver Portal Público</span>
+            </a>
+        </div>
+    </div>
+
+    {{-- TARJETAS ESTADÍSTICAS REALES DE INMUEBLES --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+        <x-stat-card
+            label="Total de Inmuebles"
+            :value="number_format($totalInmuebles)"
+            icon="home"
+        />
+        <x-stat-card
+            label="Disponibles en Venta"
+            :value="number_format($totalVenta)"
+            icon="tag"
+        />
+        <x-stat-card
+            label="Disponibles en Arriendo"
+            :value="number_format($totalArriendo)"
+            icon="box"
+        />
+        <x-stat-card
+            label="Inmuebles Cerrados (Éxito)"
+            :value="number_format($totalCerrados)"
+            icon="shield"
+        />
+    </div>
+
+    {{-- GRÁFICOS INMOBILIARIOS --}}
+    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+
+        {{-- Gráfico 1: Publicaciones en los últimos 6 meses --}}
+        <x-card title="Publicaciones mensuales" subtitle="Inmuebles creados en los últimos 6 meses" class="xl:col-span-2">
+            <canvas id="salesChart" height="110" role="img" aria-label="Gráfico de publicaciones mensuales"></canvas>
+        </x-card>
+
+        {{-- Gráfico 2: Inmuebles por tipo de propiedad --}}
+        <x-card title="Inmuebles por Tipo" subtitle="Distribución por categoría">
+            <canvas id="categoryChart" height="200" role="img" aria-label="Gráfico de inmuebles por tipo"></canvas>
+        </x-card>
+    </div>
+
+    {{-- Gráfico 3: Cobertura por Municipio --}}
+    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+        <x-card title="Inmuebles por Municipio" subtitle="Presencia en la provincia de García Rovira" class="xl:col-span-3">
+            <canvas id="usersChart" height="90" role="img" aria-label="Gráfico de inmuebles por municipio"></canvas>
+        </x-card>
+    </div>
+
     {{-- MÓDULO DE SEGURIDAD Y ROLES --}}
-    <div class="mb-8 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+    <div class="mt-8 mb-8 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
             <div>
                 <div class="flex items-center gap-2">
@@ -118,112 +188,81 @@
         </div>
     </div>
 
-    {{-- Tarjetas estadísticas --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <x-stat-card
-            label="Total de usuarios"
-            :value="number_format($totalUsers)"
-            change="+12.4%"
-            trend="up"
-            icon="users"
-        />
-        <x-stat-card
-            label="Total de productos"
-            :value="number_format($totalProducts)"
-            change="+4.1%"
-            trend="up"
-            icon="box"
-        />
-        <x-stat-card
-            label="Ventas del mes"
-            :value="number_format($totalSales)"
-            change="-2.3%"
-            trend="down"
-            icon="chart"
-        />
-        <x-stat-card
-            label="Ingresos"
-            :value="'$' . number_format($totalRevenue, 2)"
-            change="+8.7%"
-            trend="up"
-            icon="tag"
-        />
-    </div>
-
-    {{-- Gráficos --}}
-    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-
-        <x-card title="Ventas mensuales" subtitle="Últimos 6 meses" class="xl:col-span-2">
-            <canvas id="salesChart" height="110" role="img" aria-label="Gráfico de ventas mensuales"></canvas>
-        </x-card>
-
-        <x-card title="Productos por categoría">
-            <canvas id="categoryChart" height="200" role="img" aria-label="Gráfico de productos por categoría"></canvas>
-        </x-card>
-    </div>
-
-    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-        <x-card title="Usuarios registrados" subtitle="Últimos 6 meses" class="xl:col-span-3">
-            <canvas id="usersChart" height="90" role="img" aria-label="Gráfico de usuarios registrados"></canvas>
-        </x-card>
-    </div>
-
-    {{-- Tabla de actividad reciente --}}
+    {{-- TABLA DE INMUEBLES RECIENTES --}}
     <div class="mt-6">
-        <x-card title="Actividad reciente" subtitle="Últimos registros del sistema" :padding="false">
+        <x-card title="Inmuebles Recientes" subtitle="Últimas propiedades registradas o actualizadas" :padding="false">
             <x-slot:actions>
-                <x-button variant="secondary" href="#">Ver todo</x-button>
+                <x-button variant="secondary" href="{{ route('inmueble.index') }}">Ver inventario completo</x-button>
             </x-slot:actions>
 
-            <x-table :headers="['Usuario', 'Descripción', 'Estado', 'Fecha', 'Acciones']">
-                @forelse ($recentActivity as $item)
-                    <tr class="hover:bg-slate-50">
+            <x-table :headers="['Inmueble', 'Municipio', 'Oferta y Precio', 'Publicado por', 'Estado', 'Acciones']">
+                @forelse ($inmueblesRecientes as $inmueble)
+                    @php
+                        $det = $inmueble->detalle_inmueble;
+                        $primeraFoto = $inmueble->imagenes->first()?->url_imagen;
+                    @endphp
+                    <tr class="hover:bg-slate-50 transition">
                         <td class="px-5 py-3.5">
                             <div class="flex items-center gap-3">
-                                <img
-                                    src="{{ $item['avatar'] }}"
-                                    class="w-8 h-8 rounded-full object-cover ring-1 ring-slate-100"
-                                    alt="Avatar de {{ $item['name'] }}"
-                                >
-                                <span class="font-medium text-slate-700 whitespace-nowrap">{{ $item['name'] }}</span>
+                                @if($primeraFoto)
+                                    <img src="{{ asset('storage/' . $primeraFoto) }}" class="w-10 h-10 rounded-lg object-cover ring-1 ring-slate-200 shrink-0" alt="{{ $inmueble->nombre }}">
+                                @else
+                                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center text-xs shrink-0 font-bold">
+                                        🏡
+                                    </div>
+                                @endif
+                                <div>
+                                    <span class="font-bold text-slate-800 block text-sm">{{ $inmueble->nombre }}</span>
+                                    <span class="text-xs text-slate-400">{{ $inmueble->tipo_inmueble?->nombre ?? 'Inmueble' }} &bull; Zona {{ ucfirst($inmueble->zona) }}</span>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-5 py-3.5 text-slate-500 max-w-xs truncate">{{ $item['description'] }}</td>
-                        <td class="px-5 py-3.5"><x-badge :status="$item['status']" /></td>
-                        <td class="px-5 py-3.5 text-slate-500 whitespace-nowrap">{{ $item['date'] }}</td>
+                        <td class="px-5 py-3.5 text-slate-600 text-sm">
+                            <div class="font-medium text-slate-700">{{ $inmueble->municipio?->nombre ?? '-' }}</div>
+                            <div class="text-xs text-slate-400">{{ $inmueble->barrio?->nombre ? 'B. ' . $inmueble->barrio->nombre : ($det?->direccion ?? '-') }}</div>
+                        </td>
+                        <td class="px-5 py-3.5">
+                            <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full mb-0.5">
+                                {{ ucfirst($det?->tipo_oferta ?? 'Oferta') }}
+                            </span>
+                            <div class="font-bold text-slate-800 text-sm">
+                                ${{ number_format($det?->precio ?? 0, 0, ',', '.') }}
+                            </div>
+                        </td>
+                        <td class="px-5 py-3.5 text-slate-600 text-xs">
+                            <span class="font-semibold text-slate-700 block">{{ $inmueble->usuario?->nombre ?? 'Administrador' }}</span>
+                            <span class="text-slate-400">{{ $inmueble->usuario?->correo ?? '' }}</span>
+                        </td>
+                        <td class="px-5 py-3.5">
+                            @php
+                                $estado = strtolower($det?->estado_publicacion ?? 'disponible');
+                                $claseBadge = match($estado) {
+                                    'disponible' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                    'arrendado'  => 'bg-blue-100 text-blue-800 border-blue-200',
+                                    'vendido'    => 'bg-purple-100 text-purple-800 border-purple-200',
+                                    'reservado'  => 'bg-amber-100 text-amber-800 border-amber-200',
+                                    default      => 'bg-slate-100 text-slate-700 border-slate-200',
+                                };
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border {{ $claseBadge }}">
+                                {{ ucfirst($estado) }}
+                            </span>
+                        </td>
                         <td class="px-5 py-3.5">
                             <div class="flex items-center gap-1">
-                                <a href="#" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Ver {{ $item['name'] }}">
+                                <a href="{{ route('propiedad.show', $inmueble->id) }}" target="_blank" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-blue-600 transition" title="Ver en portal público">
                                     <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'eye'])</span>
                                 </a>
-                                <a href="#" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Editar {{ $item['name'] }}">
+                                <a href="{{ route('inmueble.edit', $inmueble->id) }}" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-indigo-600 transition" title="Editar inmueble">
                                     <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'pencil'])</span>
                                 </a>
-                                <button
-                                    type="button"
-                                    @click="$dispatch('open-modal', 'delete-{{ $loop->index }}')"
-                                    class="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    aria-label="Eliminar {{ $item['name'] }}"
-                                >
-                                    <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'trash'])</span>
-                                </button>
-
-                                <x-modal name="delete-{{ $loop->index }}" title="Eliminar registro" maxWidth="sm">
-                                    <p class="text-sm text-slate-500">
-                                        ¿Seguro que deseas eliminar a <strong>{{ $item['name'] }}</strong>? Esta acción no se puede deshacer.
-                                    </p>
-                                    <x-slot:footer>
-                                        <x-button variant="secondary" @click="show = false">Cancelar</x-button>
-                                        <x-button variant="danger">Eliminar</x-button>
-                                    </x-slot:footer>
-                                </x-modal>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-400">
-                            No hay actividad reciente.
+                        <td colspan="6" class="px-5 py-10 text-center text-sm text-slate-400">
+                            No hay inmuebles registrados aún. ¡Pulsa en "Publicar Inmueble" para comenzar!
                         </td>
                     </tr>
                 @endforelse
@@ -238,59 +277,82 @@
     document.addEventListener('DOMContentLoaded', function () {
         const monthLabels = @json($chartData['months']);
 
+        // Gráfico 1: Publicaciones en los últimos 6 meses (Curva azul índigo)
         new Chart(document.getElementById('salesChart'), {
             type: 'line',
             data: {
                 labels: monthLabels,
                 datasets: [{
-                    label: 'Ventas',
-                    data: @json($chartData['sales']),
-                    borderColor: '#4f46e5',
-                    backgroundColor: 'rgba(79,70,229,0.08)',
+                    label: 'Inmuebles publicados',
+                    data: @json($chartData['publicaciones']),
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.08)',
                     tension: 0.35,
                     fill: true,
-                    pointRadius: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#2563eb',
                 }]
             },
             options: {
                 responsive: true,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                scales: { 
+                    y: { 
+                        beginAtZero: true, 
+                        ticks: { stepSize: 1 },
+                        grid: { color: '#f1f5f9' } 
+                    }, 
+                    x: { grid: { display: false } } 
+                }
             }
         });
 
-        new Chart(document.getElementById('usersChart'), {
-            type: 'bar',
-            data: {
-                labels: monthLabels,
-                datasets: [{
-                    label: 'Usuarios registrados',
-                    data: @json($chartData['users']),
-                    backgroundColor: '#818cf8',
-                    borderRadius: 6,
-                    maxBarThickness: 36,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
-            }
-        });
-
+        // Gráfico 2: Inmuebles por Tipo (Dona colorida)
         new Chart(document.getElementById('categoryChart'), {
             type: 'doughnut',
             data: {
-                labels: @json($chartData['categoryLabels']),
+                labels: @json($chartData['tipoLabels']),
                 datasets: [{
-                    data: @json($chartData['categoryValues']),
-                    backgroundColor: ['#4f46e5', '#818cf8', '#c7d2fe', '#a5b4fc', '#312e81'],
+                    data: @json($chartData['tipoValues']),
+                    backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'],
                     borderWidth: 0,
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 16, font: { size: 11 } } } }
+                plugins: { 
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { boxWidth: 10, padding: 14, font: { size: 11, weight: 'bold' } } 
+                    } 
+                }
+            }
+        });
+
+        // Gráfico 3: Cobertura por Municipio (Barras)
+        new Chart(document.getElementById('usersChart'), {
+            type: 'bar',
+            data: {
+                labels: @json($chartData['municipioLabels']),
+                datasets: [{
+                    label: 'Cantidad de Inmuebles',
+                    data: @json($chartData['municipioValues']),
+                    backgroundColor: '#4f46e5',
+                    borderRadius: 8,
+                    maxBarThickness: 42,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { 
+                        beginAtZero: true, 
+                        ticks: { stepSize: 1 },
+                        grid: { color: '#f1f5f9' } 
+                    }, 
+                    x: { grid: { display: false } } 
+                }
             }
         });
     });

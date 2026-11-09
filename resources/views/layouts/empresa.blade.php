@@ -12,6 +12,7 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     </style>
+    @stack('styles')
 </head>
 <body x-data="{ mobileMenuOpen: false }" class="min-h-full flex flex-col text-neutral-100 antialiased selection:bg-blue-600 selection:text-white bg-neutral-950">
 
@@ -175,5 +176,6 @@
         </div>
     </footer>
 
+    @stack('scripts')
 </body>
 </html>
