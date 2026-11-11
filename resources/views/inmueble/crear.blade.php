@@ -168,18 +168,30 @@
                     </div>
 
                     <div>
-                        <label class="{{ $label }}">Precio</label>
-                        <input type="number" step="0.01" name="detalle[precio]" value="{{ old('detalle.precio') }}" class="{{ $input }}">
+                        <label class="{{ $label }}">Precio <span class="text-rose-500">*</span></label>
+                        <input type="number" step="0.01" min="0" name="detalle[precio]" value="{{ old('detalle.precio') }}" class="{{ $input }}">
+                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> No se permite un valor negativo en el precio.</p>
+                        @error('detalle.precio')
+                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="{{ $label }}">Precio de administración</label>
-                        <input type="number" step="0.01" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador') }}" class="{{ $input }}">
+                        <input type="number" step="0.01" min="0" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador') }}" class="{{ $input }}">
+                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> No se permite un valor negativo.</p>
+                        @error('detalle.precio_administrador')
+                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="{{ $label }}">Área (m²)</label>
-                        <input type="number" step="0.01" name="detalle[area]" value="{{ old('detalle.area') }}" class="{{ $input }}">
+                        <input type="number" step="0.01" min="0" name="detalle[area]" value="{{ old('detalle.area') }}" class="{{ $input }}">
+                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> El área no puede ser negativa.</p>
+                        @error('detalle.area')
+                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div id="campo-estrato">
@@ -263,13 +275,13 @@
 
                 {{-- Zona de Arrastrar y Soltar (Dropzone) --}}
                 <div id="dropzone"
-                     class="relative border-2 border-dashed border-gray-300 hover:border-indigo-500 rounded-xl p-8 text-center bg-gray-50/60 hover:bg-indigo-50/30 transition-all cursor-pointer group">
+                    class="relative border-2 border-dashed border-gray-300 hover:border-indigo-500 rounded-xl p-8 text-center bg-gray-50/60 hover:bg-indigo-50/30 transition-all cursor-pointer group">
                     <input type="file"
-                           name="imagenes[]"
-                           id="imagenes"
-                           multiple
-                           accept="image/jpeg,image/png,image/webp,image/jpg"
-                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        name="imagenes[]"
+                        id="imagenes"
+                        multiple
+                        accept="image/jpeg,image/png,image/webp,image/jpg"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
 
                     <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
                         <div class="w-14 h-14 rounded-full bg-indigo-100/80 group-hover:bg-indigo-200/80 text-indigo-600 flex items-center justify-center transition group-hover:scale-110 shadow-xs">
@@ -702,6 +714,21 @@
             selectTipoInmueble.addEventListener('change', () => adaptarCamposPorTipo(true));
             adaptarCamposPorTipo(false);
         }
+
+        // Validación en tiempo real para números no negativos
+        document.querySelectorAll('input[type="number"][min="0"]').forEach(input => {
+            input.addEventListener('input', function () {
+                const errorMsg = this.parentElement.querySelector('.error-negativo');
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val < 0) {
+                    if (errorMsg) errorMsg.classList.remove('hidden');
+                    this.classList.add('border-rose-500', 'focus:border-rose-500', 'focus:ring-rose-500');
+                } else {
+                    if (errorMsg) errorMsg.classList.add('hidden');
+                    this.classList.remove('border-rose-500', 'focus:border-rose-500', 'focus:ring-rose-500');
+                }
+            });
+        });
     });
 </script>
 @endpush

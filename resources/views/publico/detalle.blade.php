@@ -259,16 +259,6 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
             <span>🛰️ Vista Satélite</span>
         </button>
-
-        @if($tieneCoords)
-            <button type="button"
-                    @click="activeMapTab = 'streetview'"
-                    :class="activeMapTab === 'streetview' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-neutral-800 text-neutral-400 hover:text-white'"
-                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
-                <span>🚶‍♂️ Vista de Calle 360°</span>
-            </button>
-        @endif
     </div>
 
     {{-- 1. Mapa Satélite con Marcador Físico Exacto --}}
@@ -288,38 +278,7 @@
         @endif
     </div>
 
-    {{-- 2. Iframe Street View 360° --}}
-    @if($tieneCoords && $urlStreetViewEmbed)
-        <div x-show="activeMapTab === 'streetview'" x-cloak class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800 relative bg-neutral-950">
-            {{-- Aviso instructivo flotante para el visitante --}}
-            <div class="absolute top-3 left-3 right-3 sm:right-auto sm:max-w-md z-10 bg-neutral-900/90 backdrop-blur-md border border-neutral-700/80 rounded-xl px-3.5 py-2.5 shadow-2xl flex items-start gap-2.5 text-xs text-neutral-200 pointer-events-none">
-                <span class="text-base select-none">💡</span>
-                <p class="leading-relaxed">
-                    <strong class="text-white">Vista a nivel de calle:</strong> Arrastra con el mouse o tu dedo para <strong>girar 360° hacia la fachada</strong> del inmueble, o pulsa las flechas para avanzar por la vía.
-                </p>
-            </div>
-
-            <iframe 
-                width="100%" 
-                height="100%" 
-                style="border:0;" 
-                loading="lazy" 
-                allowfullscreen 
-                referrerpolicy="no-referrer-when-downgrade"
-                src="{{ $urlStreetViewEmbed }}">
-            </iframe>
-            <div class="absolute bottom-3 right-3 z-10">
-                <a href="{{ $urlStreetViewDirecto }}"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-neutral-900/90 backdrop-blur-md text-white hover:bg-neutral-800 border border-neutral-700 shadow-xl transition">
-                    <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
-                    <span>Pantalla completa 360°</span>
-                    <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-            </div>
-        </div>
-    @endif
+    
 </div>
 
 {{-- SECCIÓN DE INMUEBLES SIMILARES --}}
@@ -381,9 +340,9 @@
         {{-- Imagen activa --}}
         <div class="max-h-[75vh] max-w-full flex items-center justify-center p-2">
             <img id="visor-imagen"
-                 src=""
-                 alt="Vista previa del inmueble"
-                 class="max-h-[72vh] max-w-full object-contain rounded-xl shadow-2xl transition-opacity duration-200">
+                src=""
+                alt="Vista previa del inmueble"
+                class="max-h-[72vh] max-w-full object-contain rounded-xl shadow-2xl transition-opacity duration-200">
         </div>
 
         {{-- Flecha siguiente --}}

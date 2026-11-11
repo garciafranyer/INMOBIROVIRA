@@ -192,14 +192,14 @@
                 <h3 class="text-white font-semibold mb-3">Contacto</h3>
                 <ul class="space-y-2 text-sm text-neutral-400">
                     <li>Málaga, Santander</li>
-                    <li>contacto@inmobirovira.com</li>
+                    <li>admin@admin.com</li>
                     <li>
                         <a href="https://wa.me/{{ config('services.whatsapp.numero', '573103451093') }}"
                            target="_blank"
                            rel="noopener noreferrer"
                            class="hover:text-emerald-400 transition inline-flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-                            {{ config('services.whatsapp.numero_visible', '+57 310 345 1093') }}
+                            {{ config('services.whatsapp.numero_visible', '+57 322 3163892') }}
                         </a>
                     </li>
                 </ul>

@@ -218,18 +218,30 @@
                 <div>
                     <label class="{{ $label }}">Precio <span class="text-rose-400">*</span></label>
                     <input type="number" step="0.01" name="detalle[precio]" value="{{ old('detalle.precio', $d?->precio ?? '') }}" min="0" required class="{{ $input }}">
+                    <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ No se permite un valor negativo en el precio.</p>
+                    @error('detalle.precio')
+                        <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- 5. Precio de administración --}}
                 <div>
                     <label class="{{ $label }}">Precio de administración</label>
                     <input type="number" step="0.01" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador', $d?->precio_administrador ?? 0) }}" min="0" class="{{ $input }}">
+                    <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ No se permite un valor negativo.</p>
+                    @error('detalle.precio_administrador')
+                        <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- 6. Área --}}
                 <div>
                     <label class="{{ $label }}">Área (m²) <span class="text-rose-400">*</span></label>
                     <input type="number" step="0.01" name="detalle[area]" value="{{ old('detalle.area', $d?->area ?? '') }}" min="0" required class="{{ $input }}">
+                    <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ El área no puede ser negativa.</p>
+                    @error('detalle.area')
+                        <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- 7. Estrato --}}
@@ -800,6 +812,21 @@
             selectTipoInmueble.addEventListener('change', () => adaptarCamposPorTipo(true));
             adaptarCamposPorTipo(false);
         }
+
+        // Validación en tiempo real para números no negativos
+        document.querySelectorAll('input[type="number"][min="0"]').forEach(input => {
+            input.addEventListener('input', function () {
+                const errorMsg = this.parentElement.querySelector('.error-negativo');
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val < 0) {
+                    if (errorMsg) errorMsg.classList.remove('hidden');
+                    this.classList.add('border-rose-500', 'focus:border-rose-500');
+                } else {
+                    if (errorMsg) errorMsg.classList.add('hidden');
+                    this.classList.remove('border-rose-500', 'focus:border-rose-500');
+                }
+            });
+        });
     });
 </script>
 @endpush

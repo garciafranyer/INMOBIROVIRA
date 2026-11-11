@@ -100,7 +100,6 @@
         <div class="p-3 border-t border-slate-800/80 bg-slate-950/40 space-y-2 shrink-0">
             <a
                 href="{{ route('inicio') }}"
-                target="_blank"
                 class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900/90 hover:bg-slate-800 hover:text-white border border-slate-800 transition"
                 title="Abrir el portal público en una pestaña nueva"
             >
