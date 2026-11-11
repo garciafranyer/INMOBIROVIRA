@@ -63,6 +63,23 @@ class SeguridadSeeder extends Seeder
         );
         $empresa->assignRole($rolEmpresa);
 
+        // Crear Rol y Usuario Regular (Propietario Particular) de prueba
+        $rolUsuario = Role::firstOrCreate(
+            ['name' => 'usuario', 'guard_name' => $guard],
+            ['activo' => true]
+        );
+
+        $usuarioRegular = $modelo::firstOrCreate(
+            ['email' => 'usuario@inmobirovira.com'],
+            [
+                'nombre' => 'Carlos Rueda (Propietario)',
+                'telefono' => '3157891234',
+                'direccion' => 'Barrio El Rosal, Málaga',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $usuarioRegular->assignRole($rolUsuario);
+
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

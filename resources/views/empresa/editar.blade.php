@@ -107,13 +107,20 @@
                     </select>
                 </div>
 
-                {{-- 6. Barrio --}}
+                {{-- 6. Barrio / Vereda --}}
                 <div>
-                    <label class="{{ $label }}">Barrio <span class="text-xs text-neutral-400 font-normal">(Opcional)</span></label>
+                    <label id="label-barrio" class="{{ $label }}">Barrio / Vereda <span class="text-xs text-neutral-400 font-normal">(Opcional)</span></label>
                     <select name="id_barrio" id="id_barrio" class="{{ $input }}">
-                        <option value="" class="bg-neutral-900">Sin barrio / Zona rural</option>
+                        <option value="" id="opcion-defecto-barrio" class="bg-neutral-900">Sin especificar / Casco urbano</option>
                         @foreach ($barrios as $b)
-                            <option value="{{ $b->id }}" class="bg-neutral-900" data-municipio="{{ $b->id_municipio }}" @selected(old('id_barrio', $inmueble->id_barrio) == $b->id)>
+                            @php
+                                $esVda = str_contains(strtolower($b->nombre), 'vda') || str_contains(strtolower($b->nombre), 'vereda');
+                            @endphp
+                            <option value="{{ $b->id }}"
+                                    class="bg-neutral-900"
+                                    data-municipio="{{ $b->id_municipio }}"
+                                    data-tipo="{{ $esVda ? 'rural' : 'urbana' }}"
+                                    @selected(old('id_barrio', $inmueble->id_barrio) == $b->id)>
                                 {{ $b->nombre }}
                             </option>
                         @endforeach
@@ -181,14 +188,31 @@
                 </div>
 
                 {{-- 3. Estado de publicación --}}
-                <div>
-                    <label class="{{ $label }}">Estado de publicación <span class="text-rose-400">*</span></label>
-                    <select name="detalle[estado_publicacion]" required class="{{ $input }}">
-                        @foreach (['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'] as $estado)
-                            <option value="{{ $estado }}" class="bg-neutral-900" @selected(old('detalle.estado_publicacion', $d?->estado_publicacion ?? 'disponible') === $estado)>{{ ucfirst($estado) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                @php
+                    $esAdmin = auth()->user()?->hasRole(config('seguridad.rol_admin', 'administrador'));
+                    $esEmpresa = auth()->user()?->hasRole('Empresa');
+                    $esParticular = ! $esAdmin && ! $esEmpresa;
+                @endphp
+
+                @if ($esParticular && ($d?->estado_publicacion === 'pendiente'))
+                    <div>
+                        <label class="{{ $label }}">Estado de publicación</label>
+                        <div class="px-3.5 py-2.5 rounded-xl bg-amber-950/40 border border-amber-800/80 text-amber-300 text-xs flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><strong>En moderación:</strong> Pendiente de aprobación por el Administrador.</span>
+                        </div>
+                        <input type="hidden" name="detalle[estado_publicacion]" value="pendiente">
+                    </div>
+                @else
+                    <div>
+                        <label class="{{ $label }}">Estado de publicación <span class="text-rose-400">*</span></label>
+                        <select name="detalle[estado_publicacion]" required class="{{ $input }}">
+                            @foreach (['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'] as $estado)
+                                <option value="{{ $estado }}" class="bg-neutral-900" @selected(old('detalle.estado_publicacion', $d?->estado_publicacion ?? 'disponible') === $estado)>{{ ucfirst($estado) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
 
                 {{-- 4. Precio --}}
                 <div>
@@ -386,29 +410,62 @@
 
 <script>
     (function () {
-        // Filtrar barrios dinámicamente según el municipio seleccionado
+        // Filtrar barrios y veredas dinámicamente según municipio y zona (urbana/rural)
         const selectMunicipio = document.getElementById('id_municipio');
+        const selectZona = document.getElementById('zona');
         const selectBarrio = document.getElementById('id_barrio');
+        const labelBarrio = document.getElementById('label-barrio');
+        const opcionDefecto = document.getElementById('opcion-defecto-barrio');
+
         if (selectMunicipio && selectBarrio) {
-            function filtrarBarrios() {
+            function filtrarSubdivisiones() {
                 const munId = selectMunicipio.value;
+                const zonaVal = selectZona ? selectZona.value : '';
                 const opciones = selectBarrio.querySelectorAll('option');
+
+                if (labelBarrio) {
+                    labelBarrio.innerHTML = zonaVal === 'rural'
+                        ? 'Vereda <span class="text-xs text-neutral-400 font-normal">(Zona Rural)</span>'
+                        : 'Barrio <span class="text-xs text-neutral-400 font-normal">(Casco Urbano)</span>';
+                }
+
+                if (opcionDefecto) {
+                    opcionDefecto.textContent = zonaVal === 'rural'
+                        ? 'Selecciona vereda (Opcional)'
+                        : 'Selecciona barrio (Opcional)';
+                }
+
+                let encontrado = false;
 
                 opciones.forEach(opt => {
                     const munOpt = opt.getAttribute('data-municipio');
+                    const tipoOpt = opt.getAttribute('data-tipo');
+
                     if (!munOpt) {
                         opt.style.display = '';
-                    } else if (!munId || munOpt === munId) {
+                        return;
+                    }
+
+                    const coincideMun = !munId || munOpt === munId;
+                    const coincideZona = !zonaVal || tipoOpt === zonaVal;
+
+                    if (coincideMun && coincideZona) {
                         opt.style.display = '';
+                        if (opt.selected) encontrado = true;
                     } else {
                         opt.style.display = 'none';
                         if (opt.selected) opt.selected = false;
                     }
                 });
+
+                if (!encontrado && selectBarrio.value !== '') {
+                    selectBarrio.value = '';
+                }
             }
 
-            selectMunicipio.addEventListener('change', filtrarBarrios);
-            filtrarBarrios();
+            selectMunicipio.addEventListener('change', filtrarSubdivisiones);
+            if (selectZona) selectZona.addEventListener('change', filtrarSubdivisiones);
+            filtrarSubdivisiones();
         }
 
         const inputImagenes = document.getElementById('imagenes');

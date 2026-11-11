@@ -3,6 +3,7 @@
 use App\Http\Controllers\Seguridad\AuthController;
 use App\Http\Controllers\Seguridad\CuentaController;
 use App\Http\Controllers\Seguridad\PermisoController;
+use App\Http\Controllers\Seguridad\RecuperarPasswordController;
 use App\Http\Controllers\Seguridad\RolController;
 use App\Http\Controllers\Seguridad\UsuarioRolController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,12 @@ Route::middleware('web')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])
             ->middleware('throttle:5,1')
             ->name('login.store');
+
+        // Recuperación de Contraseña
+        Route::get('/recuperar-contrasena', [RecuperarPasswordController::class, 'mostrarFormularioSolicitud'])->name('password.request');
+        Route::post('/recuperar-contrasena', [RecuperarPasswordController::class, 'enviarEnlaceRecuperacion'])->name('password.email');
+        Route::get('/restablecer-contrasena/{token}', [RecuperarPasswordController::class, 'mostrarFormularioRestablecer'])->name('password.reset');
+        Route::post('/restablecer-contrasena', [RecuperarPasswordController::class, 'restablecerPassword'])->name('password.update');
     });
 
     Route::middleware(['auth', 'nocache'])->group(function () {

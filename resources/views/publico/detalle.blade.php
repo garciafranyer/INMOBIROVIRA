@@ -66,9 +66,14 @@
                 <span class="text-neutral-400">{{ $inmueble->tipo_inmueble?->nombre }}</span>
             </div>
 
+            @php
+                $esVda = $inmueble->barrio && (str_contains(strtolower($inmueble->barrio->nombre), 'vda') || str_contains(strtolower($inmueble->barrio->nombre), 'vereda') || strtolower($inmueble->zona) === 'rural');
+                $etiquetaSubdiv = $esVda ? 'Vereda ' : 'Barrio ';
+            @endphp
+
             <h1 class="text-2xl font-bold text-white">{{ $inmueble->nombre }}</h1>
             <p class="text-neutral-400 mt-1">
-                {{ $inmueble->municipio?->nombre }}@if($inmueble->barrio) · Barrio {{ $inmueble->barrio->nombre }}@endif · {{ $d->direccion }}
+                {{ $inmueble->municipio?->nombre }}@if($inmueble->barrio) · {{ $etiquetaSubdiv }}{{ str_ireplace('vda. ', '', $inmueble->barrio->nombre) }}@endif · {{ $d->direccion }}
             </p>
 
             <p class="text-3xl font-black text-white mt-4">${{ number_format($d->precio, 0, ',', '.') }}</p>
@@ -80,7 +85,8 @@
                     ? (str_starts_with($rawTel, '57') ? $rawTel : '57' . $rawTel)
                     : config('services.whatsapp.numero', '573103451093');
 
-                $municipio = ($inmueble->municipio?->nombre ?? 'García Rovira') . ($inmueble->barrio ? ' (Barrio ' . $inmueble->barrio->nombre . ')' : '');
+                $subdivTexto = $inmueble->barrio ? ' (' . $etiquetaSubdiv . str_ireplace('vda. ', '', $inmueble->barrio->nombre) . ')' : '';
+                $municipio = ($inmueble->municipio?->nombre ?? 'García Rovira') . $subdivTexto;
                 $precio    = number_format($d->precio ?? 0, 0, ',', '.');
                 $oferta    = ucfirst($d->tipo_oferta ?? 'Oferta');
                 $url       = url()->current();
@@ -132,7 +138,7 @@
                 @endif
 
                 @if($inmueble->barrio)
-                    <div><dt class="text-neutral-400">Barrio</dt><dd class="font-semibold text-white">{{ $inmueble->barrio->nombre }}</dd></div>
+                    <div><dt class="text-neutral-400">{{ $esVda ? 'Vereda' : 'Barrio' }}</dt><dd class="font-semibold text-white">{{ $inmueble->barrio->nombre }}</dd></div>
                 @endif
 
                 @if(!empty($d->estrato))
@@ -221,7 +227,7 @@
                 @endif
             </h2>
             <p class="text-xs text-neutral-400 mt-0.5">
-                {{ $d->direccion }}@if($inmueble->barrio), Barrio {{ $inmueble->barrio->nombre }}@endif, {{ $inmueble->municipio?->nombre ?? 'Santander' }}
+                {{ $d->direccion }}@if($inmueble->barrio), {{ $etiquetaSubdiv }}{{ str_ireplace('vda. ', '', $inmueble->barrio->nombre) }}@endif, {{ $inmueble->municipio?->nombre ?? 'Santander' }}
             </p>
         </div>
 

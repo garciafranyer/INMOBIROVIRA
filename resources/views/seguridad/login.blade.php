@@ -27,7 +27,7 @@
                         </svg>
                     </div>
                     <div class="leading-none">
-                        <span class="text-3xl font-black tracking-tight text-white">Inmobi<span class="text-blue-500 font-light">rovira</span></span>
+                        <span class="text-3xl font-black tracking-tight text-white">Inmobi<span class="text-slate-300 font-light">rovira</span></span>
                     </div>
                 </a>
                 <p class="text-xs text-slate-400 mt-2 font-medium tracking-wide">
@@ -43,14 +43,25 @@
                 <div class="mb-5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200 leading-relaxed flex items-start gap-2.5">
                     <span class="text-base select-none shrink-0">ℹ️</span>
                     <div>
-                        <strong class="text-white block font-semibold mb-0.5">Acceso exclusivo para Empresas y Administrador</strong>
-                        <span>¿Eres una empresa inmobiliaria y deseas publicar tus inmuebles? </span>
+                        <strong class="text-white block font-semibold mb-0.5">Acceso exclusivo para Empresas, usuario autorizado y Administrador</strong>
+                        <span>¿Eres una empresa inmobiliaria o un usuario y deseas publicar tus inmuebles? </span>
                         <a href="https://api.whatsapp.com/send?phone={{ config('services.whatsapp.numero', '573103451093') }}&text={{ rawurlencode('👋 ¡Hola Inmobirovira! Soy una empresa interesada en afiliarme para publicar inmuebles en su plataforma.') }}"
                            target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-white underline font-semibold transition">
                             Contáctanos por WhatsApp &rarr;
                         </a>
                     </div>
                 </div>
+
+                {{-- Alerta de Notificación / Restablecimiento Exitoso --}}
+                @if (session('status'))
+                    <div class="mb-5 p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-800/80 text-xs text-emerald-200 leading-relaxed flex items-start gap-2.5">
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div>
+                            <strong class="text-white block font-semibold mb-0.5">Operación exitosa</strong>
+                            <span>{{ session('status') }}</span>
+                        </div>
+                    </div>
+                @endif
 
                 <form action="{{ route('login.store') }}" method="POST" class="space-y-4">
                     @csrf
@@ -83,6 +94,10 @@
                             <input type="checkbox" name="remember" value="1" class="rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 h-4 w-4">
                             <span>Recordarme</span>
                         </label>
+
+                        <a href="{{ route('password.request') }}" class="text-blue-400 hover:text-blue-300 font-medium transition">
+                            ¿Olvidaste tu contraseña?
+                        </a>
                     </div>
 
                     <button type="submit"

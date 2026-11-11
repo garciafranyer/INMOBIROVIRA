@@ -67,7 +67,7 @@ class InmuebleUpdateRequest extends FormRequest
             'detalle.numero_bano'          => 'nullable|integer|min:0',
             'detalle.descripcion'          => 'required|string|max:3000',
             'detalle.fecha_publicacion'    => 'nullable|date',
-            'detalle.estado_publicacion'   => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
+            'detalle.estado_publicacion'   => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo', 'pendiente'])],
 
             // Imágenes nuevas (opcionales al editar)
             'imagenes'   => 'nullable|array|max:10',

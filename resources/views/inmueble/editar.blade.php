@@ -91,12 +91,16 @@
                     </div>
 
                     <div>
-                        <label class="{{ $label }}">Barrio <span class="text-xs text-gray-400 font-normal">(Opcional)</span></label>
+                        <label id="label-barrio" class="{{ $label }}">Barrio / Vereda <span class="text-xs text-gray-400 font-normal">(Opcional)</span></label>
                         <select name="id_barrio" id="id_barrio" class="{{ $input }}">
-                            <option value="">Sin barrio / Zona rural</option>
+                            <option value="" id="opcion-defecto-barrio">Sin especificar / Casco urbano</option>
                             @foreach ($barrios as $b)
+                                @php
+                                    $esVda = str_contains(strtolower($b->nombre), 'vda') || str_contains(strtolower($b->nombre), 'vereda');
+                                @endphp
                                 <option value="{{ $b->id }}"
                                         data-municipio="{{ $b->id_municipio }}"
+                                        data-tipo="{{ $esVda ? 'rural' : 'urbana' }}"
                                         @selected(old('id_barrio', $inmueble->id_barrio) == $b->id)>
                                     {{ $b->nombre }}
                                 </option>
@@ -356,29 +360,62 @@
 
 <script>
     (function () {
-        // Filtrar barrios dinámicamente según el municipio seleccionado
+        // Filtrar barrios y veredas dinámicamente según municipio y zona (urbana/rural)
         const selectMunicipio = document.getElementById('id_municipio');
+        const selectZona = document.getElementById('zona');
         const selectBarrio = document.getElementById('id_barrio');
+        const labelBarrio = document.getElementById('label-barrio');
+        const opcionDefecto = document.getElementById('opcion-defecto-barrio');
+
         if (selectMunicipio && selectBarrio) {
-            function filtrarBarrios() {
+            function filtrarSubdivisiones() {
                 const munId = selectMunicipio.value;
+                const zonaVal = selectZona ? selectZona.value : '';
                 const opciones = selectBarrio.querySelectorAll('option');
+
+                if (labelBarrio) {
+                    labelBarrio.innerHTML = zonaVal === 'rural'
+                        ? 'Vereda <span class="text-xs text-gray-400 font-normal">(Zona Rural)</span>'
+                        : 'Barrio <span class="text-xs text-gray-400 font-normal">(Casco Urbano)</span>';
+                }
+
+                if (opcionDefecto) {
+                    opcionDefecto.textContent = zonaVal === 'rural'
+                        ? 'Selecciona vereda (Opcional)'
+                        : 'Selecciona barrio (Opcional)';
+                }
+
+                let encontrado = false;
 
                 opciones.forEach(opt => {
                     const munOpt = opt.getAttribute('data-municipio');
+                    const tipoOpt = opt.getAttribute('data-tipo');
+
                     if (!munOpt) {
                         opt.style.display = '';
-                    } else if (!munId || munOpt === munId) {
+                        return;
+                    }
+
+                    const coincideMun = !munId || munOpt === munId;
+                    const coincideZona = !zonaVal || tipoOpt === zonaVal;
+
+                    if (coincideMun && coincideZona) {
                         opt.style.display = '';
+                        if (opt.selected) encontrado = true;
                     } else {
                         opt.style.display = 'none';
                         if (opt.selected) opt.selected = false;
                     }
                 });
+
+                if (!encontrado && selectBarrio.value !== '') {
+                    selectBarrio.value = '';
+                }
             }
 
-            selectMunicipio.addEventListener('change', filtrarBarrios);
-            filtrarBarrios();
+            selectMunicipio.addEventListener('change', filtrarSubdivisiones);
+            if (selectZona) selectZona.addEventListener('change', filtrarSubdivisiones);
+            filtrarSubdivisiones();
         }
 
         const inputImagenes = document.getElementById('imagenes');

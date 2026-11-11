@@ -61,6 +61,28 @@
         </a>
     </div>
 
+    {{-- ALERTA SI HAY PUBLICACIONES EN REVISIÓN --}}
+    @if (($pendientes ?? 0) > 0)
+        <div class="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                    <h4 class="text-xs sm:text-sm font-bold text-amber-200">
+                        {{ $pendientes }} {{ $pendientes === 1 ? 'publicación en revisión' : 'publicaciones en revisión' }}
+                    </h4>
+                    <p class="text-[11px] sm:text-xs text-amber-300/80">
+                        El administrador está revisando los datos y fotos de tu propiedad. Una vez autorizada, se publicará automáticamente en el portal.
+                    </p>
+                </div>
+            </div>
+            <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                En Moderación
+            </span>
+        </div>
+    @endif
+
     {{-- TARJETAS ESTADÍSTICAS DARK LUXURY --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
         {{-- Total Inmuebles --}}
@@ -151,6 +173,7 @@
                                     'reservado'  => 'bg-amber-950/80 text-amber-300 border-amber-800',
                                     'arrendado'  => 'bg-blue-950/80 text-blue-300 border-blue-800',
                                     'vendido'    => 'bg-neutral-800 text-neutral-300 border-neutral-700',
+                                    'pendiente'  => 'bg-amber-500/20 text-amber-300 border-amber-500/50',
                                     default      => 'bg-rose-950/80 text-rose-300 border-rose-800'
                                 };
                                 $oferta = strtolower($d?->tipo_oferta ?? 'venta');
@@ -215,21 +238,28 @@
                                     ${{ number_format($d?->precio ?? 0, 0, ',', '.') }}
                                 </td>
 
-                                {{-- Estado con selector rápido --}}
+                                {{-- Estado con selector rápido o aviso de moderación si está pendiente --}}
                                 <td class="px-5 py-4">
-                                    <form action="{{ route('empresa.estado', $inmueble->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="estado_publicacion"
-                                                onchange="this.form.submit()"
-                                                class="text-xs font-bold rounded-xl px-2.5 py-1.5 border {{ $estadoColor }} cursor-pointer focus:outline-none transition">
-                                            <option value="disponible" class="bg-neutral-900 text-emerald-400" @selected($estado === 'disponible')>Disponible</option>
-                                            <option value="reservado"  class="bg-neutral-900 text-amber-400" @selected($estado === 'reservado')>Reservado</option>
-                                            <option value="arrendado"  class="bg-neutral-900 text-blue-400" @selected($estado === 'arrendado')>Arrendado</option>
-                                            <option value="vendido"    class="bg-neutral-900 text-neutral-300" @selected($estado === 'vendido')>Vendido</option>
-                                            <option value="inactivo"   class="bg-neutral-900 text-rose-400" @selected($estado === 'inactivo')>Inactivo</option>
-                                        </select>
-                                    </form>
+                                    @if ($estado === 'pendiente')
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/40" title="En espera de aprobación del Administrador">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                                            <span>⏳ En revisión</span>
+                                        </span>
+                                    @else
+                                        <form action="{{ route('empresa.estado', $inmueble->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="estado_publicacion"
+                                                    onchange="this.form.submit()"
+                                                    class="text-xs font-bold rounded-xl px-2.5 py-1.5 border {{ $estadoColor }} cursor-pointer focus:outline-none transition">
+                                                <option value="disponible" class="bg-neutral-900 text-emerald-400" @selected($estado === 'disponible')>Disponible</option>
+                                                <option value="reservado"  class="bg-neutral-900 text-amber-400" @selected($estado === 'reservado')>Reservado</option>
+                                                <option value="arrendado"  class="bg-neutral-900 text-blue-400" @selected($estado === 'arrendado')>Arrendado</option>
+                                                <option value="vendido"    class="bg-neutral-900 text-neutral-300" @selected($estado === 'vendido')>Vendido</option>
+                                                <option value="inactivo"   class="bg-neutral-900 text-rose-400" @selected($estado === 'inactivo')>Inactivo</option>
+                                            </select>
+                                        </form>
+                                    @endif
                                 </td>
 
                                 {{-- Acciones --}}

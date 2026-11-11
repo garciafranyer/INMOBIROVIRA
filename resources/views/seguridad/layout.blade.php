@@ -50,9 +50,8 @@
 
         {{-- Sidebar Estilo Panel de Control --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0">
-            <div class="h-16 flex items-center px-6 bg-slate-950 gap-3">
-                <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">A</span>
-                <span class="text-white font-bold tracking-wide">Laravel</span>
+            <div class="h-20 flex items-center px-5 bg-slate-950 border-b border-slate-800">
+                <x-logo :href="route('dashboard.index')" size="sm" badge="Módulo Seguridad" />
             </div>
 
             <div class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">

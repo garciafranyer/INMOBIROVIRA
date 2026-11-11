@@ -22,23 +22,7 @@
 
             {{-- Logotipo Oficial InmobiRovira Platino & Badge --}}
             <div class="flex items-center gap-3">
-                <a href="{{ route('empresa.index') }}" class="flex items-center gap-2.5 group">
-                    <div class="w-9 h-9 rounded-xl bg-neutral-900 border border-neutral-800 shadow-md flex items-center justify-center group-hover:scale-105 transition duration-200">
-                        <svg class="w-6 h-6 drop-shadow-md" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="24" cy="24" r="21" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="2 3" />
-                            <path d="M13 26L24 16L35 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M17 25V33C17 34.1 17.9 35 19 35H29C30.1 35 31 34.1 31 33V25" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" />
-                            <path d="M24 35V29" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
-                        </svg>
-                    </div>
-                    <span class="text-xl font-black tracking-tight text-white leading-none">
-                        Inmobi<span class="text-slate-300 font-light">rovira</span>
-                    </span>
-                </a>
-                <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-neutral-900 text-neutral-300 border border-neutral-800">
-                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                    Portal Empresa
-                </span>
+                <x-logo :href="route('empresa.index')" size="sm" badge="Portal Empresa" />
             </div>
 
             {{-- Navegación central para escritorio --}}

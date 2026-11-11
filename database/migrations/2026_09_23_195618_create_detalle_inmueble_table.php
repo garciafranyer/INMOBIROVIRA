@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('numero_bano')->nullable();
             $table->text('descripcion');
             $table->date('fecha_publicacion');
-            $table->enum('estado_publicacion',['disponible','arrendado','vendido','reservado','inactivo']);
+            $table->enum('estado_publicacion',['disponible','arrendado','vendido','reservado','inactivo','pendiente']);
             $table->unsignedBigInteger('id_inmueble');
             $table->foreign('id_inmueble')->references('id')->on('inmueble');
             $table->timestamps();

@@ -47,6 +47,11 @@ class DashboardController extends Controller
             $q->whereIn('estado_publicacion', ['arrendado', 'vendido']);
         })->count();
 
+        // Inmuebles pendientes de moderación (subidos por usuarios particulares)
+        $totalPendientes = Inmueble::whereHas('detalle_inmueble', function ($q) {
+            $q->where('estado_publicacion', 'pendiente');
+        })->count();
+
         $totalEmpresas = usuario::whereHas('roles', function ($q) {
             $q->where('name', '!=', config('seguridad.rol_admin', 'administrador'));
         })->count();
@@ -93,6 +98,7 @@ class DashboardController extends Controller
         return view('dashboard.index', compact(
             'totalInmuebles',
             'totalDisponibles',
+            'totalPendientes',
             'totalVenta',
             'totalArriendo',
             'totalCerrados',

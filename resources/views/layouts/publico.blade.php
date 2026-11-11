@@ -16,18 +16,8 @@
         <header class="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/90 via-black/50 to-transparent">
             <div class="max-w-7xl mx-auto px-4 py-4 sm:py-5 flex items-center justify-between gap-4">
 
-                {{-- Logo Izquierda: Opción Platino Perla --}}
-                <a href="{{ route('inicio') }}" class="flex items-center gap-3 shrink-0 group">
-                    <svg class="w-10 h-10 drop-shadow-md" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="21" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="2 3" />
-                        <path d="M13 26L24 16L35 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M17 25V33C17 34.1 17.9 35 19 35H29C30.1 35 31 34.1 31 33V25" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" />
-                        <path d="M24 35V29" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
-                    </svg>
-                    <div class="leading-none">
-                        <span class="text-xl font-black tracking-tight text-white drop-shadow-md">Inmobi<span class="text-slate-300 font-light">rovira</span></span>
-                    </div>
-                </a>
+                {{-- Logo Izquierda: Oficial InmobiRovira Platino --}}
+                <x-logo :href="route('inicio')" />
 
                 {{-- Cápsula Central Oscura Traslúcida --}}
                 <nav class="hidden md:flex items-center bg-neutral-900/90 backdrop-blur-md p-1 rounded-full border border-neutral-800 shadow-2xl text-sm font-semibold">
@@ -119,17 +109,7 @@
         {{-- MODO REGULAR OSCURO ELEGANTE PARA PÁGINAS INTERNAS --}}
         <header class="bg-neutral-950/95 backdrop-blur-md border-b border-neutral-800/80 sticky top-0 z-50 shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
-                <a href="{{ route('inicio') }}" class="flex items-center gap-3 shrink-0 group">
-                    <svg class="w-10 h-10" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="21" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="2 3" />
-                        <path d="M13 26L24 16L35 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M17 25V33C17 34.1 17.9 35 19 35H29C30.1 35 31 34.1 31 33V25" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" />
-                        <path d="M24 35V29" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
-                    </svg>
-                    <div class="leading-none">
-                        <span class="text-xl font-black tracking-tight text-white">Inmobi<span class="text-slate-300 font-light">rovira</span></span>
-                    </div>
-                </a>
+                <x-logo :href="route('inicio')" />
 
                 <nav class="hidden md:flex items-center bg-neutral-900 p-1 rounded-full border border-neutral-800 text-sm font-semibold">
                     <a href="{{ route('inicio', ['tipo_oferta' => 'arriendo']) }}#inmuebles" class="px-5 py-1.5 rounded-full transition {{ request('tipo_oferta') === 'arriendo' ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white' }}">Arriendo</a>
@@ -191,16 +171,8 @@
         <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
 
             <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <svg class="w-10 h-10" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="21" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="2 3" />
-                        <path d="M13 26L24 16L35 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M17 25V33C17 34.1 17.9 35 19 35H29C30.1 35 31 34.1 31 33V25" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" />
-                        <path d="M24 35V29" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
-                    </svg>
-                    <div class="leading-none">
-                        <span class="text-xl font-black tracking-tight text-white">Inmobi<span class="text-slate-300 font-light">rovira</span></span>
-                    </div>
+                <div class="mb-4">
+                    <x-logo :href="route('inicio')" />
                 </div>
                 <p class="text-sm text-neutral-400 leading-relaxed">
                     Tu portal de confianza para encontrar casas, apartamentos, fincas y locales en venta y arriendo en la provincia de García Rovira, Santander.

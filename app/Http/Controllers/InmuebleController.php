@@ -115,12 +115,12 @@ class InmuebleController extends Controller
     }
 
     /**
-     * Actualiza rápidamente el estado de publicación desde la tabla.
+     * Actualiza rápidamente el estado de publicación desde la tabla (incluye moderación y aprobación).
      */
     public function actualizarEstado(int $id, \Illuminate\Http\Request $request)
     {
         $request->validate([
-            'estado_publicacion' => ['required', \Illuminate\Validation\Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
+            'estado_publicacion' => ['required', \Illuminate\Validation\Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo', 'pendiente'])],
         ]);
 
         $inmueble = $this->inmueble_service->buscarporid($id);
@@ -130,6 +130,12 @@ class InmuebleController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Estado del inmueble actualizado a ' . ucfirst($request->estado_publicacion));
+        $mensaje = match ($request->estado_publicacion) {
+            'disponible' => '¡Inmueble aprobado y disponible para el público en el portal!',
+            'inactivo'   => 'El inmueble ha sido rechazado / inactivado.',
+            default      => 'Estado del inmueble actualizado a ' . ucfirst($request->estado_publicacion),
+        };
+
+        return back()->with('success', $mensaje);
     }
 }

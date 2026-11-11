@@ -35,7 +35,7 @@ class EmpresaInmuebleController extends Controller
             ->latest()
             ->paginate(10);
 
-        // Contadores rápidos para la empresa
+        // Contadores rápidos para la empresa / usuario
         $totalInmuebles = Inmueble::where('id_usuario', $usuario->id)->count();
         $disponibles = Inmueble::where('id_usuario', $usuario->id)
             ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'disponible'))
@@ -43,13 +43,17 @@ class EmpresaInmuebleController extends Controller
         $cerrados = Inmueble::where('id_usuario', $usuario->id)
             ->whereHas('detalle_inmueble', fn ($q) => $q->whereIn('estado_publicacion', ['arrendado', 'vendido']))
             ->count();
+        $pendientes = Inmueble::where('id_usuario', $usuario->id)
+            ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'pendiente'))
+            ->count();
 
         return view('empresa.index', compact(
             'usuario',
             'inmuebles',
             'totalInmuebles',
             'disponibles',
-            'cerrados'
+            'cerrados',
+            'pendientes'
         ));
     }
 
@@ -66,22 +70,34 @@ class EmpresaInmuebleController extends Controller
     }
 
     /**
-     * Guarda el inmueble asociándolo automáticamente a la empresa conectada.
+     * Guarda el inmueble asociándolo automáticamente a la empresa o usuario conectado.
      */
     public function store(InmuebleStoreRequest $request): RedirectResponse
     {
-        // Seguridad: se asegura de que el inmueble pertenezca al usuario autenticado
-        $request->merge([
-            'id_usuario' => $request->user()->id,
-        ]);
+        $usuario = $request->user();
+        $datos = $request->safe()->except('imagenes');
+        $datos['id_usuario'] = $usuario->id;
+
+        $esAdmin = $usuario->hasRole(config('seguridad.rol_admin', 'administrador'));
+        $esEmpresa = $usuario->hasRole('Empresa');
+        $esParticular = ! $esAdmin && ! $esEmpresa;
+
+        // Si es un usuario regular/particular, su publicación pasa a revisión pendiente del administrador
+        if ($esParticular) {
+            $datos['detalle']['estado_publicacion'] = 'pendiente';
+        }
 
         $this->inmuebleService->crear(
-            $request->safe()->except('imagenes'),
+            $datos,
             $request->file('imagenes') ?? []
         );
 
+        $mensaje = $esParticular
+            ? '¡Inmueble enviado con éxito! Tu publicación está en revisión y será autorizada por el administrador en breve.'
+            : '¡Inmueble publicado con éxito!';
+
         return redirect()->route('empresa.index')
-            ->with('success', '¡Inmueble publicado con éxito!');
+            ->with('success', $mensaje);
     }
 
     /**
@@ -107,19 +123,28 @@ class EmpresaInmuebleController extends Controller
      */
     public function update(int $id, InmuebleUpdateRequest $request): RedirectResponse
     {
-        $inmueble = Inmueble::findOrFail($id);
+        $inmueble = Inmueble::with('detalle_inmueble')->findOrFail($id);
+        $usuario = $request->user();
 
-        if ($inmueble->id_usuario !== $request->user()->id) {
+        if ($inmueble->id_usuario !== $usuario->id) {
             abort(403, 'No tienes permiso para modificar este inmueble.');
         }
 
-        $request->merge([
-            'id_usuario' => $request->user()->id,
-        ]);
+        $datos = $request->safe()->except('imagenes');
+        $datos['id_usuario'] = $usuario->id;
+
+        $esAdmin = $usuario->hasRole(config('seguridad.rol_admin', 'administrador'));
+        $esEmpresa = $usuario->hasRole('Empresa');
+        $esParticular = ! $esAdmin && ! $esEmpresa;
+
+        // Si es usuario particular y su inmueble está pendiente de moderación, no puede auto-aprobarse a disponible
+        if ($esParticular && $inmueble->detalle_inmueble?->estado_publicacion === 'pendiente') {
+            $datos['detalle']['estado_publicacion'] = 'pendiente';
+        }
 
         $this->inmuebleService->actualizar(
             $id,
-            $request->safe()->except('imagenes'),
+            $datos,
             $request->file('imagenes')
         );
 
@@ -150,13 +175,23 @@ class EmpresaInmuebleController extends Controller
     public function actualizarEstado(int $id, Request $request): RedirectResponse
     {
         $request->validate([
-            'estado_publicacion' => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo'])],
+            'estado_publicacion' => ['required', Rule::in(['disponible', 'arrendado', 'vendido', 'reservado', 'inactivo', 'pendiente'])],
         ]);
 
         $inmueble = Inmueble::with('detalle_inmueble')->findOrFail($id);
+        $usuario = $request->user();
 
-        if ($inmueble->id_usuario !== $request->user()->id) {
+        if ($inmueble->id_usuario !== $usuario->id) {
             abort(403, 'No tienes permiso para modificar este inmueble.');
+        }
+
+        $esAdmin = $usuario->hasRole(config('seguridad.rol_admin', 'administrador'));
+        $esEmpresa = $usuario->hasRole('Empresa');
+        $esParticular = ! $esAdmin && ! $esEmpresa;
+
+        // Si es usuario particular y su inmueble está pendiente, no puede auto-aprobarse a disponible
+        if ($esParticular && $inmueble->detalle_inmueble?->estado_publicacion === 'pendiente' && $request->estado_publicacion === 'disponible') {
+            return back()->with('error', 'Tu publicación está en revisión. El administrador debe autorizarla antes de que pueda estar disponible.');
         }
 
         if ($inmueble->detalle_inmueble) {

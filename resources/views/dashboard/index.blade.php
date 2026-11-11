@@ -30,6 +30,35 @@
         </div>
     </div>
 
+    {{-- ALERTA DE AUTORIZACIÓN: INMUEBLES PENDIENTES DE MODERACIÓN --}}
+    @if ($totalPendientes > 0)
+        <div class="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-transparent border-2 border-amber-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md shadow-amber-500/5">
+            <div class="flex items-start sm:items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/30">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-base font-black text-amber-950">
+                            {{ $totalPendientes }} {{ $totalPendientes === 1 ? 'Inmueble requiere tu autorización' : 'Inmuebles requieren tu autorización' }}
+                        </h3>
+                        <span class="px-2 py-0.5 text-[11px] font-black rounded-full bg-amber-500 text-white">Acción requerida</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-amber-900 mt-1">
+                        Usuarios particulares han publicado propiedades que están en moderación. Revisa sus datos, fotos y precios para decidir si aprobarlos o rechazarlos.
+                    </p>
+                </div>
+            </div>
+            <a href="{{ route('inmueble.index') }}"
+               class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-600/30 transition transform hover:scale-102 shrink-0">
+                <span>Revisar y Autorizar</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+        </div>
+    @endif
+
     {{-- TARJETAS ESTADÍSTICAS REALES DE INMUEBLES --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         <x-stat-card
@@ -238,6 +267,7 @@
                                 $estado = strtolower($det?->estado_publicacion ?? 'disponible');
                                 $claseBadge = match($estado) {
                                     'disponible' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                    'pendiente'  => 'bg-amber-100 text-amber-900 border-amber-300 font-black',
                                     'arrendado'  => 'bg-blue-100 text-blue-800 border-blue-200',
                                     'vendido'    => 'bg-purple-100 text-purple-800 border-purple-200',
                                     'reservado'  => 'bg-amber-100 text-amber-800 border-amber-200',
