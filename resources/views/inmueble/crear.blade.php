@@ -768,9 +768,13 @@
                 }
             });
         });
-                }
-            });
-        });
+
+        // Asegurar que Leaflet calcule el tamaño exacto del mapa
+        setTimeout(() => {
+            if (typeof map !== 'undefined' && map) {
+                map.invalidateSize();
+            }
+        }, 300);
     });
 </script>
 @endpush
