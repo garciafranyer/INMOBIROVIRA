@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MunicipioStoreRequest;
 use App\Http\Requests\MunicipioUpdateRequest;
+use App\Models\barrio;
+use App\Models\Inmueble;
 use App\Models\municipio;
 use App\Services\MunicipioService;
 
@@ -75,7 +77,39 @@ class MunicipioController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->municipio_service->eliminar($id);
-        return redirect()->route('municipio.index')->with('success','Se elimino corrrectamente');
+        try {
+            $municipio = $this->municipio_service->buscarporid($id);
+
+            // Verificar si tiene inmuebles asociados
+            $totalInmuebles = Inmueble::where('id_municipio', $id)->count();
+
+            // Verificar si tiene barrios o veredas asociadas
+            $totalBarrios = barrio::where('id_municipio', $id)->count();
+
+            if ($totalInmuebles > 0 || $totalBarrios > 0) {
+                $detalles = [];
+                if ($totalInmuebles > 0) {
+                    $detalles[] = "$totalInmuebles inmueble(s)";
+                }
+                if ($totalBarrios > 0) {
+                    $detalles[] = "$totalBarrios barrio(s)/vereda(s)";
+                }
+                $textoDetalles = implode(' y ', $detalles);
+
+                return redirect()->route('municipio.index')->with(
+                    'error',
+                    "No se puede eliminar el municipio '{$municipio->nombre}' porque tiene {$textoDetalles} asociado(s). Primero debes reasignar o eliminar esos registros."
+                );
+            }
+
+            $this->municipio_service->eliminar($id);
+
+            return redirect()->route('municipio.index')->with('success', "El municipio '{$municipio->nombre}' se eliminó correctamente.");
+        } catch (\Throwable $e) {
+            return redirect()->route('municipio.index')->with(
+                'error',
+                'No se pudo eliminar el municipio porque está vinculado a otros registros en el sistema.'
+            );
+        }
     }
 }

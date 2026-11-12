@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BarrioStoreRequest;
 use App\Http\Requests\BarrioUpdateRequest;
 use App\Models\barrio;
+use App\Models\Inmueble;
 use App\Services\BarrioService;
 use App\Services\MunicipioService;
 
@@ -80,7 +81,27 @@ class BarrioController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->barrio_service->eliminar($id);
-        return redirect()->route('barrio.index')->with('success', 'Se elimino correctamente');
+        try {
+            $barrio = $this->barrio_service->buscarporid($id);
+
+            // Verificar si tiene inmuebles asociados
+            $totalInmuebles = Inmueble::where('id_barrio', $id)->count();
+
+            if ($totalInmuebles > 0) {
+                return redirect()->route('barrio.index')->with(
+                    'error',
+                    "No se puede eliminar el barrio/vereda '{$barrio->nombre}' porque tiene {$totalInmuebles} inmueble(s) asociado(s). Primero debes reasignar o eliminar esos inmuebles."
+                );
+            }
+
+            $this->barrio_service->eliminar($id);
+
+            return redirect()->route('barrio.index')->with('success', "El barrio/vereda '{$barrio->nombre}' se eliminó correctamente.");
+        } catch (\Throwable $e) {
+            return redirect()->route('barrio.index')->with(
+                'error',
+                'No se pudo eliminar el barrio porque está vinculado a otros registros en el sistema.'
+            );
+        }
     }
 }

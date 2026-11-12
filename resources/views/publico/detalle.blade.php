@@ -33,8 +33,8 @@
                             onclick="abrirVisor({{ $loop->index }})"
                             class="group relative overflow-hidden rounded-2xl border border-neutral-800 focus:outline-hidden text-left cursor-pointer {{ $loop->first ? 'col-span-2 sm:col-span-3' : '' }}">
                         <img src="{{ asset('storage/' . $img->url_imagen) }}"
-                             alt="{{ $inmueble->nombre }}"
-                             class="w-full {{ $loop->first ? 'h-96' : 'h-40' }} object-cover group-hover:scale-102 group-hover:brightness-95 transition-all duration-300">
+                            alt="{{ $inmueble->nombre }}"
+                            class="w-full {{ $loop->first ? 'h-96' : 'h-40' }} object-cover group-hover:scale-102 group-hover:brightness-95 transition-all duration-300">
 
                         {{-- Indicador flotante al pasar el mouse --}}
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -102,9 +102,9 @@
             @endphp
 
             <a href="https://api.whatsapp.com/send?phone={{ $telWa }}&text={{ rawurlencode($mensajeDetalle) }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="mt-6 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-5 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition transform hover:scale-102 cursor-pointer">
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-6 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-5 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition transform hover:scale-102 cursor-pointer">
                 <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                 </svg>
@@ -113,9 +113,9 @@
 
             {{-- Botón para compartir por WhatsApp (100% enlace HTML puro, sin JavaScript, sin Facebook) --}}
             <a href="https://api.whatsapp.com/send?text={{ urlencode('Te comparto esta propiedad en Inmobirovira: ' . $inmueble->nombre . ' - ' . url()->current()) }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="mt-2.5 flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-neutral-700/80 transition cursor-pointer">
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-2.5 flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-neutral-700/80 transition cursor-pointer">
                 <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
@@ -259,10 +259,14 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
             <span>🛰️ Vista Satélite</span>
         </button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
     </div>
 
     {{-- 1. Mapa Satélite con Marcador Físico Exacto --}}
-    <div x-show="activeMapTab === 'satelite'" class="w-full h-[500px] rounded-xl overflow-hidden border border-neutral-800 relative z-0">
+    <div x-show="activeMapTab === 'satelite'" class="w-full h-125 rounded-xl overflow-hidden border border-neutral-800 relative z-0">
         @if($tieneCoords)
             <div id="mapa-publico" class="w-full h-full"></div>
         @else
@@ -277,8 +281,6 @@
             </iframe>
         @endif
     </div>
-
-    
 </div>
 
 {{-- SECCIÓN DE INMUEBLES SIMILARES --}}
@@ -309,7 +311,7 @@
 @endif
 
 {{-- MODAL LIGHTBOX / CARRUSEL INTERACTIVO --}}
-<div id="visor-carrusel" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 select-none">
+<div id="visor-carrusel" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex-col justify-between p-4 sm:p-6 select-none">
     {{-- Barra superior --}}
     <div class="flex items-center justify-between text-white max-w-7xl mx-auto w-full pt-2 px-2">
         <div class="text-xs sm:text-sm font-semibold tracking-wide bg-neutral-900 px-3.5 py-1.5 rounded-full border border-neutral-800 text-neutral-300">

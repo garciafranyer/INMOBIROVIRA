@@ -23,13 +23,6 @@
             </a>
         </div>
 
-        {{-- Mensaje de éxito --}}
-        @if (session('success'))
-            <div class="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg mb-6">
-                {{ session('success') }}
-            </div>
-        @endif
-
         {{-- Tabla --}}
         <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-sm">
             <table class="min-w-full text-sm text-left">

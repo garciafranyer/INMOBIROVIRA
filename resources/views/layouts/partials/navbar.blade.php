@@ -28,7 +28,10 @@
             {{-- Botón rápido: Ir al portal público --}}
             <a
                 href="{{ route('inicio') }}"
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                 class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition"
             >
                 <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -101,7 +104,7 @@
                     aria-haspopup="true"
                     :aria-expanded="open.toString()"
                 >
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
+                    <div class="w-8 h-8 rounded-xl bg-linear-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
                         {{ strtoupper(substr(auth()->user()->nombre ?? auth()->user()->name ?? 'A', 0, 1)) }}
                     </div>
                     <div class="hidden sm:block text-left">

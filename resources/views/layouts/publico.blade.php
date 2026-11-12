@@ -22,15 +22,15 @@
                 {{-- Cápsula Central Oscura Traslúcida --}}
                 <nav class="hidden md:flex items-center bg-neutral-900/90 backdrop-blur-md p-1 rounded-full border border-neutral-800 shadow-2xl text-sm font-semibold">
                     <a href="{{ route('inicio', ['tipo_oferta' => 'arriendo']) }}#inmuebles"
-                       class="px-5 py-1.5 rounded-full transition {{ request('tipo_oferta') === 'arriendo' ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
+                    class="px-5 py-1.5 rounded-full transition {{ request('tipo_oferta') === 'arriendo' ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
                         Arriendo
                     </a>
                     <a href="{{ route('inicio', ['tipo_oferta' => 'venta']) }}#inmuebles"
-                       class="px-5 py-1.5 rounded-full transition {{ request('tipo_oferta') === 'venta' ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
+                    class="px-5 py-1.5 rounded-full transition {{ request('tipo_oferta') === 'venta' ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
                         Venta
                     </a>
                     <a href="{{ route('inicio') }}#inmuebles"
-                       class="px-5 py-1.5 rounded-full transition {{ empty(request('tipo_oferta')) ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
+                    class="px-5 py-1.5 rounded-full transition {{ empty(request('tipo_oferta')) ? 'bg-blue-600 text-white shadow-xs' : 'text-neutral-400 hover:text-white' }}">
                         Inmuebles
                     </a>
                 </nav>
@@ -45,7 +45,7 @@
                         @endphp
                         <div class="flex items-center gap-2">
                             <a href="{{ $rutaPanel }}"
-                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer">
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                 </svg>
@@ -121,7 +121,7 @@
                     @auth
                         <div class="flex items-center gap-2">
                             <a href="{{ route('dashboard.index') }}"
-                               class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer">
+                            class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                 </svg>
@@ -140,7 +140,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}"
-                           class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
+                        class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 transition transform hover:scale-105 cursor-pointer">
                             Iniciar sesión
                         </a>
                     @endauth
@@ -195,9 +195,9 @@
                     <li>admin@admin.com</li>
                     <li>
                         <a href="https://wa.me/{{ config('services.whatsapp.numero', '573103451093') }}"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="hover:text-emerald-400 transition inline-flex items-center gap-1.5">
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-emerald-400 transition inline-flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                             {{ config('services.whatsapp.numero_visible', '+57 322 3163892') }}
                         </a>

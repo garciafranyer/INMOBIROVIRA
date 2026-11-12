@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TipoInmuebleStoreRequest;
 use App\Http\Requests\TipoInmuebleUpdateRequest;
+use App\Models\Inmueble;
 use App\Services\TipoInmuebleService;
 
 
@@ -75,8 +76,28 @@ class TipoInmuebleController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->tipo_inmueble_service->eliminar($id);
-        return redirect()->route('tipo_inmueble.index')->with('success','Se elimino corrrectamente');
+        try {
+            $tipo = $this->tipo_inmueble_service->buscarporid($id);
+
+            // Verificar si tiene inmuebles asociados
+            $totalInmuebles = Inmueble::where('id_tipo_inmueble', $id)->count();
+
+            if ($totalInmuebles > 0) {
+                return redirect()->route('tipo_inmueble.index')->with(
+                    'error',
+                    "No se puede eliminar el tipo '{$tipo->nombre}' porque tiene {$totalInmuebles} inmueble(s) asociado(s). Primero debes reasignar o eliminar los inmuebles de esta categoría."
+                );
+            }
+
+            $this->tipo_inmueble_service->eliminar($id);
+
+            return redirect()->route('tipo_inmueble.index')->with('success', "El tipo de inmueble '{$tipo->nombre}' se eliminó correctamente.");
+        } catch (\Throwable $e) {
+            return redirect()->route('tipo_inmueble.index')->with(
+                'error',
+                'No se pudo eliminar el tipo de inmueble porque está en uso en el sistema.'
+            );
+        }
     }
 }
 

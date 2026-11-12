@@ -166,4 +166,72 @@ class SeguridadAuthTest extends TestCase
         $responsePublicoAprobado = $this->get(route('inicio'));
         $responsePublicoAprobado->assertSee('Casa Campestre de Moderacion');
     }
+
+    public function test_no_se_puede_eliminar_municipio_barrio_o_tipo_con_inmuebles_asociados(): void
+    {
+        $admin = usuario::where('email', config('seguridad.admin.email', 'admin@admin.com'))->first();
+        $this->assertNotNull($admin);
+
+        $inmueble = \App\Models\Inmueble::first();
+        $this->assertNotNull($inmueble);
+
+        // 1. Intento de eliminar el municipio asociado al inmueble
+        $responseMunicipio = $this->actingAs($admin)->delete(route('municipio.destroy', $inmueble->id_municipio));
+        $responseMunicipio->assertStatus(302);
+        $responseMunicipio->assertSessionHas('error');
+        $this->assertDatabaseHas('municipio', ['id' => $inmueble->id_municipio]);
+
+        // 2. Intento de eliminar el tipo de inmueble asociado
+        $responseTipo = $this->actingAs($admin)->delete(route('tipo_inmueble.destroy', $inmueble->id_tipo_inmueble));
+        $responseTipo->assertStatus(302);
+        $responseTipo->assertSessionHas('error');
+        $this->assertDatabaseHas('tipo_inmueble', ['id' => $inmueble->id_tipo_inmueble]);
+
+        // 3. Intento de eliminar el barrio si existe
+        if ($inmueble->id_barrio) {
+            $responseBarrio = $this->actingAs($admin)->delete(route('barrio.destroy', $inmueble->id_barrio));
+            $responseBarrio->assertStatus(302);
+            $responseBarrio->assertSessionHas('error');
+            $this->assertDatabaseHas('barrio', ['id' => $inmueble->id_barrio]);
+        }
+
+        // 4. Intento de eliminar el usuario dueño del inmueble
+        $responseUsuario = $this->actingAs($admin)->delete(route('usuario.destroy', $inmueble->id_usuario));
+        $responseUsuario->assertStatus(302);
+        $responseUsuario->assertSessionHas('error');
+        $this->assertDatabaseHas('usuario', ['id' => $inmueble->id_usuario]);
+    }
+
+    public function test_rechaza_precios_negativos_en_inmuebles(): void
+    {
+        $admin = usuario::where('email', config('seguridad.admin.email', 'admin@admin.com'))->first();
+        $municipio = \App\Models\municipio::first();
+        $tipoInmueble = \App\Models\tipo_inmueble::first();
+
+        // Intento con precio negativo y precio de administración negativo
+        $response = $this->actingAs($admin)->post(route('inmueble.store'), [
+            'nombre' => 'Inmueble con Precio Negativo',
+            'zona' => 'urbana',
+            'id_usuario' => $admin->id,
+            'id_tipo_inmueble' => $tipoInmueble->id,
+            'id_municipio' => $municipio->id,
+            'detalle' => [
+                'direccion' => 'Calle 5 # 10-20',
+                'tipo_oferta' => 'venta',
+                'precio' => -50000,
+                'precio_administrador' => -20000,
+                'area' => -10,
+                'descripcion' => 'Prueba de validacion de precios negativos',
+                'fecha_publicacion' => now()->toDateString(),
+                'estado_publicacion' => 'disponible',
+            ],
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'detalle.precio' => 'El precio del inmueble no puede ser negativo ni menor a 0',
+            'detalle.precio_administrador' => 'El precio de administración no puede ser negativo ni menor a 0',
+            'detalle.area' => 'El área no puede ser negativa ni menor a 0',
+        ]);
+    }
 }

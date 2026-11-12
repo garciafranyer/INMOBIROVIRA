@@ -202,9 +202,14 @@
                 <div>
                     <label class="{{ $label }}">Precio <span class="text-rose-400">*</span></label>
                     <input type="number" step="0.01" name="detalle[precio]" value="{{ old('detalle.precio') }}" placeholder="Ej: 150000000" min="0" required class="{{ $input }}">
+<<<<<<< HEAD
                     <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ No se permite un valor negativo en el precio.</p>
                     @error('detalle.precio')
                         <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+=======
+                    @error('detalle.precio')
+                        <p class="text-xs text-rose-400 mt-1 font-medium">{{ $message }}</p>
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                     @enderror
                 </div>
 
@@ -212,9 +217,14 @@
                 <div>
                     <label class="{{ $label }}">Precio de administración</label>
                     <input type="number" step="0.01" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador', 0) }}" placeholder="0 si no aplica" min="0" class="{{ $input }}">
+<<<<<<< HEAD
                     <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ No se permite un valor negativo.</p>
                     @error('detalle.precio_administrador')
                         <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+=======
+                    @error('detalle.precio_administrador')
+                        <p class="text-xs text-rose-400 mt-1 font-medium">{{ $message }}</p>
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                     @enderror
                 </div>
 
@@ -222,9 +232,14 @@
                 <div>
                     <label class="{{ $label }}">Área (m²) <span class="text-rose-400">*</span></label>
                     <input type="number" step="0.01" name="detalle[area]" value="{{ old('detalle.area') }}" placeholder="Ej: 85" min="0" required class="{{ $input }}">
+<<<<<<< HEAD
                     <p class="error-negativo hidden text-xs font-semibold text-rose-400 mt-1">⚠️ El área no puede ser negativa.</p>
                     @error('detalle.area')
                         <p class="text-xs font-semibold text-rose-400 mt-1">{{ $message }}</p>
+=======
+                    @error('detalle.area')
+                        <p class="text-xs text-rose-400 mt-1 font-medium">{{ $message }}</p>
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                     @enderror
                 </div>
 
@@ -760,6 +775,7 @@
             adaptarCamposPorTipo(false);
         }
 
+<<<<<<< HEAD
         // Validación en tiempo real para números no negativos
         document.querySelectorAll('input[type="number"][min="0"]').forEach(input => {
             input.addEventListener('input', function () {
@@ -771,6 +787,61 @@
                 } else {
                     if (errorMsg) errorMsg.classList.add('hidden');
                     this.classList.remove('border-rose-500', 'focus:border-rose-500');
+=======
+        // ==========================================
+        // Validación en tiempo real contra precios negativos
+        // ==========================================
+        const camposNoNegativos = document.querySelectorAll(
+            'input[name="detalle[precio]"], input[name="detalle[precio_administrador]"], input[name="detalle[area]"]'
+        );
+
+        camposNoNegativos.forEach(input => {
+            let alertBox = input.parentElement.querySelector('.alerta-negativo-dinamica');
+            if (!alertBox) {
+                alertBox = document.createElement('div');
+                alertBox.className = 'alerta-negativo-dinamica hidden mt-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-800 bg-rose-950/90 text-rose-200 flex items-center gap-1.5 shadow-lg transition-all duration-200';
+                input.parentElement.appendChild(alertBox);
+            }
+
+            const mostrarAlertaNegativo = (mensaje) => {
+                alertBox.innerHTML = `
+                    <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span>${mensaje}</span>
+                `;
+                alertBox.classList.remove('hidden');
+                input.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/50', 'bg-rose-950/30');
+
+                clearTimeout(input._negativoTimeout);
+                input._negativoTimeout = setTimeout(() => {
+                    if (!input.value.includes('-') && (parseFloat(input.value) >= 0 || !input.value)) {
+                        ocultarAlertaNegativo();
+                    }
+                }, 3500);
+            };
+
+            const ocultarAlertaNegativo = () => {
+                alertBox.classList.add('hidden');
+                input.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/50', 'bg-rose-950/30');
+            };
+
+            // Detectar al presionar la tecla del signo menos (-)
+            input.addEventListener('keydown', function (e) {
+                if (e.key === '-' || e.key === 'Subtract' || e.keyCode === 189 || e.keyCode === 109) {
+                    e.preventDefault();
+                    mostrarAlertaNegativo('¡No se permiten valores negativos! El signo menos (-) no es válido.');
+                }
+            });
+
+            // Detectar al pegar o modificar el valor
+            input.addEventListener('input', function () {
+                if (this.value.includes('-') || parseFloat(this.value) < 0) {
+                    this.value = this.value.replace(/-/g, '');
+                    mostrarAlertaNegativo('¡Valor negativo no permitido! Solo números mayores o iguales a 0.');
+                } else {
+                    ocultarAlertaNegativo();
+>>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                 }
             });
         });

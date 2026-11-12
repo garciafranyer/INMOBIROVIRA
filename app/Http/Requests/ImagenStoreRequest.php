@@ -20,7 +20,7 @@ class ImagenStoreRequest extends FormRequest
         return [
             'id_inmueble' => 'required|exists:inmueble,id',
             'imagenes'    => 'required|array|max:10',
-            'imagenes.*'  => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'imagenes.*'  => 'image|mimes:jpg,jpeg,png,webp|max:3048',
         ];
     }
 

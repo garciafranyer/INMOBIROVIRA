@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsuarioStoreRequest;
 use App\Http\Requests\UsuarioUpdateRequest;
+use App\Models\Inmueble;
 use App\Models\usuario;
 use App\Repositories\UsuarioRepository;
 use App\Services\UsuarioService;
@@ -78,8 +79,34 @@ class UsuarioController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->usuario_service->eliminar($id);
+        try {
+            if (auth()->id() === $id) {
+                return redirect()->route('usuario.index')->with(
+                    'error',
+                    'No puedes eliminar tu propia cuenta de usuario en sesión activa.'
+                );
+            }
 
-        return redirect()->route('usuario.index')->with('success','se elimino correctamente');
+            $usuario = $this->usuario_service->buscarporid($id);
+
+            // Verificar si tiene inmuebles asociados
+            $totalInmuebles = Inmueble::where('id_usuario', $id)->count();
+
+            if ($totalInmuebles > 0) {
+                return redirect()->route('usuario.index')->with(
+                    'error',
+                    "No se puede eliminar el usuario '{$usuario->nombre}' porque tiene {$totalInmuebles} inmueble(s) registrado(s). Debes reasignar o eliminar sus inmuebles primero."
+                );
+            }
+
+            $this->usuario_service->eliminar($id);
+
+            return redirect()->route('usuario.index')->with('success', "El usuario '{$usuario->nombre}' se eliminó correctamente.");
+        } catch (\Throwable $e) {
+            return redirect()->route('usuario.index')->with(
+                'error',
+                'No se pudo eliminar el usuario porque está vinculado a otros registros en el sistema.'
+            );
+        }
     }
 }
