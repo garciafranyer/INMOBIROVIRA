@@ -30,7 +30,7 @@
             <p class="text-sm text-neutral-400 mt-0.5">Modifica los datos del inmueble, su detalle y sus imágenes.</p>
         </div>
 
-        <a href="{{ route('propiedad.show', $inmueble->id) }}" target="_blank"
+        <a href="{{ route('propiedad.show', $inmueble->id) }}"
            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-neutral-800 bg-neutral-900/90 text-xs font-bold text-neutral-300 hover:text-white hover:bg-neutral-800 transition shadow-lg self-start sm:self-auto">
             <span>Ver ficha en la web</span>
             <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>

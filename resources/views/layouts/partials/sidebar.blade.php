@@ -101,7 +101,7 @@
             <a
                 href="{{ route('inicio') }}"
                 class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900/90 hover:bg-slate-800 hover:text-white border border-slate-800 transition"
-                title="Abrir el portal público en una pestaña nueva"
+                title="Ir al portal público"
             >
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>

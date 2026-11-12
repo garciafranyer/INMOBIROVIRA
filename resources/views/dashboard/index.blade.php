@@ -280,7 +280,7 @@
                         </td>
                         <td class="px-5 py-3.5">
                             <div class="flex items-center gap-1">
-                                <a href="{{ route('propiedad.show', $inmueble->id) }}" target="_blank" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-blue-600 transition" title="Ver en portal público">
+                                <a href="{{ route('propiedad.show', $inmueble->id) }}" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-blue-600 transition" title="Ver en portal público">
                                     <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'eye'])</span>
                                 </a>
                                 <a href="{{ route('inmueble.edit', $inmueble->id) }}" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-indigo-600 transition" title="Editar inmueble">
