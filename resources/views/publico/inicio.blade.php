@@ -81,12 +81,32 @@ style="background-image: url('https://images.unsplash.com/photo-1600585154340-be
                 </select>
             </div>
 
-            {{-- Botón Azul Redondeado Tipo Píldora --}}
-            <button type="submit"
-                    class="w-full md:w-auto px-8 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer shrink-0">
-                Buscar
-            </button>
+            @php
+                $hayFiltros = !empty($filtros['buscar']) || !empty($filtros['tipo_oferta']) || !empty($filtros['zona']) || !empty($filtros['id_municipio']) || !empty($filtros['id_tipo_inmueble']);
+            @endphp
+
+            <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                {{-- Botón Azul Redondeado Tipo Píldora --}}
+                <button type="submit"
+                        class="flex-1 md:flex-initial px-8 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/40 transition transform hover:scale-102 cursor-pointer">
+                    Buscar
+                </button>
+
+                {{-- Botón Limpiar Filtros (aparece si hay filtros activos) --}}
+                @if ($hayFiltros)
+                    <a href="{{ route('inicio') }}#inmuebles"
+                       title="Limpiar todos los filtros"
+                       class="px-5 py-3.5 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white font-semibold text-xs sm:text-sm border border-neutral-700 transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>Limpiar</span>
+                    </a>
+                @endif
+            </div>
+            
         </form>
+
 
         {{-- Indicador animado para deslizar --}}
         <a href="#inmuebles"

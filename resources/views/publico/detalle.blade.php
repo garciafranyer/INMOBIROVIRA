@@ -18,7 +18,8 @@
     $listaImagenes = $inmueble->imagenes->map(fn($img) => asset('storage/' . $img->url_imagen))->values();
 @endphp
 
-<a href="{{ route('inicio') }}" class="text-sm text-blue-400 hover:text-blue-300 inline-flex items-center gap-1.5 font-medium transition mb-2">
+<a href="{{ route('inicio') }}"
+   class="text-sm text-black bg-white hover:bg-gray-200 inline-flex items-center gap-2 font-semibold transition-all duration-300 mt-3 mb-5 ml-2 px-5 py-2.5 rounded-lg border border-gray-300 shadow-sm">
     &larr; Volver al listado
 </a>
 
@@ -255,9 +256,9 @@
         <button type="button"
                 @click="activeMapTab = 'satelite'; $nextTick(() => { if (window.mapPublico) window.mapPublico.invalidateSize(); })"
                 :class="activeMapTab === 'satelite' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-neutral-800 text-neutral-400 hover:text-white'"
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
-            <span>🛰️ Vista Satélite</span>
+                
+            
+            
         </button>
     </div>
 
@@ -291,7 +292,7 @@
                     Inmuebles similares en {{ $inmueble->municipio?->nombre ?? 'la provincia' }} o de tipo {{ strtolower($inmueble->tipo_inmueble?->nombre ?? 'inmueble') }}.
                 </p>
             </div>
-            <a href="{{ route('inicio') }}#inmuebles" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition shrink-0">
+            <a href="{{ route('inicio') }}#inmuebles" class="text-sm text-black bg-white hover:bg-gray-200 inline-flex items-center gap-2 font-semibold transition-all duration-300 mt-3 mb-5 ml-2 px-5 py-2.5 rounded-lg border border-gray-300 shadow-sm">
                 <span>Ver todo el catálogo</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />

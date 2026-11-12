@@ -1,21 +1,15 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
-import ApexCharts from 'apexcharts';
-
+import 'apexcharts';
+import "./datatables";
 // flatpickr
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr';
 // FullCalendar
-import { Calendar } from '@fullcalendar/core';
+// import { Calendar } from '@fullcalendar/core';
 
-
-
-window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
-window.FullCalendar = Calendar;
+// window.FullCalendar = Calendar;
 
-Alpine.start();
 
 // Initialize components on DOM ready
 document.addEventListener('DOMContentLoaded', () => {

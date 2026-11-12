@@ -1,13 +1,14 @@
 
 
-import { Calendar } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import listPlugin from "@fullcalendar/list";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+// import { Calendar } from "@fullcalendar/core";
+// import dayGridPlugin from "@fullcalendar/daygrid";
+// import listPlugin from "@fullcalendar/list";
+// import timeGridPlugin from "@fullcalendar/timegrid";
+// import interactionPlugin from "@fullcalendar/interaction";
 
 export function calendarInit() {
   const calendarWrapper = document.querySelector("#calendar");
+  if (!calendarWrapper) return;
 
   if (calendarWrapper) {
     // Calendar Date variable

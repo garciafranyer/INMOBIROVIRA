@@ -880,3 +880,93 @@ pre[class*='language-'] {
     margin-right: -60px !important;
   }
 }
+
+#tablePrins {
+    visibility: hidden;
+    width: 100% !important;
+}
+
+/* Mostrar la tabla cuando DataTables termine */
+#tablePrins.dt-inicializada {
+    visibility: visible;
+}
+
+@layer components {
+    /* Contenedor DataTables estilo Dashboard */
+    .dt-container {
+        @apply w-full max-w-full transition-none;
+    }
+
+    /* Fila superior: Buscador y selector de cantidad */
+    .dt-container .dt-layout-row:has(.dt-search),
+    .dt-container .dt-layout-row:first-child {
+        @apply flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 pt-1;
+    }
+
+    /* Fila inferior: Info y Paginación */
+    .dt-container .dt-layout-row:has(.dt-paging),
+    .dt-container .dt-layout-row:last-child {
+        @apply flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 pb-1 border-t border-slate-100;
+    }
+
+    /* Buscador y selector de longitud */
+    .dt-container .dt-search,
+    .dt-container .dt-length {
+        @apply flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider;
+    }
+
+    .dt-container .dt-search input {
+        @apply rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 outline-none transition focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+    }
+
+    .dt-container .dt-length select {
+        @apply rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 outline-none transition cursor-pointer focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+    }
+
+    /* Tabla con bordes y encabezados estilo Dashboard */
+    .dt-container table.dataTable {
+        @apply w-full text-left border-collapse border border-slate-200/90 rounded-2xl overflow-hidden;
+    }
+
+    .dt-container table.dataTable thead {
+        @apply bg-slate-50 text-[11px] font-extrabold uppercase text-slate-500 tracking-wider border-b border-slate-200 text-left;
+    }
+
+    .dt-container table.dataTable thead th {
+        @apply px-4 py-3.5 font-bold select-none text-slate-600;
+    }
+
+    .dt-container table.dataTable tbody tr {
+        @apply bg-white transition-colors border-b border-slate-100 text-xs font-medium text-slate-700 text-left;
+    }
+
+    .dt-container table.dataTable tbody tr:hover {
+        @apply bg-slate-50/80;
+    }
+
+    .dt-container table.dataTable tbody td {
+        @apply px-4 py-3.5 align-middle;
+    }
+
+    /* Texto informativo (Mostrando X a Y de Z registros) */
+    .dt-container .dt-info {
+        @apply text-xs font-semibold text-slate-400;
+    }
+
+    /* Paginación redondeada con azul primario */
+    .dt-container .dt-paging {
+        @apply flex flex-row flex-wrap items-center gap-1.5;
+    }
+
+    .dt-container .dt-paging .dt-paging-button {
+        @apply inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 transition shadow-xs hover:bg-slate-50 hover:text-slate-900 cursor-pointer;
+    }
+
+    .dt-container .dt-paging .dt-paging-button.current {
+        @apply border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/30 font-black cursor-default hover:bg-blue-600 hover:text-white;
+    }
+
+    .dt-container .dt-paging .dt-paging-button.disabled {
+        @apply cursor-not-allowed opacity-40 bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-400 shadow-none;
+    }
+}
