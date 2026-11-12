@@ -168,49 +168,26 @@
                     </div>
 
                     <div>
-<<<<<<< HEAD
-                        <label class="{{ $label }}">Precio <span class="text-rose-500">*</span></label>
-                        <input type="number" step="0.01" min="0" name="detalle[precio]" value="{{ old('detalle.precio') }}" class="{{ $input }}">
-                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> No se permite un valor negativo en el precio.</p>
-                        @error('detalle.precio')
-                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
-=======
                         <label class="{{ $label }}">Precio <span class="text-red-500">*</span></label>
                         <input type="number" step="0.01" min="0" name="detalle[precio]" value="{{ old('detalle.precio') }}" placeholder="Ej: 150000000" class="{{ $input }}">
                         @error('detalle.precio')
                             <p class="text-xs text-red-600 mt-1 font-medium">{{ $message }}</p>
->>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                         @enderror
                     </div>
 
                     <div>
                         <label class="{{ $label }}">Precio de administración</label>
-<<<<<<< HEAD
-                        <input type="number" step="0.01" min="0" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador') }}" class="{{ $input }}">
-                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> No se permite un valor negativo.</p>
-                        @error('detalle.precio_administrador')
-                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
-=======
                         <input type="number" step="0.01" min="0" name="detalle[precio_administrador]" value="{{ old('detalle.precio_administrador', 0) }}" placeholder="0 si no aplica" class="{{ $input }}">
                         @error('detalle.precio_administrador')
                             <p class="text-xs text-red-600 mt-1 font-medium">{{ $message }}</p>
->>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                         @enderror
                     </div>
 
                     <div>
-<<<<<<< HEAD
-                        <label class="{{ $label }}">Área (m²)</label>
-                        <input type="number" step="0.01" min="0" name="detalle[area]" value="{{ old('detalle.area') }}" class="{{ $input }}">
-                        <p class="error-negativo hidden text-xs font-semibold text-rose-600 mt-1"> El área no puede ser negativa.</p>
-                        @error('detalle.area')
-                            <p class="text-xs font-semibold text-rose-600 mt-1">{{ $message }}</p>
-=======
                         <label class="{{ $label }}">Área (m²) <span class="text-red-500">*</span></label>
                         <input type="number" step="0.01" min="0" name="detalle[area]" value="{{ old('detalle.area') }}" placeholder="Ej: 85.5" class="{{ $input }}">
                         @error('detalle.area')
                             <p class="text-xs text-red-600 mt-1 font-medium">{{ $message }}</p>
->>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
                         @enderror
                     </div>
 
@@ -735,19 +712,6 @@
             adaptarCamposPorTipo(false);
         }
 
-<<<<<<< HEAD
-        // Validación en tiempo real para números no negativos
-        document.querySelectorAll('input[type="number"][min="0"]').forEach(input => {
-            input.addEventListener('input', function () {
-                const errorMsg = this.parentElement.querySelector('.error-negativo');
-                const val = parseFloat(this.value);
-                if (!isNaN(val) && val < 0) {
-                    if (errorMsg) errorMsg.classList.remove('hidden');
-                    this.classList.add('border-rose-500', 'focus:border-rose-500', 'focus:ring-rose-500');
-                } else {
-                    if (errorMsg) errorMsg.classList.add('hidden');
-                    this.classList.remove('border-rose-500', 'focus:border-rose-500', 'focus:ring-rose-500');
-=======
         // ==========================================
         // Validación en tiempo real contra precios negativos
         // ==========================================
@@ -801,7 +765,9 @@
                     mostrarAlertaNegativo('¡Valor negativo no permitido! Solo números mayores o iguales a 0.');
                 } else {
                     ocultarAlertaNegativo();
->>>>>>> 566ac90 (se agrego mensaje de error a la hora de eliminar un campo que tenga un inmueble creado, tambien se agrego advertencia de numeros negativos en precio y se arreglaron las redireciones de whatsApp)
+                }
+            });
+        });
                 }
             });
         });
