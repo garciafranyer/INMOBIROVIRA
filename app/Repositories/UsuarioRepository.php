@@ -7,7 +7,7 @@ use App\Repositories\Contracts\UsuarioRepositoryInterface;
 class UsuarioRepository implements UsuarioRepositoryInterface
 {
     public function listar(){
-        $usuario = usuario::all();
+        $usuario = usuario::with('roles')->get();
         return $usuario;
     }
 

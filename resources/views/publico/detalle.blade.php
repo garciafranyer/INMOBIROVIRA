@@ -35,7 +35,7 @@
                             class="group relative overflow-hidden rounded-2xl border border-neutral-800 focus:outline-hidden text-left cursor-pointer {{ $loop->first ? 'col-span-2 sm:col-span-3' : '' }}">
                         <img src="{{ asset('storage/' . $img->url_imagen) }}"
                              alt="{{ $inmueble->nombre }}"
-                             class="w-full {{ $loop->first ? 'h-96' : 'h-40' }} object-cover group-hover:scale-102 group-hover:brightness-95 transition-all duration-300">
+                             class="w-full {{ $loop->first ? 'h-96' : 'h-28 sm:h-32' }} object-cover group-hover:scale-102 group-hover:brightness-95 transition-all duration-300">
 
                         {{-- Indicador flotante al pasar el mouse --}}
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -52,11 +52,6 @@
         @else
             <div class="w-full h-96 bg-neutral-900 border border-neutral-800 rounded-2xl flex items-center justify-center text-neutral-500">Sin fotos</div>
         @endif
-
-        <div class="mt-8 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl">
-            <h2 class="text-lg font-bold mb-2 text-white">Descripción</h2>
-            <p class="text-neutral-300 leading-relaxed">{{ $d->descripcion }}</p>
-        </div>
     </div>
 
     {{-- Información Lateral --}}
@@ -186,6 +181,13 @@
                     <div><dt class="text-neutral-400">Publicado</dt><dd class="font-semibold text-white">{{ $d->fecha_publicacion }}</dd></div>
                 @endif
             </dl>
+
+            @if(!empty($d->descripcion))
+                <div class="mt-6 pt-5 border-t border-neutral-800">
+                    <h3 class="text-base font-bold text-white mb-2">Descripción</h3>
+                    <p class="text-neutral-300 text-sm leading-relaxed whitespace-pre-line">{{ $d->descripcion }}</p>
+                </div>
+            @endif
         </div>
     </div>
 

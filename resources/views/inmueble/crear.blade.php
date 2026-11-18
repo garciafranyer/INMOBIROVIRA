@@ -408,15 +408,23 @@
         });
 
         function procesarArchivos(nuevosArchivos) {
+            let excedioLimite = false;
             Array.from(nuevosArchivos).forEach(archivo => {
                 if (!archivo.type.startsWith('image/')) return;
-                if (dt.items.length >= 10) return;
+                if (dt.items.length >= 10) {
+                    excedioLimite = true;
+                    return;
+                }
 
                 const yaExiste = Array.from(dt.files).some(f => f.name === archivo.name && f.size === archivo.size);
                 if (!yaExiste) {
                     dt.items.add(archivo);
                 }
             });
+
+            if (excedioLimite) {
+                alert('El límite máximo de imágenes permitidas para un inmueble es 10.');
+            }
 
             inputImagenes.files = dt.files;
             renderizarVistaPrevia();

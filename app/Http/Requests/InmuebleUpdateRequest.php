@@ -111,11 +111,31 @@ class InmuebleUpdateRequest extends FormRequest
             'detalle.estado_publicacion.in'         => 'El estado de publicación no es válido',
 
             // Imágenes
-            'imagenes.max'        => 'Máximo 10 imágenes por vez',
+            'imagenes.max'        => 'El límite máximo permitido es de 10 imágenes por inmueble.',
             'imagenes.*.uploaded' => 'No se pudo subir una imagen. Puede superar el tamaño permitido',
             'imagenes.*.image'    => 'Cada archivo debe ser una imagen',
             'imagenes.*.mimes'    => 'Formatos permitidos: jpg, jpeg, png, webp',
             'imagenes.*.max'      => 'Cada imagen puede pesar máximo 5 MB',
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $inmuebleId = $this->route('inmueble') ?? $this->route('id');
+            if ($inmuebleId && $this->hasFile('imagenes')) {
+                $id = is_object($inmuebleId) ? $inmuebleId->id : (int) $inmuebleId;
+                $existentes = \App\Models\Imagen::where('id_inmueble', $id)->count();
+                $nuevas = count($this->file('imagenes', []));
+
+                if (($existentes + $nuevas) > 10) {
+                    $disponibles = max(0, 10 - $existentes);
+                    $mensaje = $disponibles > 0
+                        ? "Este inmueble ya tiene {$existentes} fotos. Solo puedes agregar hasta {$disponibles} fotos más (límite máximo: 10 imágenes)."
+                        : 'Este inmueble ya alcanzó el límite máximo de 10 fotos. Debes eliminar fotos existentes antes de subir nuevas.';
+                    $validator->errors()->add('imagenes', $mensaje);
+                }
+            }
+        });
     }
 }

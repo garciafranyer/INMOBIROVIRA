@@ -100,7 +100,7 @@ class InmuebleStoreRequest extends FormRequest
             'detalle.estado_publicacion.required'   => 'El estado de publicación es obligatorio',
             'detalle.estado_publicacion.in'         => 'El estado de publicación no es válido',
 
-            'imagenes.max'        => 'Máximo 10 imágenes por vez',
+            'imagenes.max'        => 'El límite máximo permitido es de 10 imágenes por inmueble.',
             'imagenes.*.uploaded' => 'No se pudo subir una imagen. Puede superar el tamaño permitido',
             'imagenes.*.image'    => 'Cada archivo debe ser una imagen',
             'imagenes.*.mimes'    => 'Formatos permitidos: jpg, jpeg, png, webp',

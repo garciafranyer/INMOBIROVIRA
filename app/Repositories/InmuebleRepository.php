@@ -97,7 +97,7 @@ class InmuebleRepository implements InmuebleRepositoryInterface
 
     public function listarSimilares(Inmueble $inmueble, int $limite = 3)
     {
-        return Inmueble::with('municipio', 'tipo_inmueble', 'detalle_inmueble', 'imagenes')
+        $similares = Inmueble::with('municipio', 'tipo_inmueble', 'detalle_inmueble', 'imagenes')
             ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'disponible'))
             ->where('id', '!=', $inmueble->id)
             ->where(function ($q) use ($inmueble) {
@@ -111,5 +111,22 @@ class InmuebleRepository implements InmuebleRepositoryInterface
             ->latest()
             ->take($limite)
             ->get();
+
+        // Si no hay suficientes similares del mismo municipio o tipo, complementar con otros disponibles
+        if ($similares->count() < $limite) {
+            $faltantes = $limite - $similares->count();
+            $excluidos = $similares->pluck('id')->push($inmueble->id)->all();
+
+            $otros = Inmueble::with('municipio', 'tipo_inmueble', 'detalle_inmueble', 'imagenes')
+                ->whereHas('detalle_inmueble', fn ($q) => $q->where('estado_publicacion', 'disponible'))
+                ->whereNotIn('id', $excluidos)
+                ->latest()
+                ->take($faltantes)
+                ->get();
+
+            $similares = $similares->merge($otros);
+        }
+
+        return $similares;
     }
 }

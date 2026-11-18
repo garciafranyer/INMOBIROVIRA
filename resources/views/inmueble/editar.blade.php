@@ -458,16 +458,32 @@
             procesarArchivos(this.files);
         });
 
+        const fotosExistentes = {{ $inmueble->imagenes->count() }};
+        const maxNuevas = Math.max(0, 10 - fotosExistentes);
+
         function procesarArchivos(nuevosArchivos) {
+            if (maxNuevas <= 0) {
+                alert('Este inmueble ya tiene el límite máximo de 10 fotos. Debes eliminar fotos existentes antes de subir nuevas.');
+                return;
+            }
+
+            let excedioLimite = false;
             Array.from(nuevosArchivos).forEach(archivo => {
                 if (!archivo.type.startsWith('image/')) return;
-                if (dt.items.length >= 10) return;
+                if (dt.items.length >= maxNuevas) {
+                    excedioLimite = true;
+                    return;
+                }
 
                 const yaExiste = Array.from(dt.files).some(f => f.name === archivo.name && f.size === archivo.size);
                 if (!yaExiste) {
                     dt.items.add(archivo);
                 }
             });
+
+            if (excedioLimite) {
+                alert(`Solo puedes agregar hasta ${maxNuevas} fotos más (el inmueble ya cuenta con ${fotosExistentes} fotos y el límite total es 10).`);
+            }
 
             inputImagenes.files = dt.files;
             renderizarVistaPrevia();
@@ -479,7 +495,7 @@
 
             if (archivos.length > 0) {
                 contadorFotos.classList.remove('hidden');
-                contadorFotos.textContent = `${archivos.length} / 10 fotos nuevas seleccionadas`;
+                contadorFotos.textContent = `${archivos.length} / ${maxNuevas} fotos nuevas seleccionadas (Total: ${fotosExistentes + archivos.length} de 10)`;
             } else {
                 contadorFotos.classList.add('hidden');
             }
