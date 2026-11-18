@@ -23,7 +23,8 @@ Route::middleware(['auth', 'nocache'])->group(function () {
 
     Route::resource('municipio', MunicipioController::class);
     Route::resource('tipo_inmueble', TipoInmuebleController::class);
-    Route::resource('usuario', UsuarioController::class);
+    // Listado de solo consulta: las cuentas se crean, editan y eliminan desde Seguridad > Cuentas de usuario
+    Route::resource('usuario', UsuarioController::class)->only(['index']);
     Route::resource('barrio', BarrioController::class);
     Route::patch('inmueble/{id}/estado', [InmuebleController::class, 'actualizarEstado'])->name('inmueble.estado');
     Route::resource('inmueble', InmuebleController::class);

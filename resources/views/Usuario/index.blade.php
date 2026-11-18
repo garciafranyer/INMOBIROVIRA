@@ -16,15 +16,19 @@
                 </span>
             </div>
             <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                Administra las cuentas de usuario, sus datos de contacto y roles en la plataforma.
+                Consulta las cuentas registradas en la plataforma. Para crear, editar o eliminar usuarios ve a <strong>Seguridad &rsaquo; Cuentas de usuario</strong>.
             </p>
         </div>
 
-        <a href="{{ route('usuario.create') }}"
-           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-md shadow-blue-600/30 transition transform hover:-translate-y-0.5 cursor-pointer shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            <span>Nuevo Usuario</span>
-        </a>
+        @if (Route::has('seguridad.cuentas.create'))
+            @can(config('seguridad.permiso_admin'))
+                <a href="{{ route('seguridad.cuentas.create') }}"
+                   class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-md shadow-blue-600/30 transition transform hover:-translate-y-0.5 cursor-pointer shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    <span>Crear desde Seguridad</span>
+                </a>
+            @endcan
+        @endif
     </div>
 
     {{-- Tarjeta de la Tabla con DataTables --}}
@@ -39,7 +43,7 @@
                         <th class="px-4 py-3.5">Teléfono / WhatsApp</th>
                         <th class="px-4 py-3.5">Dirección</th>
                         <th class="px-4 py-3.5">Rol / Tipo</th>
-                        <th class="px-4 py-3.5 text-right">Acciones</th>
+                        <th class="px-4 py-3.5 text-right">Registrado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,28 +97,8 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3.5 text-right">
-                                <div class="inline-flex items-center gap-1.5 justify-end">
-                                    {{-- Editar --}}
-                                    <a href="{{ route('usuario.edit', $item->id) }}"
-                                       class="p-2 rounded-xl text-slate-500 hover:text-amber-600 hover:bg-amber-50 border border-slate-200/80 transition cursor-pointer"
-                                       title="Editar usuario">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </a>
-
-                                    {{-- Eliminar --}}
-                                    <form action="{{ route('usuario.destroy', $item->id) }}" method="POST"
-                                          onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?')"
-                                          class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200/80 transition cursor-pointer"
-                                                title="Eliminar usuario">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
-                                </div>
+                            <td class="px-4 py-3.5 text-right text-slate-500 font-medium whitespace-nowrap">
+                                {{ $item->created_at ? $item->created_at->format('d/m/Y') : '—' }}
                             </td>
                         </tr>
                     @endforeach

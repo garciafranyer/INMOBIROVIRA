@@ -2,6 +2,7 @@
 
 namespace App\Services\Seguridad;
 
+use App\Models\Inmueble;
 use App\Repositories\Seguridad\RolRepository;
 use App\Repositories\Seguridad\UsuarioRepository;
 use Exception;
@@ -83,6 +84,12 @@ class CuentaService
 
         if ($esAdmin && $this->usuarioRepository->contarConRol($rolAdmin) <= 1) {
             throw new Exception('No puedes eliminar al único usuario con el rol ' . $rolAdmin . '.');
+        }
+
+        $totalInmuebles = Inmueble::where('id_usuario', $usuario->getKey())->count();
+
+        if ($totalInmuebles > 0) {
+            throw new Exception("No se puede eliminar el usuario '{$usuario->nombre}' porque tiene {$totalInmuebles} inmueble(s) registrado(s). Debes reasignar o eliminar sus inmuebles primero.");
         }
 
         $this->usuarioRepository->eliminar($usuario);

@@ -39,6 +39,8 @@ class CuentaController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique(config('auth.providers.users.model'), 'email')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'direccion' => ['nullable', 'string', 'max:255'],
             'roles' => ['nullable', 'array'],
             'roles.*' => ['string', Rule::exists(config('permission.table_names.roles'), 'name')],
         ]);
@@ -75,6 +77,8 @@ class CuentaController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique(config('auth.providers.users.model'), 'email')->ignore($usuario->getKey())],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'direccion' => ['nullable', 'string', 'max:255'],
             'roles' => ['nullable', 'array'],
             'roles.*' => ['string', Rule::exists(config('permission.table_names.roles'), 'name')],
         ]);
@@ -84,6 +88,10 @@ class CuentaController extends Controller
             'email'    => $datos['email'] ?? null,
             'password' => $datos['password'] ?? null,
         ], fn ($v) => ! is_null($v) && $v !== '');
+
+        // Teléfono y dirección se guardan siempre (pueden quedar vacíos)
+        $datosUsuario['telefono'] = $datos['telefono'] ?? '';
+        $datosUsuario['direccion'] = $datos['direccion'] ?? '';
 
         try {
             $this->cuentaService->actualizar(

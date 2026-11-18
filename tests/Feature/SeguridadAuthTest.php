@@ -195,8 +195,8 @@ class SeguridadAuthTest extends TestCase
             $this->assertDatabaseHas('barrio', ['id' => $inmueble->id_barrio]);
         }
 
-        // 4. Intento de eliminar el usuario dueño del inmueble
-        $responseUsuario = $this->actingAs($admin)->delete(route('usuario.destroy', $inmueble->id_usuario));
+        // 4. Intento de eliminar el usuario dueño del inmueble (desde Seguridad > Cuentas de usuario)
+        $responseUsuario = $this->actingAs($admin)->delete(route('seguridad.cuentas.destroy', $inmueble->id_usuario));
         $responseUsuario->assertStatus(302);
         $responseUsuario->assertSessionHas('error');
         $this->assertDatabaseHas('usuario', ['id' => $inmueble->id_usuario]);

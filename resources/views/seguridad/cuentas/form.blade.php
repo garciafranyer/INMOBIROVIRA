@@ -28,6 +28,18 @@
         </div>
 
         <div>
+            <label for="telefono" class="block text-sm font-medium text-slate-700 mb-1">Teléfono / WhatsApp <span class="text-xs text-slate-400">(opcional)</span></label>
+            <input type="text" name="telefono" id="telefono" value="{{ old('telefono', $usuario?->telefono) }}" maxlength="20" placeholder="Ej: 3103451093"
+                   class="w-full rounded-md border border-slate-300 px-3 py-2">
+        </div>
+
+        <div>
+            <label for="direccion" class="block text-sm font-medium text-slate-700 mb-1">Dirección <span class="text-xs text-slate-400">(opcional)</span></label>
+            <input type="text" name="direccion" id="direccion" value="{{ old('direccion', $usuario?->direccion) }}" maxlength="255" placeholder="Ej: Carrera 8 # 11-24, Málaga"
+                   class="w-full rounded-md border border-slate-300 px-3 py-2">
+        </div>
+
+        <div>
             <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
             <input type="password" name="password" id="password" minlength="8" autocomplete="new-password" @required(! $usuario)
                    class="w-full rounded-md border border-slate-300 px-3 py-2">
